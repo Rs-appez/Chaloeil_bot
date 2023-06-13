@@ -1,0 +1,10 @@
+config
+venv/
+__pycache__/
+*.py[cod]
+*$py.class
+.vscode/
+
+cogs/test.py
+.env
+audios/tts.mp3

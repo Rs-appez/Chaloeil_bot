@@ -3,9 +3,9 @@ from models.games.answer import Answer
 
 class Question():
 
-    def __init__(self, question, answers, level , cat) -> None:
+    def __init__(self, question, answer, level , cat) -> None:
         self.question = question
-        self.answers = answers
+        self.answer = answer
         self.level = level
         self.cat = cat
 

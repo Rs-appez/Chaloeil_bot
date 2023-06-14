@@ -1,6 +1,7 @@
 from nextcord.ext import commands
 from nextcord.interactions import Interaction
 from nextcord import slash_command
+from models.games.battleRoyal import BattleRoyal
 
 class Game(commands.Cog):
     """some games"""
@@ -10,8 +11,10 @@ class Game(commands.Cog):
 
 
     @slash_command(name="battle_royal",description="Get the 👑",dm_permission=False)
-    async def test(self,interaction : Interaction ):
-        await interaction.response.send_message('ok')
+    async def br(self,interaction : Interaction ):
+        br = BattleRoyal()
+        await br.start(interaction.channel)
+        await interaction.response.send_message("ok")
 
 
 

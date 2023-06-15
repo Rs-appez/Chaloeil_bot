@@ -12,8 +12,8 @@ class Game(commands.Cog):
 
     @slash_command(name="battle_royal",description="Get the 👑",dm_permission=False)
     async def br(self,interaction : Interaction ):
-        br = BattleRoyal()
-        await br.start(interaction.channel)
+        br = BattleRoyal(interaction.channel)
+        await br.start()
         await interaction.response.send_message("ok")
 
 

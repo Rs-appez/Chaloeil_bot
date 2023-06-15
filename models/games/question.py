@@ -13,3 +13,7 @@ class Question():
     def get_questions(level = None, cat = None):
 
         return Question("pourquoi",Answer("42",["21","la reponse D","parceque"]),0,"test")
+    
+    def get_answers(self):
+
+        return self.answer.show_answers()

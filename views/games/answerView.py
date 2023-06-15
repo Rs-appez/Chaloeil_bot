@@ -7,7 +7,6 @@ class AnswerView(View):
 
         def __init__(self,answer):
             self.answer = answer
-            # self.current_view = current_view
 
             super().__init__(label=answer,style=ButtonStyle.primary)
 

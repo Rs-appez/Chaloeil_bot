@@ -18,4 +18,4 @@ class BattleRoyal():
 
 
     async def show_question(self,question : Question):
-        await self.channel.send(question.question,view=AnswerView(self))
+        await self.channel.send(question.question,view=AnswerView(question))

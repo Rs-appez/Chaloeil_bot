@@ -12,3 +12,7 @@ class Answer():
         answer.append(self.good_answer)
         random.shuffle(answer)
         return answer
+    
+    def check_answer(self,answer):
+
+        return self.good_answer == answer

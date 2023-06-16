@@ -17,3 +17,7 @@ class Question():
     def get_answers(self):
 
         return self.answer.show_answers()
+    
+    def check_answer(self,answer):
+
+        return self.answer.check_answer(answer)

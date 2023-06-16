@@ -13,10 +13,10 @@ class AnswerView(View):
         async def callback(self,interaction):
 
 
-            for btn in self.view.children:
-                btn.disabled = True
+            # for btn in self.view.children:
+            #     btn.disabled = True
 
-            await interaction.response.edit_message(view=self.view)
+            await interaction.response.send_message(f"{self.view.question.check_answer(self.answer)}",ephemeral=True)
     
     def __init__(self,question):
 

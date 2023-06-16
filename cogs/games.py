@@ -1,6 +1,6 @@
 from nextcord.ext import commands
 from nextcord.interactions import Interaction
-from nextcord import slash_command
+from nextcord import slash_command , ChannelType
 from models.games.battleRoyal import BattleRoyal
 
 class Game(commands.Cog):
@@ -12,10 +12,19 @@ class Game(commands.Cog):
 
     @slash_command(name="battle_royal",description="Get the 👑",dm_permission=False)
     async def br(self,interaction : Interaction ):
-        br = BattleRoyal(interaction.channel)
+        channel = await self.__create_game_channel(interaction,"battle royal")
+        br = BattleRoyal(channel)
         await br.start()
         await interaction.response.send_message("ok")
 
+
+    async def __create_game_channel(self,interaction : Interaction,name_channel):
+
+        if interaction.channel.type == ChannelType.private :
+            game_channel = interaction.channel
+        else :
+            game_channel = await interaction.channel.create_thread(name=name_channel,reason = f"{name_channel} started",type=ChannelType.private_thread)
+        return game_channel
 
 
 def setup(bot):

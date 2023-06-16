@@ -2,6 +2,7 @@ from nextcord.ext import commands
 from nextcord.interactions import Interaction
 from nextcord import slash_command , ChannelType
 from models.games.battleRoyal import BattleRoyal
+from views.games.joinGameView import JoinGameView
 
 class Game(commands.Cog):
     """some games"""
@@ -15,7 +16,7 @@ class Game(commands.Cog):
         channel = await self.__create_game_channel(interaction,"battle royal")
         br = BattleRoyal(channel)
         await br.start()
-        await interaction.response.send_message("ok")
+        await interaction.response.send_message("Rejoint la partie !",view=JoinGameView(br,self.bot.emoji))
 
 
     async def __create_game_channel(self,interaction : Interaction,name_channel):

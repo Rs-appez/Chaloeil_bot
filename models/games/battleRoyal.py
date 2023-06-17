@@ -25,7 +25,7 @@ class BattleRoyal():
         await self.show_question(self.questions[0])
 
     async def show_question(self,question : Question):
-        await self.channel.send(question.question,view=AnswerView(question))
+        await self.channel.send(question.question,view=AnswerView(self,question))
 
 
     async def __init_players(self):

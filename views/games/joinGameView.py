@@ -10,8 +10,9 @@ class JoinGameView(View):
             super().__init__(label="Participer",style=ButtonStyle.blurple,emoji=emoji)
 
         async def callback(self,interaction):
-
-            await interaction.response.send_message(f"joined",ephemeral=True)
+            thread = self.view.game.channel
+            await thread.add_user( interaction.user)
+            await interaction.response.send_message(f"Tu as été ajouté au channel de jeu ➡️ {thread.jump_url}",ephemeral=True)
 
     def __init__(self,game,emoji) -> None:
         super().__init__(timeout=None)

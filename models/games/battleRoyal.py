@@ -11,7 +11,7 @@ class BattleRoyal():
         self.channel = channel
         self.creator_id = creator_id
         self.players = []
-        self.life_point = 3
+        
 
     def __get_questions(self):
 
@@ -31,5 +31,5 @@ class BattleRoyal():
     async def __init_players(self):
         for player in await self.channel.fetch_members():
             if not player.id == int(config.CHALOEIL_ID):
-                self.players.append((Player(await player.fetch_member()),self.life_point))
+                self.players.append(Player(await player.fetch_member()))
 

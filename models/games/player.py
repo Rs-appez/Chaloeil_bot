@@ -5,7 +5,9 @@ class Player():
     def __init__(self,member : Member) -> None:
         self.member = member
         self.dm_chan = None
-
+        self.life_point = 3
+        self.answer = ""
+        
     def __str__(self) -> str:
         return self.member.nick
     

@@ -21,7 +21,7 @@ class AnswerView(View):
     def __init__(self,question):
 
         self.question = question
-        super().__init__(timeout=60)
+        super().__init__()
         for answer in question.get_answers():
 
             self.add_item(self.ButtonAnswer(answer))

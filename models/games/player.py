@@ -7,10 +7,13 @@ class Player():
         self.dm_chan = None
         self.life_point = 3
         self.answer = ""
-        
+
     def __str__(self) -> str:
-        return self.member.nick
-    
+        if self.member.nick :
+            return self.member.nick
+        else :
+            return self.member.name
+        
     async def dm(self,msg,view = None):
         if not self.dm_chan :
             self.dm_chan = await self.member.create_dm()

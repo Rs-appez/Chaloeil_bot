@@ -13,9 +13,22 @@ class ChaloeilBot(commands.Bot):
         intents.message_content = True
         super().__init__(command_prefix, intents=intents)
 
+        self.ch_emojis = {}
+
     async def on_ready(self):
         print(f"{self.user.display_name} est pret")
-        if not config.DEBUG :
-            guild = self.get_guild(int(config.CELLAR_GUILD_ID))
-            if guild :
-                msg = await guild.get_channel(int(config.CHANNELBOT_LOG_ID)).send("UP !")
+        if not config.DEBUG:
+            cellar = self.get_guild(int(config.CELLAR_GUILD_ID))
+            if cellar :
+                self.ch_emojis["chaloeil"] = await cellar.fetch_emoji(1119363924907790406)
+                msg = await cellar.get_channel(int(config.CHANNELBOT_LOG_ID)).send("UP !")
+                await msg.add_reaction(self.ch_emojis["chaloeil"])
+            await self.get_emojis()
+
+    async def get_emojis(self):
+
+        guild = self.get_guild(int(config.DELIRE_GUILD_ID))
+        if guild :
+            self.ch_emojis["delire"] = await guild.fetch_emoji(1102878847734644736)
+
+

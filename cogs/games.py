@@ -16,9 +16,10 @@ class Game(commands.Cog):
     async def br(self,interaction : Interaction ):
         channel = await self.__create_game_channel(interaction,"battle royal")
         br = BattleRoyal(channel)
-
-        await channel.send(f"{self.bot.emoji} WELCOME {self.bot.emoji}")
-        await interaction.channel.send("Rejoint la partie !",view=JoinGameView(br,self.bot.emoji))
+        chaloeil_emoji = self.bot.ch_emojis["chaloeil"]
+        delire_blason = self.bot.ch_emojis['delire']
+        await channel.send(f"{delire_blason} {chaloeil_emoji} WELCOME {chaloeil_emoji} {delire_blason}")
+        await interaction.channel.send("Rejoint la partie !",view=JoinGameView(br,chaloeil_emoji))
         await interaction.response.send_message("Démarrer la partie",view=StartView(br),ephemeral=True)
 
 

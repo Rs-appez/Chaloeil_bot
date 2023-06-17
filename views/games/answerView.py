@@ -13,8 +13,7 @@ class AnswerView(View):
         async def callback(self,interaction):
             
             player = [p for p in self.view.game.players if p.member.id == interaction.user.id][0]
-            player.answer = self.answer
-
+            self.view.game.set_player_answer(player,self.answer)
             await interaction.response.send_message(content=f"Tu as répondu : \"_{self.answer}_\"",ephemeral=True)
     
     def __init__(self,game,question):

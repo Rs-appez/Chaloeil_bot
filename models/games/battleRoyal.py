@@ -11,7 +11,7 @@ class BattleRoyal():
         self.channel = channel
         self.creator_id = creator_id
         self.players = []
-        
+        self.player_answer = []
 
     def __get_questions(self):
 
@@ -32,4 +32,14 @@ class BattleRoyal():
         for player in await self.channel.fetch_members():
             if not player.id == int(config.CHALOEIL_ID):
                 self.players.append(Player(await player.fetch_member()))
+
+    def set_player_answer(self,player : Player, answer : str):
+
+        if player in [p[0] for p in self.player_answer] :
+                
+            self.player_answer.remove([p for p in self.player_answer if p[0] == player][0])
+
+        self.player_answer.append((player,answer))
+
+        print(self.player_answer)
 

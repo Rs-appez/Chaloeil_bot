@@ -40,6 +40,3 @@ class BattleRoyal():
             self.player_answer.remove([p for p in self.player_answer if p[0] == player][0])
 
         self.player_answer.append((player,answer))
-
-        print(self.player_answer)
-

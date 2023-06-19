@@ -47,10 +47,13 @@ class BattleRoyal():
             await self.check_result()
 
     async def check_result(self):
+        res_string = f"La réponse était : **{self.current_question.get_answer()}**\n\n__Joueur encore dans la course :__\n"
 
         for player in self.players:
             player_answer = [pa[1] for pa in self.player_answer if pa[0] == player]
             if not player_answer or  not self.current_question.check_answer(player_answer[0]):
                 player.loose_life_point()
-
+            res_string += f"{player} : {player.life_point} pdv\n"
+        
         self.player_answer = []
+        await self.channel.send(res_string)

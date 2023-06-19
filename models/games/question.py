@@ -17,6 +17,10 @@ class Question():
     def get_answers(self):
 
         return self.answer.show_answers()
+        
+    def get_answer(self) -> str:
+
+        return self.answer.good_answer
     
     def check_answer(self,answer):
 

@@ -7,27 +7,26 @@ from views.games.startView import StartView
 class BattleRoyal():
 
     def __init__(self, channel, creator_id) -> None:
-        self.questions = self.__get_questions()
         self.channel = channel
         self.creator_id = creator_id
         self.players = []
         self.player_answer = []
         self.current_question = None
 
-    def __get_questions(self):
+    def __get_question(self):
 
-        return [Question.get_questions()]
+        return Question.get_question()
     
     async def launch_statement(self):
         await self.channel.send("blabla\nblablabla",view=StartView(self))
 
     async def start(self):
         await self.__init_players()
-        await self.show_question(self.questions[0])
+        await self.show_question()
 
-    async def show_question(self,question : Question):
-        self.current_question = question
-        await self.channel.send(question.question,view=AnswerView(self,question))
+    async def show_question(self):
+        self.current_question = self.__get_question()
+        await self.channel.send(self.current_question.question,view=AnswerView(self,self.current_question))
 
 
     async def __init_players(self):
@@ -47,7 +46,13 @@ class BattleRoyal():
             await self.check_result()
 
     async def check_result(self):
-        res_string = f"La réponse était : **{self.current_question.get_answer()}**\n\n__Joueur encore dans la course :__\n"
+        answers = self.current_question.get_good_answers()
+        if len(answers) == 1:
+            res_string = f"La réponse était : **{answers[0]}**\n"
+        else :
+            res_string = f"Les réponses étaient : **{', '.join(answers)}**\n"
+            
+        res_string += "\n__Joueur encore dans la course :__\n"
 
         for player in self.players:
             player_answer = [pa[1] for pa in self.player_answer if pa[0] == player]

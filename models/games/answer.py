@@ -1,18 +1,19 @@
 import random
 class Answer():
       
-    def __init__(self, good_answer, bad_answers) -> None:
-        self.bad_answers = bad_answers
-        self.good_answer = good_answer
+    def __init__(self, json) -> None:
+
+        self.bad_answers = [a["answer_text"] for a in json if not a["is_correct"]]
+        self.good_answers = [a["answer_text"] for a in json if a["is_correct"]]
 
     
     def show_answers(self):
-        
-        answer = self.bad_answers.copy()
-        answer.append(self.good_answer)
-        random.shuffle(answer)
-        return answer
+        answers = []
+        answers.extend(self.bad_answers)
+        answers.extend(self.good_answers)
+        random.shuffle(answers)
+        return answers
     
     def check_answer(self,answer):
 
-        return self.good_answer == answer
+        return  answer in self.good_answers

@@ -1,26 +1,33 @@
 from models.games.answer import Answer
-
+import config
+import requests
 
 class Question():
 
-    def __init__(self, question, answer, level , cat) -> None:
-        self.question = question
-        self.answer = answer
-        self.level = level
-        self.cat = cat
+    api_url = config.BACKEND_URL + "question/questions/"
+
+    def __init__(self, json) -> None:
+        self.question = json["question_text"]
+        self.answer = Answer(json["answers"])
+        self.level = json["level"]
+        self.cat = json["categories"]
 
     @staticmethod
-    def get_questions(level = None, cat = None):
+    def get_question(level = None, cat = None):
 
-        return Question("pourquoi",Answer("42",["21","la reponse D","parceque"]),0,"test")
-    
+        req = requests.get(Question.api_url + "random_question",params={"level":level,"cat":cat},headers={"Authorization":config.BACKEND_TOKEN})
+
+        if req.status_code == 200:
+            return Question(req.json())
+        else :
+            raise Exception("Error when getting question")
     def get_answers(self):
 
         return self.answer.show_answers()
         
-    def get_answer(self) -> str:
+    def get_good_answers(self) :
 
-        return self.answer.good_answer
+        return self.answer.good_answers
     
     def check_answer(self,answer):
 

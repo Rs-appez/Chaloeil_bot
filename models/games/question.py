@@ -17,11 +17,11 @@ class Question():
     def get_question(level = None, cat = None):
 
         req = requests.get(Question.api_url + "random_question",params={"level":level,"cat":cat},headers={"Authorization":config.BACKEND_TOKEN})
-
+        
         if req.status_code == 200:
             return Question(req.json())
         else :
-            raise Exception("Error when getting question")
+            return None
     def get_answers(self):
 
         return self.answer.show_answers()

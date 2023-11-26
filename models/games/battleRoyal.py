@@ -4,6 +4,7 @@ from models.games.player import Player
 from models.games.question import Question
 from views.games.answerView import AnswerView
 import config
+from views.games.reloadQuestionView import ReloadQuestionView
 from views.games.startView import StartView
 
 class BattleRoyal():
@@ -28,6 +29,9 @@ class BattleRoyal():
 
     async def show_question(self):
         self.current_question = self.__get_question()
+        if self.current_question is None:
+            await self.channel.send("Erreur lors de la récupération de la question 😭",view=ReloadQuestionView(self))
+            return
         question_msg = "‎ ‎\n" +self.current_question.question
         if self.current_question.image_url :
             await self.channel.send(self.current_question.image_url)

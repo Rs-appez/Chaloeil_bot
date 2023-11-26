@@ -1,3 +1,5 @@
+import asyncio
+from models.games.timer import Timer
 from models.games.player import Player
 from models.games.question import Question
 from views.games.answerView import AnswerView
@@ -12,7 +14,7 @@ class BattleRoyal():
         self.players = []
         self.player_answer = []
         self.current_question = None
-
+        self.timer = None
     def __get_question(self):
 
         return Question.get_question()
@@ -27,6 +29,8 @@ class BattleRoyal():
     async def show_question(self):
         self.current_question = self.__get_question()
         await self.channel.send("‎ ‎\n"+self.current_question.question,view=AnswerView(self,self.current_question))
+
+        self.timer = Timer(60, self.check_result,asyncio.get_running_loop())
 
 
     async def __init_players(self):
@@ -43,7 +47,7 @@ class BattleRoyal():
         self.player_answer.append((player,answer))
 
         if len(self.players) == len(self.player_answer):
-            await self.check_result()
+            self.timer.stop()
 
     async def check_result(self):
         answers = self.current_question.get_good_answers()

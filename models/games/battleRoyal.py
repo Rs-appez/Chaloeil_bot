@@ -26,7 +26,7 @@ class BattleRoyal():
 
     async def show_question(self):
         self.current_question = self.__get_question()
-        await self.channel.send(self.current_question.question,view=AnswerView(self,self.current_question))
+        await self.channel.send("‎ ‎\n"+self.current_question.question,view=AnswerView(self,self.current_question))
 
 
     async def __init_players(self):
@@ -64,7 +64,7 @@ class BattleRoyal():
 
         self.players = [p for p in self.players if p.life_point > 0]
         self.player_answer = []
-        await self.channel.send(res_string+"\n\n")
+        await self.channel.send(res_string)
 
         await self.__next_question()
 

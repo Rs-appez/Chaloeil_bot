@@ -59,18 +59,17 @@ class BattleRoyal():
             if not player_answer or  not self.current_question.check_answer(player_answer[0]):
                 player.loose_life_point()
                 if player.life_point == 0:
-                    self.players.remove(player)
                     continue
             res_string += f"{player} : {player.life_point} pdv\n"
-        
+
+        self.players = [p for p in self.players if p.life_point > 0]
         self.player_answer = []
-        await self.channel.send(res_string)
+        await self.channel.send(res_string+"\n\n")
 
         await self.__next_question()
 
     async def __next_question(self):
-        if len(self.players) == 0:
-            # await self.channel.send(f"\n**{self.players[0]} a gagné !**")
-            await self.channel.send(f"chaloeil a gagné !")
+        if len(self.players) == 1:
+            await self.channel.send(f"\n**{self.players[0]} a gagné !**")
         else :
             await self.show_question()

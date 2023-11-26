@@ -19,7 +19,7 @@ class AnswerView(View):
                 await self.view.game.set_player_answer(player[0],self.answer)
                 
             else :
-                await interaction.response.send_message(content=f"Tu as rejoint la partie après qu'elle ait démarré, tu ne peux pas y participer.",ephemeral=True)
+                await interaction.response.send_message(content=f"https://tenor.com/view/the-sixth-sense-haley-joel-osment-cole-sear-i-see-dead-people-dead-gif-4431095",ephemeral=True)
 
     def __init__(self,game,question):
 

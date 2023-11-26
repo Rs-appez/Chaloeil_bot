@@ -88,7 +88,7 @@ class BattleRoyal():
             await asyncio.sleep(60)
             await self.self_destruct()
         else :
-            await asyncio.sleep(10)
+            await asyncio.sleep(8)
             await self.show_question()
 
     async def self_destruct(self):

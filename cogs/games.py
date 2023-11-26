@@ -12,8 +12,13 @@ class Game(commands.Cog):
         self.bot = bot
 
 
-    @slash_command(name="battle_royal",description="Get the 👑",dm_permission=False)
+    @slash_command(name="battle_royal_quizz",description="Get the 👑",dm_permission=False,default_member_permissions= 0)
     async def br(self,interaction : Interaction ):
+        """Start a battle royal quizz game"""
+        if interaction.channel.type in [ChannelType.news_thread,ChannelType.public_thread,ChannelType.private_thread] :
+            await interaction.response.send_message(f"Tu ne peux pas lancer un jeu dans un thread",ephemeral=True)
+            return
+        
         channel = await self.__create_game_channel(interaction,"battle royal")
         br = BattleRoyal(channel,interaction.user.id)
 

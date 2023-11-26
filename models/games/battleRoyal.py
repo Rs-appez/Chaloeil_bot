@@ -37,7 +37,7 @@ class BattleRoyal():
             await self.channel.send(self.current_question.image_url)
         await self.channel.send(question_msg,view=AnswerView(self,self.current_question))
 
-        self.timer = Timer(20, self.check_result,asyncio.get_running_loop())
+        self.timer = Timer(40, self.check_result,asyncio.get_running_loop())
 
 
     async def __init_players(self):
@@ -88,6 +88,7 @@ class BattleRoyal():
             await asyncio.sleep(60)
             await self.self_destruct()
         else :
+            await asyncio.sleep(10)
             await self.show_question()
 
     async def self_destruct(self):

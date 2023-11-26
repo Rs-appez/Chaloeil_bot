@@ -15,8 +15,9 @@ class AnswerView(View):
             player = [p for p in self.view.game.players if p.member.id == interaction.user.id]
 
             if player :
-                await self.view.game.set_player_answer(player[0],self.answer)
                 await interaction.response.send_message(content=f"Tu as répondu : \"_{self.answer}_\"",ephemeral=True)
+                await self.view.game.set_player_answer(player[0],self.answer)
+                
             else :
                 await interaction.response.send_message(content=f"Tu as rejoint la partie après qu'elle ait démarré, tu ne peux pas y participer.",ephemeral=True)
 

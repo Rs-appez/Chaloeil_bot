@@ -1,2 +1,0 @@
-BOT Discord 
-WIP

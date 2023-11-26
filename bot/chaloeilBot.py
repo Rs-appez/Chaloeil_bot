@@ -1,3 +1,4 @@
+from nextcord import CustomActivity
 import nextcord
 from nextcord.ext import commands
 import config
@@ -11,7 +12,7 @@ class ChaloeilBot(commands.Bot):
         intents.members = True
         intents.voice_states = True
         intents.message_content = True
-        super().__init__(command_prefix, intents=intents)
+        super().__init__(command_prefix, intents=intents,activity=CustomActivity(name="Custom Status",state="I want to play a game"))
 
         self.ch_emojis = {}
 

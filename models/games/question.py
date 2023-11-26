@@ -11,6 +11,7 @@ class Question():
         self.answer = Answer(json["answers"])
         self.level = json["level"]
         self.cat = json["categories"]
+        self.image_url = json["image_url"]
 
     @staticmethod
     def get_question(level = None, cat = None):

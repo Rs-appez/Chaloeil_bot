@@ -28,7 +28,10 @@ class BattleRoyal():
 
     async def show_question(self):
         self.current_question = self.__get_question()
-        await self.channel.send("‎ ‎\n"+self.current_question.question,view=AnswerView(self,self.current_question))
+        question_msg = "‎ ‎\n" +self.current_question.question
+        if self.current_question.image_url :
+            await self.channel.send(self.current_question.image_url)
+        await self.channel.send(question_msg,view=AnswerView(self,self.current_question))
 
         self.timer = Timer(60, self.check_result,asyncio.get_running_loop())
 

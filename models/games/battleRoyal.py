@@ -57,6 +57,7 @@ class BattleRoyal():
             self.timer.stop()
 
     async def check_result(self):
+
         answers = self.current_question.get_good_answers()
         if len(answers) == 1:
             res_string = f"La réponse était : **{answers[0]}**\n"
@@ -73,7 +74,14 @@ class BattleRoyal():
                     continue
             res_string += f"{player} : {player.life_point} pdv\n"
 
-        self.players = [p for p in self.players if p.life_point > 0]
+        players_in_life = [p for p in self.players if p.life_point > 0]
+
+        if len(players_in_life) > 0:
+            self.players = players_in_life
+        else :
+            for player in self.players:
+                player.add_life_point()
+
         self.player_answer = []
         await self.channel.send(res_string)
 

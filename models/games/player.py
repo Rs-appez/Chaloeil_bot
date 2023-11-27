@@ -26,3 +26,9 @@ class Player():
             self.life_point = 0
         
         return self.life_point
+    
+    def add_life_point(self,add = 1):
+
+        self.life_point = self.life_point + add
+        
+        return self.life_point

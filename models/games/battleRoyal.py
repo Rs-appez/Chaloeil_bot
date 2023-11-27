@@ -58,21 +58,10 @@ class BattleRoyal():
 
     async def check_result(self):
 
-        answers = self.current_question.get_good_answers()
-        if len(answers) == 1:
-            res_string = f"La réponse était : **{answers[0]}**\n"
-        else :
-            res_string = f"Les réponses étaient : **{', '.join(answers)}**\n"
-            
-        res_string += "\n__Joueur encore dans la course :__\n"
-
         for player in self.players:
             player_answer = [pa[1] for pa in self.player_answer if pa[0] == player]
             if not player_answer or  not self.current_question.check_answer(player_answer[0]):
                 player.loose_life_point()
-                if player.life_point == 0:
-                    continue
-            res_string += f"{player} : {player.life_point} pdv\n"
 
         players_in_life = [p for p in self.players if p.life_point > 0]
 
@@ -82,6 +71,18 @@ class BattleRoyal():
             for player in self.players:
                 player.add_life_point()
 
+        #Display result
+        answers = self.current_question.get_good_answers()
+        if len(answers) == 1:
+            res_string = f"La réponse était : **{answers[0]}**\n"
+        else :
+            res_string = f"Les réponses étaient : **{', '.join(answers)}**\n"
+            
+        res_string += "\n__Joueur encore dans la course :__\n"
+        for player in sorted(self.players,key=lambda p: p.life_point,reverse=True):
+
+            res_string += f"{player} : {player.life_point} pdv\n"
+            
         self.player_answer = []
         await self.channel.send(res_string)
 

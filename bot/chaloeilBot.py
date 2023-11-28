@@ -30,6 +30,6 @@ class ChaloeilBot(commands.Bot):
 
         guild = self.get_guild(int(config.DELIRE_GUILD_ID))
         if guild :
-            self.ch_emojis["delire"] = await guild.fetch_emoji(1102878847734644736)
+            self.ch_emojis["delire"] = await guild.fetch_emoji(1027165356168593478)
 
 

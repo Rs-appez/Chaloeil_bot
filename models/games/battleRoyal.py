@@ -94,8 +94,8 @@ class BattleRoyal():
         if len(self.players) == 1:
             await self.channel.send(f"\n**{self.players[0]} a gagné !**")
             await asyncio.sleep(10)
-            await self.channel.send(f"💥  *Ce channel va s'autodétruire dans 60 secondes !* 💥")
-            await self.channel.send(f"https://tenor.com/view/self-destruction-imminent-please-evacuate-gif-8912211")
+            await self.channel.send("💥  *Ce channel va s'autodétruire dans 60 secondes !* 💥")
+            await self.channel.send("https://tenor.com/view/self-destruction-imminent-please-evacuate-gif-8912211")
             await asyncio.sleep(60)
             await self.self_destruct()
         else :

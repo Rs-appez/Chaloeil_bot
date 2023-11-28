@@ -14,7 +14,7 @@ class Question():
         self.image_url = json["image_url"]
 
     @staticmethod
-    def get_question(level = '', cat = ''):
+    def get_question(level = None, cat = None):
 
         req = requests.get(Question.api_url + "random_question",params={"level":level,"category":cat},headers={"Authorization":config.BACKEND_TOKEN})
         

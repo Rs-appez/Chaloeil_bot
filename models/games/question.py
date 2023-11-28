@@ -14,9 +14,9 @@ class Question():
         self.image_url = json["image_url"]
 
     @staticmethod
-    def get_question(level = None, cat = None):
+    def get_question(level = '', cat = ''):
 
-        req = requests.get(Question.api_url + "random_question",params={"level":level,"cat":cat},headers={"Authorization":config.BACKEND_TOKEN})
+        req = requests.get(Question.api_url + "random_question",params={"level":level,"category":cat},headers={"Authorization":config.BACKEND_TOKEN})
         
         if req.status_code == 200:
             return Question(req.json())

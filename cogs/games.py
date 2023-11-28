@@ -10,7 +10,8 @@ class Game(commands.Cog):
     """some games"""
 
     choices = {
-        "Seulement les maps" : "map"
+        "Seulement les maps" : "map",
+        "Seulement les succès" : "succes",
     }
 
     def __init__(self,bot):

@@ -9,16 +9,18 @@ from views.games.startView import StartView
 
 class BattleRoyal():
 
-    def __init__(self, channel, creator_id) -> None:
+    def __init__(self, channel, creator_id, category) -> None:
         self.channel = channel
         self.creator_id = creator_id
+        self.category = category
         self.players = []
         self.player_answer = []
         self.current_question = None
         self.timer = None
+
     def __get_question(self):
 
-        return Question.get_question()
+        return Question.get_question(cat=self.category)
     
     async def launch_statement(self):
         await self.channel.send("blabla\nblablabla",view=StartView(self))

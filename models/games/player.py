@@ -2,10 +2,11 @@ from nextcord import Member
 
 class Player():
 
-    def __init__(self,member : Member, life_point = 3 ) -> None:
+    def __init__(self,member : Member, life_point = 3 , points = 0 ) -> None:
         self.member = member
         self.dm_chan = None
         self.life_point = life_point
+        self.points = points
 
     def __str__(self) -> str:
         if self.member.nick :
@@ -30,5 +31,20 @@ class Player():
     def add_life_point(self,add = 1):
 
         self.life_point = self.life_point + add
+        
+        return self.life_point
+    
+    def loose_point(self,loose = 1, negative = True):
+
+        self.points = self.points - loose
+        
+        if self.points < 0 and not negative :
+            self.points = 0
+
+        return self.life_point
+    
+    def add_point(self,add = 1):
+
+        self.points = self.points + add
         
         return self.life_point

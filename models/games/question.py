@@ -14,14 +14,18 @@ class Question():
         self.image_url = json["image_url"]
 
     @staticmethod
-    def get_question(level = None, cat = None):
+    def get_question(number,level = None, cat = None):
 
-        req = requests.get(Question.api_url + "random_question",params={"level":level,"category":cat},headers={"Authorization":config.BACKEND_TOKEN})
+        req = requests.get(Question.api_url + "random_question",params={"level":level,"category":cat,"number" : number},headers={"Authorization":config.BACKEND_TOKEN})
         
         if req.status_code == 200:
-            return Question(req.json())
+            if number == 1 :
+                return Question(req.json()[0])
+            else :
+                return [Question(q) for q in req.json()]
         else :
             return None
+        
     def get_answers(self):
 
         return self.answer.show_answers()

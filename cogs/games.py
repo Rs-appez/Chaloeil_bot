@@ -2,6 +2,7 @@ from nextcord.ext import commands
 from nextcord.interactions import Interaction
 from nextcord import slash_command , ChannelType 
 from models.games.battleRoyal import BattleRoyal
+from models.games.quizz import Quizz
 from views.games.joinGameView import JoinGameView
 from views.games.statementView import StatementView
 from nextcord import SlashOption
@@ -21,11 +22,11 @@ class Game(commands.Cog):
     @slash_command(name="battle_royal_quizz",description="Get the 👑",dm_permission=False,default_member_permissions= 0)
     async def br(self,interaction : Interaction, category  : str = SlashOption(name="categorie",description="Choisi une categorie",required=False,choices=choices) ):
         """Start a battle royal quizz game"""
-        if interaction.channel.type in [ChannelType.news_thread,ChannelType.public_thread,ChannelType.private_thread] :
-            await interaction.response.send_message("Tu ne peux pas lancer un jeu dans un thread",ephemeral=True)
-            return
         
         channel = await self.__create_game_channel(interaction,"battle royal")
+        if not channel :
+            return 
+        
         br = BattleRoyal(channel,interaction.user.id,category)
 
         chaloeil_emoji = self.bot.ch_emojis["chaloeil"] if "chaloeil"  in self.bot.ch_emojis else None
@@ -35,9 +36,30 @@ class Game(commands.Cog):
         await interaction.channel.send("Rejoint la partie !",view=JoinGameView(br,chaloeil_emoji))
         await interaction.response.send_message("Afficher l'énoncé",view=StatementView(br),ephemeral=True)
 
+    @slash_command(name="quizz_battle",description="Get the 🪜",dm_permission=False,default_member_permissions= 0)
+    async def quizz(self,interaction : Interaction, nb_question : int, category  : str = SlashOption(name="categorie",description="Choisi une categorie",required=False,choices=choices) ):
+        """Start a quizz battle game"""
+        
+        channel = await self.__create_game_channel(interaction,"battle royal")
+        if not channel :
+            return 
+        
+        quizz = Quizz(channel,interaction.user.id,category,nb_question)
+
+        chaloeil_emoji = self.bot.ch_emojis["chaloeil"] if "chaloeil"  in self.bot.ch_emojis else None
+        delire_blason = self.bot.ch_emojis['delire'] if "delire" in self.bot.ch_emojis else None
+
+        await channel.send(f"{delire_blason} {chaloeil_emoji} WELCOME {chaloeil_emoji} {delire_blason}")
+        await interaction.channel.send("Rejoint la partie !",view=JoinGameView(quizz,chaloeil_emoji))
+        await interaction.response.send_message("Afficher l'énoncé",view=StatementView(quizz),ephemeral=True)
+
 
     async def __create_game_channel(self,interaction : Interaction,name_channel):
 
+        if interaction.channel.type in [ChannelType.news_thread,ChannelType.public_thread,ChannelType.private_thread] :
+            await interaction.response.send_message("Tu ne peux pas lancer un jeu dans un thread",ephemeral=True)
+            return None
+        
         if interaction.channel.type == ChannelType.private :
             game_channel = interaction.channel
         else :

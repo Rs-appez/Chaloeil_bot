@@ -1,3 +1,4 @@
+from models.games.question import Question
 from models.games.quizz import Quizz
 
 
@@ -7,6 +8,10 @@ class BattleRoyal(Quizz):
         super().__init__(channel, creator_id, category)
         
         self.statement_string = "battle !!!\nblablabla"
+
+    def _get_question(self):
+
+        return Question.get_question(self.nb_question ,cat=self.category)
 
     def _compute_score(self):
 

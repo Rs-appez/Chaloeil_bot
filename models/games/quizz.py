@@ -9,21 +9,25 @@ from views.games.startView import StartView
 
 class Quizz():
 
-    def __init__(self, channel, creator_id, category) -> None:
+    def __init__(self, channel, creator_id, category, nb_question = 1) -> None:
         self.channel = channel
         self.creator_id = creator_id
         self.category = category
+        self.nb_question = nb_question
         self.players = []
         self.player_answer = []
         self.current_question = None
         self.timer = None
 
         self.statement_string = "blabla\nblablabla"
+        self.questions = None
 
-    def __get_question(self):
+    def _get_question(self):
+        if self.questions is None or len(self.questions) == 0 :
+            self.questions = Question.get_question(self.nb_question,cat=self.category)
 
-        return Question.get_question(cat=self.category)
-    
+        return self.questions.pop(0)
+
     async def launch_statement(self):
         await self.channel.send(self.statement_string,view=StartView(self))
 
@@ -32,7 +36,7 @@ class Quizz():
         await self.show_question()
 
     async def show_question(self):
-        self.current_question = self.__get_question()
+        self.current_question = self._get_question()
         if self.current_question is None:
             await self.channel.send("Erreur lors de la récupération de la question 😭",view=ReloadQuestionView(self))
             return
@@ -61,11 +65,20 @@ class Quizz():
             self.timer.stop()
 
     def _compute_score(self):
-        print("compute score")
-        pass
+        
+        for player in self.players:
+            player_answer = [pa[1] for pa in self.player_answer if pa[0] == player]
+            if len(player_answer) > 0 and self.current_question.check_answer(player_answer[0]):
+                player.add_point()
+
 
     def _display_player(self, res_string):
-        pass
+        res_string += "\n__Classement des joueurs :__\n"
+        for player in sorted(self.players,key=lambda p: p.points,reverse=True):
+
+            res_string += f"{player} : {player.points} points !\n"
+            
+        return res_string
 
     async def check_result(self):
 
@@ -86,7 +99,7 @@ class Quizz():
         await self.__next_question()
 
     def _check_winner(self):
-       pass
+       return len(self.questions) == 0
     
     async def __next_question(self):
         if self._check_winner():

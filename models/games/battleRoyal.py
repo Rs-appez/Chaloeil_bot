@@ -6,7 +6,7 @@ class BattleRoyal(Quizz):
     def __init__(self, channel, creator_id, category) -> None:
         super().__init__(channel, creator_id, category)
         
-    
+        self.statement_string = "battle !!!\nblablabla"
 
     def _compute_score(self):
 

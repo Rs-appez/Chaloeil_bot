@@ -18,12 +18,14 @@ class Quizz():
         self.current_question = None
         self.timer = None
 
+        self.statement_string = "blabla\nblablabla"
+
     def __get_question(self):
 
         return Question.get_question(cat=self.category)
     
     async def launch_statement(self):
-        await self.channel.send("blabla\nblablabla",view=StartView(self))
+        await self.channel.send(self.statement_string,view=StartView(self))
 
     async def start(self):
         await self.__init_players()

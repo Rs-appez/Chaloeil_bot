@@ -21,11 +21,11 @@ class Game(commands.Cog):
     @slash_command(name="battle_royal_quizz",description="Get the 👑",dm_permission=False,default_member_permissions= 0)
     async def br(self,interaction : Interaction, category  : str = SlashOption(name="categorie",description="Choisi une categorie",required=False,choices=choices) ):
         """Start a battle royal quizz game"""
-        if interaction.channel.type in [ChannelType.news_thread,ChannelType.public_thread,ChannelType.private_thread] :
-            await interaction.response.send_message("Tu ne peux pas lancer un jeu dans un thread",ephemeral=True)
-            return
         
         channel = await self.__create_game_channel(interaction,"battle royal")
+        if not channel :
+            return 
+        
         br = BattleRoyal(channel,interaction.user.id,category)
 
         chaloeil_emoji = self.bot.ch_emojis["chaloeil"] if "chaloeil"  in self.bot.ch_emojis else None
@@ -38,6 +38,10 @@ class Game(commands.Cog):
 
     async def __create_game_channel(self,interaction : Interaction,name_channel):
 
+        if interaction.channel.type in [ChannelType.news_thread,ChannelType.public_thread,ChannelType.private_thread] :
+            await interaction.response.send_message("Tu ne peux pas lancer un jeu dans un thread",ephemeral=True)
+            return None
+        
         if interaction.channel.type == ChannelType.private :
             game_channel = interaction.channel
         else :

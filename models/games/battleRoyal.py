@@ -6,6 +6,7 @@ class BattleRoyal(Quizz):
     def __init__(self, channel, creator_id, category) -> None:
         super().__init__(channel, creator_id, category)
         
+    
 
     def _compute_score(self):
 
@@ -21,7 +22,15 @@ class BattleRoyal(Quizz):
         else :
             for player in self.players:
                 player.add_life_point()
-    
+
+    def _display_player(self, res_string):
+        res_string += "\n__Joueur encore dans la course :__\n"
+        for player in sorted(self.players,key=lambda p: p.life_point,reverse=True):
+
+            res_string += f"{player} : {player.life_point} pdv\n"
+        
+        return res_string
+
     def _check_winner(self):
         if len(self.players) == 1:
             return True

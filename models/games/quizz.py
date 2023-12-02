@@ -62,6 +62,9 @@ class Quizz():
         print("compute score")
         pass
 
+    def _display_player(self, res_string):
+        pass
+
     async def check_result(self):
 
         self._compute_score()
@@ -73,10 +76,7 @@ class Quizz():
         else :
             res_string = f"Les réponses étaient : **{', '.join(answers)}**\n"
             
-        res_string += "\n__Joueur encore dans la course :__\n"
-        for player in sorted(self.players,key=lambda p: p.life_point,reverse=True):
-
-            res_string += f"{player} : {player.life_point} pdv\n"
+        res_string = self._display_player(res_string)
             
         self.player_answer = []
         await self.channel.send(res_string)

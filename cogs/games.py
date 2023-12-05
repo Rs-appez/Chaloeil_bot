@@ -29,12 +29,7 @@ class Game(commands.Cog):
         
         br = BattleRoyal(channel,interaction.user.id,category)
 
-        chaloeil_emoji = self.bot.ch_emojis["chaloeil"] if "chaloeil"  in self.bot.ch_emojis else None
-        delire_blason = self.bot.ch_emojis['delire'] if "delire" in self.bot.ch_emojis else None
-
-        await channel.send(f"{delire_blason} {chaloeil_emoji} WELCOME {chaloeil_emoji} {delire_blason}")
-        await interaction.channel.send("Rejoint la partie !",view=JoinGameView(br,chaloeil_emoji))
-        await interaction.response.send_message("Afficher l'énoncé",view=StatementView(br),ephemeral=True)
+        await self.__init_game(interaction,br,channel)
 
     @slash_command(name="quizz_battle",description="Get the 🪜",dm_permission=False,default_member_permissions= 0)
     async def quizz(self,interaction : Interaction, nb_question : int, category  : str = SlashOption(name="categorie",description="Choisi une categorie",required=False,choices=choices) ):
@@ -46,12 +41,9 @@ class Game(commands.Cog):
         
         quizz = Quizz(channel,interaction.user.id,category,nb_question)
 
-        chaloeil_emoji = self.bot.ch_emojis["chaloeil"] if "chaloeil"  in self.bot.ch_emojis else None
-        delire_blason = self.bot.ch_emojis['delire'] if "delire" in self.bot.ch_emojis else None
+        await self.__init_game(interaction,quizz,channel)
+        
 
-        await channel.send(f"{delire_blason} {chaloeil_emoji} WELCOME {chaloeil_emoji} {delire_blason}")
-        await interaction.channel.send("Rejoint la partie !",view=JoinGameView(quizz,chaloeil_emoji))
-        await interaction.response.send_message("Afficher l'énoncé",view=StatementView(quizz),ephemeral=True)
 
 
     async def __create_game_channel(self,interaction : Interaction,name_channel):
@@ -66,6 +58,14 @@ class Game(commands.Cog):
             game_channel = await interaction.channel.create_thread(name=name_channel,reason = f"{name_channel} started",type=ChannelType.private_thread)
         return game_channel
 
+    async def __init_game(self,interaction : Interaction,game, game_channel):
 
+        chaloeil_emoji = self.bot.ch_emojis["chaloeil"] if "chaloeil"  in self.bot.ch_emojis else None
+        delire_blason = self.bot.ch_emojis['delire'] if "delire" in self.bot.ch_emojis else None
+
+        await game_channel.send(f"{delire_blason} {chaloeil_emoji} WELCOME {chaloeil_emoji} {delire_blason}")
+        await interaction.channel.send("Rejoint la partie !",view=JoinGameView(game,chaloeil_emoji))
+        await interaction.response.send_message("Afficher l'énoncé",view=StatementView(game),ephemeral=True)
+        
 def setup(bot):
     bot.add_cog(Game(bot))

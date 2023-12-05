@@ -40,7 +40,7 @@ class Game(commands.Cog):
     async def quizz(self,interaction : Interaction, nb_question : int, category  : str = SlashOption(name="categorie",description="Choisi une categorie",required=False,choices=choices) ):
         """Start a quizz battle game"""
         
-        channel = await self.__create_game_channel(interaction,"battle royal")
+        channel = await self.__create_game_channel(interaction,"quizz battle")
         if not channel :
             return 
         

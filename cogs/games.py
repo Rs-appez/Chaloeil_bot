@@ -44,8 +44,6 @@ class Game(commands.Cog):
         await self.__init_game(interaction,quizz,channel)
         
 
-
-
     async def __create_game_channel(self,interaction : Interaction,name_channel):
 
         if interaction.channel.type in [ChannelType.news_thread,ChannelType.public_thread,ChannelType.private_thread] :
@@ -66,6 +64,6 @@ class Game(commands.Cog):
         await game_channel.send(f"{delire_blason} {chaloeil_emoji} WELCOME {chaloeil_emoji} {delire_blason}")
         await interaction.channel.send("Rejoint la partie !",view=JoinGameView(game,chaloeil_emoji))
         await interaction.response.send_message("Afficher l'énoncé",view=StatementView(game),ephemeral=True)
-        
+
 def setup(bot):
     bot.add_cog(Game(bot))

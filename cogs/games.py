@@ -39,7 +39,7 @@ class Game(commands.Cog):
         if not channel :
             return 
         
-        quizz = Quizz(channel,interaction.user.id,category,nb_question)
+        quizz = Quizz(channel,interaction.user.id,category,nb_question, team = True)
 
         await self.__init_game(interaction,quizz,channel)
         

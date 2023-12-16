@@ -1,20 +1,24 @@
 import asyncio
 from models.games.timer import Timer
 from models.games.player import Player
+from models.games.team import Team
 from models.games.question import Question
 from views.games.answerView import AnswerView
 import config
+from views.games.createTeamView import CreateTeamView
 from views.games.reloadQuestionView import ReloadQuestionView
 from views.games.startView import StartView
 
 class Quizz():
 
-    def __init__(self, channel, creator_id, category, nb_question = 1) -> None:
+    def __init__(self, channel, creator_id, category, nb_question = 1, team = False) -> None:
         self.channel = channel
         self.creator_id = creator_id
         self.category = category
         self.nb_question = nb_question
+        self.team = team
         self.players = []
+        self.teams = []
         self.player_answer = []
         self.current_question = None
         self.timer = None
@@ -33,9 +37,14 @@ class Quizz():
 
     async def start(self):
         await self.__init_players()
-        await self.show_question()
+
+        if self.team :
+            await self.__init_teams()
+        else :
+            await self.show_question()
 
     async def show_question(self):
+        print(self.teams)
         self.current_question = self._get_question()
         if self.current_question is None:
             await self.channel.send("Erreur lors de la récupération de la question 😭",view=ReloadQuestionView(self))
@@ -52,6 +61,13 @@ class Quizz():
         for player in await self.channel.fetch_members():
             if not player.id == int(config.CHALOEIL_ID):
                 self.players.append(Player(await player.fetch_member()))
+    
+    async def __init_teams(self):
+        await self.channel.send("Crée ton équipe !",view=CreateTeamView(self))
+
+    async def add_team(self,team : Team):
+        self.teams.append(team)
+        
 
     async def set_player_answer(self,player : Player, answer : str):
 

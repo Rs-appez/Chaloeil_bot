@@ -12,11 +12,7 @@ class Team(Player):
     def __str__(self) -> str:
         string = f"**{self.name}** ( "
         for member in self.members:
-            if member.nick :
-                string += f"{member.nick}, "
-            else :
-                string += f"{member.name}, "
-
+                string += f"{member}, "
         return string[:-2] + " )"
         
     async def dm(self,msg,view = None):

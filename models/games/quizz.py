@@ -87,20 +87,23 @@ class Quizz():
 
         self.player_answer.append((player,answer))
 
-        if len(self.players) == len(self.player_answer):
+        nb_players = len(self.players) if not self.team else len(self.teams)
+
+        if nb_players == len(self.player_answer):
             self.timer.stop()
 
-    def _compute_score(self):
+    def _compute_score(self,players):
         
-        for player in self.players:
+
+        for player in players:
             player_answer = [pa[1] for pa in self.player_answer if pa[0] == player]
             if len(player_answer) > 0 and self.current_question.check_answer(player_answer[0]):
                 player.add_point()
 
 
-    def _display_player(self, res_string):
+    def _display_player(self, res_string,players):
         res_string += "\n__Classement des joueurs :__\n"
-        for player in sorted(self.players,key=lambda p: p.points,reverse=True):
+        for player in sorted(players,key=lambda p: p.points,reverse=True):
 
             res_string += f"{player} : {player.points} points !\n"
             
@@ -108,7 +111,9 @@ class Quizz():
 
     async def check_result(self):
 
-        self._compute_score()
+        players = self.players if not self.team else self.teams
+
+        self._compute_score(players)
 
         #Display result
         answers = self.current_question.get_good_answers()
@@ -117,19 +122,19 @@ class Quizz():
         else :
             res_string = f"Les réponses étaient : **{', '.join(answers)}**\n"
             
-        res_string = self._display_player(res_string)
+        res_string = self._display_player(res_string,players)
             
         self.player_answer = []
         await self.channel.send(res_string)
 
-        await self.__next_question()
+        await self.__next_question(players)
 
-    def _check_winner(self):
+    def _check_winner(self,players):
        return len(self.questions) == 0
     
-    async def __next_question(self):
-        if self._check_winner():
-            await self.channel.send(f"\n**{self.players[0]} a gagné !**")
+    async def __next_question(self,players):
+        if self._check_winner(players):
+            await self.channel.send(f"\n** {players[0]} a gagné ! **")
             await asyncio.sleep(10)
             await self.channel.send("💥  *Ce channel va s'autodétruire dans 60 secondes !* 💥")
             await self.channel.send("https://tenor.com/view/self-destruction-imminent-please-evacuate-gif-8912211")

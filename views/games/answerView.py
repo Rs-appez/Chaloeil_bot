@@ -11,8 +11,12 @@ class AnswerView(View):
             super().__init__(label=answer,style=ButtonStyle.primary)
 
         async def callback(self,interaction):
-            
+
             player = [p for p in self.view.game.players if p.member.id == interaction.user.id]
+
+            if self.view.game.team :
+                player = [t for t in self.view.game.teams if player[0] in t.members]
+                
 
             if player :
                 await interaction.response.send_message(content=f"Tu as répondu : \"_{self.answer}_\"",ephemeral=True)

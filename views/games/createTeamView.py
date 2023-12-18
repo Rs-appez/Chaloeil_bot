@@ -22,11 +22,13 @@ class CreateTeamView(View):
 
         self.add_item(self.team_members)
 
-    async def add_team(self,team_name,team_members):
+    async def add_team(self,team_name,team_members,interaction):
 
         team_members = [player for player in self.game.players if str(player) in team_members]
         
-        await self.game.add_team(Team(team_members,team_name))
+        if not self.game.add_team(Team(team_members,team_name)):
+            await interaction.response.send_message("Certains joueurs sont déjà dans une équipe.",ephemeral=True)
+            return
 
         list_team = "Liste des équipes : \n"
 

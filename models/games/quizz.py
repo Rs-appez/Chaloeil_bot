@@ -44,7 +44,6 @@ class Quizz():
             await self.show_question()
 
     async def show_question(self):
-        print(self.teams)
         self.current_question = self._get_question()
         if self.current_question is None:
             await self.channel.send("Erreur lors de la récupération de la question 😭",view=ReloadQuestionView(self))
@@ -64,11 +63,21 @@ class Quizz():
     
     async def __init_teams(self):
         list_team_msg = await self.channel.send("Aucune équipe pour le moment")
-        await self.channel.send("Crée ton équipe !",view=CreateTeamView(self,list_team_msg))
+        await self.channel.send("Crée ton équipe ! *(Selectione **tout** les membres de ton équipe dans le menu déroulant)*",view=CreateTeamView(self,list_team_msg))
 
-    async def add_team(self,team : Team):
-        self.teams.append(team)
-        
+    def add_team(self,team : Team):
+        if self.check_team_player(team.members) :
+            self.teams.append(team)
+            return True
+        else :
+            return False
+
+    def check_team_player(self,players) -> bool:
+        for team in self.teams:
+            if not all(player not in team.members for player in players):
+                return False
+            
+        return True
 
     async def set_player_answer(self,player : Player, answer : str):
 

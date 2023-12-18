@@ -9,10 +9,6 @@ class BattleRoyal(Quizz):
         
         self.statement_string = "battle !!!\nblablabla"
 
-    def _get_question(self):
-
-        return Question.get_question(self.nb_question ,cat=self.category)
-
     def _compute_score(self,players):
 
         for player in players:

@@ -26,7 +26,7 @@ class Quizz():
         self.statement_string = "blabla\nblablabla"
         self.questions = None
 
-    def _get_question(self):
+    def __get_question(self):
         if self.questions is None or len(self.questions) == 0 :
             self.questions = Question.get_question(self.nb_question,cat=self.category)
 
@@ -44,7 +44,7 @@ class Quizz():
             await self.show_question()
 
     async def show_question(self):
-        self.current_question = self._get_question()
+        self.current_question = self.__get_question()
         if self.current_question is None:
             await self.channel.send("Erreur lors de la récupération de la question 😭",view=ReloadQuestionView(self))
             return

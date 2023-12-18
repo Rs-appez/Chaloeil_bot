@@ -2,7 +2,7 @@ from nextcord import ButtonStyle
 from nextcord.ui import View, button
 
 from views.games.teamModal import TeamModal
-from nextcord.ui import Select , UserSelect, UserSelectValues
+from nextcord.ui import Select
 from nextcord import SelectOption
 from models.games.team import Team
 
@@ -45,7 +45,8 @@ class CreateTeamView(View):
     async def start(self,button,interaction):
 
         if interaction.user.id == self.game.creator_id :
-            button.disabled = True
+            for btn in self.children :
+                btn.disabled = True
             await interaction.response.edit_message(view=self)
             await self.game.show_question()
 

@@ -23,6 +23,7 @@ class Quizz():
         self.current_question = None
         self.timer = None
 
+        self.list_team_msg = None
         self.statement_string = "blabla\nblablabla"
         self.questions = None
 
@@ -62,8 +63,8 @@ class Quizz():
                 self.players.append(Player(await player.fetch_member()))
     
     async def __init_teams(self):
-        list_team_msg = await self.channel.send("Aucune équipe pour le moment")
-        await self.channel.send("Crée ton équipe ! *(Selectione **tout** les membres de ton équipe dans le menu déroulant)*",view=CreateTeamView(self,list_team_msg))
+        self.list_team_msg = await self.channel.send("Aucune équipe pour le moment")
+        await self.channel.send("Crée ton équipe !",view=CreateTeamView(self))
 
     def add_team(self,team : Team):
         if self.check_team_player(team.members) :
@@ -136,16 +137,25 @@ class Quizz():
     
     async def __next_question(self,players):
         if self._check_winner(players):
-
-            await self.channel.send(f"\n** {players[0]} a gagné ! **")
-            await asyncio.sleep(10)
-            await self.channel.send("💥  *Ce channel va s'autodétruire dans 60 secondes !* 💥")
-            await self.channel.send("https://tenor.com/view/self-destruction-imminent-please-evacuate-gif-8912211")
-            await asyncio.sleep(60)
-            await self.self_destruct()
+            await self.display_winner(players)
         else :
             await asyncio.sleep(8)
             await self.show_question()
 
     async def self_destruct(self):
         await self.channel.delete()
+
+    async def display_winner(self,players):
+        players = sorted(players,key=lambda p: p.points,reverse=True)
+        winners = [p for p in players if p.points == players[0].points]
+        
+        if len(winners) > 1:
+            await self.channel.send(f"\n** {', '.join([str(winner) for winner in winners])} ont gagné ! **")
+        else :
+            await self.channel.send(f"\n** {players[0]} a gagné ! **")
+
+        await asyncio.sleep(10)
+        await self.channel.send("💥  *Ce channel va s'autodétruire dans 60 secondes !* 💥")
+        await self.channel.send("https://tenor.com/view/self-destruction-imminent-please-evacuate-gif-8912211")
+        await asyncio.sleep(60)
+        await self.self_destruct()

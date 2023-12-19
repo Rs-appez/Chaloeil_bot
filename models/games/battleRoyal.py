@@ -4,8 +4,8 @@ from models.games.quizz import Quizz
 
 class BattleRoyal(Quizz):
 
-    def __init__(self, channel, creator_id, category) -> None:
-        super().__init__(channel, creator_id, category)
+    def __init__(self, channel, creator_id, category, team = False) -> None:
+        super().__init__(channel, creator_id, category, team=team)
         
         self.statement_string = "battle !!!\nblablabla"
 

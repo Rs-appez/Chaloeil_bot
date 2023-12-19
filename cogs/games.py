@@ -20,26 +20,26 @@ class Game(commands.Cog):
 
 
     @slash_command(name="battle_royal_quizz",description="Get the 👑",dm_permission=False,default_member_permissions= 0)
-    async def br(self,interaction : Interaction, category  : str = SlashOption(name="categorie",description="Choisi une categorie",required=False,choices=choices) ):
+    async def br(self,interaction : Interaction, category  : str = SlashOption(name="categorie",description="Choisi une categorie",required=False,choices=choices), team : bool = SlashOption(name="team",description="Jouer en équipe",required=False, default=False)):
         """Start a battle royal quizz game"""
         
         channel = await self.__create_game_channel(interaction,"battle royal")
         if not channel :
             return 
         
-        br = BattleRoyal(channel,interaction.user.id,category)
+        br = BattleRoyal(channel,interaction.user.id,category, team = team)
 
         await self.__init_game(interaction,br,channel)
 
     @slash_command(name="quizz_battle",description="Get the 🪜",dm_permission=False,default_member_permissions= 0)
-    async def quizz(self,interaction : Interaction, nb_question : int, category  : str = SlashOption(name="categorie",description="Choisi une categorie",required=False,choices=choices) ):
+    async def quizz(self,interaction : Interaction, nb_question : int, category  : str = SlashOption(name="categorie",description="Choisi une categorie",required=False,choices=choices) , team : bool = SlashOption(name="team",description="Jouer en équipe",required=False, default=False)):
         """Start a quizz battle game"""
         
         channel = await self.__create_game_channel(interaction,"quizz battle")
         if not channel :
             return 
         
-        quizz = Quizz(channel,interaction.user.id,category,nb_question, team = True)
+        quizz = Quizz(channel,interaction.user.id,category,nb_question, team = team)
 
         await self.__init_game(interaction,quizz,channel)
         

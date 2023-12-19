@@ -11,15 +11,19 @@ class AnswerView(View):
             super().__init__(label=answer,style=ButtonStyle.primary)
 
         async def callback(self,interaction):
-            
+
             player = [p for p in self.view.game.players if p.member.id == interaction.user.id]
+
+            if self.view.game.team :
+                player = [t for t in self.view.game.teams if player[0] in t.members]
+                
 
             if player :
                 await interaction.response.send_message(content=f"Tu as répondu : \"_{self.answer}_\"",ephemeral=True)
                 await self.view.game.set_player_answer(player[0],self.answer)
                 
             else :
-                await interaction.response.send_message(content=f"https://tenor.com/view/the-sixth-sense-haley-joel-osment-cole-sear-i-see-dead-people-dead-gif-4431095",ephemeral=True)
+                await interaction.response.send_message(content="https://tenor.com/view/the-sixth-sense-haley-joel-osment-cole-sear-i-see-dead-people-dead-gif-4431095",ephemeral=True)
 
     def __init__(self,game,question):
 

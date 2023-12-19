@@ -20,7 +20,7 @@ class Question():
         
         if req.status_code == 200:
             if number == 1 :
-                return Question(req.json()[0])
+                return [Question(req.json()[0])]
             else :
                 return [Question(q) for q in req.json()]
         else :

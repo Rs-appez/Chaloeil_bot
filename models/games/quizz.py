@@ -103,7 +103,9 @@ class Quizz():
 
     def _display_player(self, res_string,players):
         res_string += "\n__Classement des joueurs :__\n"
-        for player in sorted(players,key=lambda p: p.points,reverse=True):
+        players = sorted(players,key=lambda p: p.points,reverse=True)
+
+        for player in players:
 
             res_string += f"{player} : {player.points} points !\n"
             
@@ -134,6 +136,7 @@ class Quizz():
     
     async def __next_question(self,players):
         if self._check_winner(players):
+
             await self.channel.send(f"\n** {players[0]} a gagné ! **")
             await asyncio.sleep(10)
             await self.channel.send("💥  *Ce channel va s'autodétruire dans 60 secondes !* 💥")

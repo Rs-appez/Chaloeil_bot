@@ -23,6 +23,7 @@ class Quizz():
         self.current_question = None
         self.timer = None
 
+        self.list_team_msg = None
         self.statement_string = "blabla\nblablabla"
         self.questions = None
 
@@ -62,8 +63,8 @@ class Quizz():
                 self.players.append(Player(await player.fetch_member()))
     
     async def __init_teams(self):
-        list_team_msg = await self.channel.send("Aucune équipe pour le moment")
-        await self.channel.send("Crée ton équipe ! *(Selectione **tout** les membres de ton équipe dans le menu déroulant)*",view=CreateTeamView(self,list_team_msg))
+        self.list_team_msg = await self.channel.send("Aucune équipe pour le moment")
+        await self.channel.send("Crée ton équipe !",view=CreateTeamView(self))
 
     def add_team(self,team : Team):
         if self.check_team_player(team.members) :

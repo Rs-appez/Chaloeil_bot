@@ -16,4 +16,4 @@ for file in os.listdir("./cogs"):
     if(file.endswith(".py")):
         chaloeil.load_extension(f"cogs.{file[:-3]}")
 
-chaloeil.run(config.CHALOEIL_TOKEN)
+chaloeil.run(config.CHALOEIL_TOKEN) 

@@ -2,15 +2,15 @@ from nextcord.ui import Modal, TextInput
 from nextcord import TextInputStyle
 
 class SpeakModal(Modal):
-    def __init__(self,bot):
+    def __init__(self,bot, channel_id):
         super().__init__('Speak Modal')
         self.bot = bot
 
-        self.channel_id = TextInput('Channel ID', placeholder='Channel ID',required=True)
+        self.channel_id = TextInput('Channel ID', placeholder='Channel ID',required=True, default_value=channel_id)
         self.msg = TextInput('Message', placeholder='Message',required=True, style=TextInputStyle.paragraph)
 
-        self.add_item(self.channel_id)  
         self.add_item(self.msg)
+        self.add_item(self.channel_id)
 
     async def callback(self, interaction):
         try:

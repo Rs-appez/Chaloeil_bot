@@ -24,7 +24,7 @@ class Quizz():
         self.timer = None
 
         self.list_team_msg = None
-        self.statement_string = "blabla\nblablabla"
+        self.statement_string = f"Bienvenue dans le grand quiz du Chaloeil !\n\nVous allez devoir répondre à une série de {nb_question} questions.\n\n**__Règles__** :\n\n> 1 minute par question\n> fin de la question si tous les joueurs ont répondu\n> vous pouvez changer de réponse tant que tous les joueurs n'ont pas répondu"
         self.questions = None
 
     def __get_question(self):

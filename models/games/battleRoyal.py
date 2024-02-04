@@ -1,4 +1,3 @@
-from models.games.question import Question
 from models.games.quizz import Quizz
 
 

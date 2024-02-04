@@ -22,6 +22,8 @@ class BattleRoyal(Quizz):
             for player in self.players:
                 player.add_life_point()
 
+        return players
+    
     def _display_player(self, res_string,players):
         res_string += "\n__Joueur encore dans la course :__\n"
         players = sorted(players,key=lambda p: p.life_point,reverse=True)

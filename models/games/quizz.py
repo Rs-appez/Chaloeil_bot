@@ -101,6 +101,8 @@ class Quizz():
             if len(player_answer) > 0 and self.current_question.check_answer(player_answer[0]):
                 player.add_point()
 
+        return players
+
 
     def _display_player(self, res_string,players):
         res_string += "\n__Classement des joueurs :__\n"
@@ -116,7 +118,8 @@ class Quizz():
 
         players = self.players if not self.team else self.teams
 
-        self._compute_score(players)
+        players = self._compute_score(players)
+
 
         #Display result
         answers = self.current_question.get_good_answers()

@@ -6,7 +6,7 @@ class BattleRoyal(Quizz):
     def __init__(self, channel, creator_id, category, team = False) -> None:
         super().__init__(channel, creator_id, category, team=team)
         
-        self.statement_string = f"Bienvenue dans le grand quiz du Chaloeil !\n\nVous allez devoir répondre à une série de {self.nb_question} questions.\nVous partez à 3 points de vie.\nNe pas répondre correctement à une question vous fait perdre 1 point de vie.\n\n**__Règles__** :\n\n> 1 minute par question\n> fin de la question si tous les joueurs ont répondu\n> vous pouvez changer de réponse tant que tous les joueurs n'ont pas répondu\n> si tous les joueurs meurent en même temps, le round est annulé."
+        self.statement_string = f"Bienvenue dans le grand quiz du Chaloeil !\n\nVous allez devoir répondre à une série de questions.\nVous partez à 3 points de vie.\nNe pas répondre correctement à une question vous fait perdre 1 point de vie.\n\n**__Règles__** :\n\n> {self.time_to_answer} secondes par question\n> fin de la question si tous les joueurs ont répondu\n> vous pouvez changer de réponse tant que tous les joueurs n'ont pas répondu\n> si tous les joueurs meurent en même temps, le round est annulé."
     def _compute_score(self,players):
 
         for player in players:

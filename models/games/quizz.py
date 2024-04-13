@@ -22,9 +22,10 @@ class Quizz():
         self.player_answer = []
         self.current_question = None
         self.timer = None
+        self.time_to_answer = 30
 
         self.list_team_msg = None
-        self.statement_string = f"Bienvenue dans le grand quiz du Chaloeil !\n\nVous allez devoir répondre à une série de {nb_question} questions.\n\n**__Règles__** :\n\n> 1 minute par question\n> fin de la question si tous les joueurs ont répondu\n> vous pouvez changer de réponse tant que tous les joueurs n'ont pas répondu"
+        self.statement_string = f"Bienvenue dans le grand quiz du Chaloeil !\n\nVous allez devoir répondre à une série de {nb_question} questions.\n\n**__Règles__** :\n\n> {self.time_to_answer} secondes par question\n> fin de la question si tous les joueurs ont répondu\n> vous pouvez changer de réponse tant que tous les joueurs n'ont pas répondu"
         self.questions = None
 
     def __get_question(self):
@@ -54,7 +55,7 @@ class Quizz():
             await self.channel.send(self.current_question.image_url)
         await self.channel.send(question_msg,view=AnswerView(self,self.current_question))
 
-        self.timer = Timer(40, self.check_result,asyncio.get_running_loop())
+        self.timer = Timer(self.time_to_answer, self.check_result,asyncio.get_running_loop())
 
 
     async def __init_players(self):
@@ -142,7 +143,7 @@ class Quizz():
         if self._check_winner(players):
             await self.display_winner(players)
         else :
-            await asyncio.sleep(8)
+            await asyncio.sleep(5)
             await self.show_question()
 
     async def self_destruct(self):

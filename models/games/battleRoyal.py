@@ -11,6 +11,9 @@ class BattleRoyal(Quizz):
             "> fin de la question si tous les joueurs ont répondu\n> vous pouvez changer de réponse tant que tous les joueurs n'ont pas répondu\n" \
             "> si tous les joueurs meurent en même temps, le round est annulé."
         
+    async def show_question(self, altenative_sentence = None):
+        await super().show_question("")
+        
     def _compute_score(self,players):
 
         for player in players:

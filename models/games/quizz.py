@@ -49,7 +49,7 @@ class Quizz:
         else:
             await self.show_question()
 
-    async def show_question(self):
+    async def show_question(self, altenative_sentence = -1):
         self.current_question = self.__get_question()
         if self.current_question is None:
             await self.channel.send(
@@ -57,7 +57,10 @@ class Quizz:
                 view=ReloadQuestionView(self),
             )
             return
-        question_msg = "‎ ‎\n" + self.current_question.question
+        
+        altenative_sentence = f"__**Question n°{self.nb_question - len(self.questions)}**__ :" if  altenative_sentence == -1 else altenative_sentence
+        question_msg = f"‎ ‎\n{altenative_sentence}\n" + self.current_question.question
+
         if self.current_question.image_url:
             await self.channel.send(self.current_question.image_url)
         await self.channel.send(

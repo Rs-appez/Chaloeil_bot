@@ -10,6 +10,7 @@ class BattleRoyal(Quizz):
             f"Ne pas répondre correctement à une question vous fait perdre 1 point de vie.\n\n**__Règles__** :\n\n> {self.time_to_answer} secondes par question\n" \
             "> fin de la question si tous les joueurs ont répondu\n> vous pouvez changer de réponse tant que tous les joueurs n'ont pas répondu\n" \
             "> si tous les joueurs meurent en même temps, le round est annulé."
+        
     def _compute_score(self,players):
 
         for player in players:

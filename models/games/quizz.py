@@ -128,6 +128,11 @@ class Quizz:
 
         players = self._compute_score(players)
 
+        if self.team:
+            self.teams = players
+        else:
+            self.players = players
+
         # Display result
         answers = self.current_question.get_good_answers()
         if len(answers) == 1:

@@ -58,8 +58,12 @@ class Quizz:
             )
             return
         
+        time_text = f"‎ ‎\n**Temps restant : {self.time_to_answer} secondes**"
+
         altenative_sentence = f"__**Question n°{self.nb_question - len(self.questions)}**__ :" if  altenative_sentence == -1 else altenative_sentence
         question_msg = f"‎ ‎\n{altenative_sentence}\n" + self.current_question.question
+
+        time_message = await self.channel.send(time_text)
 
         if self.current_question.image_url:
             await self.channel.send(self.current_question.image_url)
@@ -67,8 +71,9 @@ class Quizz:
             question_msg, view=AnswerView(self, self.current_question)
         )
 
+
         self.timer = Timer(
-            self.time_to_answer, self.check_result, asyncio.get_running_loop()
+            self.time_to_answer, self.check_result,time_message, asyncio.get_running_loop()
         )
 
     async def __init_players(self):

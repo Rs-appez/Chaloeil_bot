@@ -62,7 +62,7 @@ class Game(commands.Cog):
         delire_blason = self.bot.ch_emojis['delire'] if "delire" in self.bot.ch_emojis else None
 
         await game_channel.send(f"{delire_blason} {chaloeil_emoji} WELCOME {chaloeil_emoji} {delire_blason}")
-        await interaction.channel.send(f"{chaloeil_emoji} **Participe au grand quiz du Chaloeil !** {chaloeil_emoji}",view=JoinGameView(game,chaloeil_emoji))
+        await interaction.channel.send(f"{chaloeil_emoji} **Participez au grand quiz du Chaloeil !** {chaloeil_emoji}",view=JoinGameView(game,chaloeil_emoji))
         await interaction.response.send_message("Afficher l'énoncé",view=StatementView(game),ephemeral=True)
 
 def setup(bot):

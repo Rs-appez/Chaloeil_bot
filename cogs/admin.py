@@ -1,6 +1,5 @@
 from nextcord.ext import commands
 from nextcord import slash_command
-from interaction_discord_bot.message import Interaction
 
 class Admin(commands.Cog):
     """Admin cmd"""
@@ -10,4 +9,3 @@ class Admin(commands.Cog):
                     
 def setup(bot):
     bot.add_cog(Admin(bot))
-    bot.add_cog(Interaction(bot))

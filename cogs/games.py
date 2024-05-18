@@ -14,6 +14,8 @@ class Game(commands.Cog):
         "Seulement les maps" : "map",
         "Seulement les succès" : "succes",
         "Seulement les archimonstres" : "archimonstre",
+        "Seulement les quêtes" : "quete",
+        "Seulement les items" : "item",
     }
 
     def __init__(self,bot):

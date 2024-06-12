@@ -11,6 +11,6 @@ multidict==6.0.5
 nextcord==2.6.0
 python-decouple==3.8
 requests==2.32.3
-typing_extensions==4.12.1
+typing_extensions==4.12.2
 urllib3==2.2.1
 yarl==1.9.4

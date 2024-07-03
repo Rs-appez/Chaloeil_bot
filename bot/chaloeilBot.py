@@ -50,6 +50,6 @@ class ChaloeilBot(commands.Bot):
                 files = []
                 for file in message.attachments:
                     files.append(await file.to_file())
-                await guild.get_channel(int(config.CHANEL_DM_ID)).send(content=f"**__{message.author} dm me __*: \n{message.content}",embeds=message.embeds,files=files)
+                await guild.get_channel(int(config.CHANEL_DM_ID)).send(content=f"**__{message.author} dm me __**: \n{message.content}",embeds=message.embeds,files=files)
 
 

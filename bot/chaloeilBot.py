@@ -3,6 +3,7 @@ import nextcord
 from nextcord.ext import commands
 import config
 import bleach
+from interaction_discord_bot.utils.message import transfer_message
 
 class ChaloeilBot(commands.Bot):
 
@@ -34,7 +35,6 @@ class ChaloeilBot(commands.Bot):
             self.ch_emojis["delire"] = await guild.fetch_emoji(1027165356168593478)
 
     async def on_message(self,message : Message):
-        print("ok")
         if message.author == self.user:
             return
 
@@ -45,11 +45,8 @@ class ChaloeilBot(commands.Bot):
 
         elif message.channel.type == ChannelType.private:
 
-            guild = self.get_guild(int(config.CHALOEIL_GUILD_ID))
+            guild = self.get_guild(int(config.CELLAR_GUILD_ID))
             if guild :
-                files = []
-                for file in message.attachments:
-                    files.append(await file.to_file())
-                await guild.get_channel(int(config.CHANEL_DM_ID)).send(content=f"**__{message.author} dm me __**: \n{message.content}",embeds=message.embeds,files=files)
+                await transfer_message(message,guild,int(config.CHANNELBOT_LOG_ID))
 
 

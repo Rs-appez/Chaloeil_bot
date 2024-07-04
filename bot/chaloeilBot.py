@@ -45,8 +45,8 @@ class ChaloeilBot(commands.Bot):
 
         elif message.channel.type == ChannelType.private:
 
-            guild = self.get_guild(int(config.CELLAR_GUILD_ID))
+            guild = self.get_guild(int(config.CHALOEIL_GUILD_ID))
             if guild :
-                await transfer_message(message,guild,int(config.CHANNELBOT_LOG_ID))
+                await transfer_message(message,guild,int(config.CHANEL_DM_ID))
 
 

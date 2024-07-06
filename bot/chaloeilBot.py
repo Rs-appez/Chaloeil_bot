@@ -31,6 +31,7 @@ class ChaloeilBot(commands.Bot):
     async def get_emojis(self):
 
         guild = self.get_guild(int(config.DELIRE_GUILD_ID))
+        print(guild)
         if guild :
             self.ch_emojis["delire"] = await guild.fetch_emoji(1027165356168593478)
 

@@ -22,16 +22,16 @@ class ChaloeilBot(commands.Bot):
         print(f"{self.user.display_name} est pret")
         if not config.DEBUG:
             cellar = self.get_guild(int(config.CELLAR_GUILD_ID))
+            chaloeil = self.get_guild(int(config.CHALOEIL_GUILD_ID))
             if cellar :
                 self.ch_emojis["chaloeil"] = await cellar.fetch_emoji(1119363924907790406)
-                msg = await cellar.get_channel(int(config.CHANNELBOT_LOG_ID)).send("UP !")
+                msg = await chaloeil.get_channel(int(config.CHANNELBOT_LOG_ID)).send("UP !")
                 await msg.add_reaction(self.ch_emojis["chaloeil"])
             await self.get_emojis()
 
     async def get_emojis(self):
 
         guild = self.get_guild(int(config.DELIRE_GUILD_ID))
-        print(guild)
         if guild :
             self.ch_emojis["delire"] = await guild.fetch_emoji(1027165356168593478)
 

@@ -1,6 +1,7 @@
 from models.games.answer import Answer
 import config
 import requests
+import random
 
 
 class Question:
@@ -8,7 +9,7 @@ class Question:
 
     def __init__(self, json) -> None:
         self.question = json["question_text"]
-        self.answer = Answer(json["answers"])
+        self.answers = [Answer(a) for a in json["answers"]]
         self.level = json["level"]
         self.cat = json["categories"]
         self.image_url = json["image_url"]
@@ -30,10 +31,12 @@ class Question:
             return None
 
     def get_answers(self):
-        return self.answer.show_answers()
+        answers = self.answers
+        random.shuffle(answers)
+        return answers
 
     def get_good_answers(self):
-        return self.answer.good_answers
+        return [a.answer_text for a in self.answers if a.is_correct]
 
     def check_answer(self, answer):
-        return self.answer.check_answer(answer)
+        return [a for a in self.answers if a.is_correct and a.answer_text == answer] != []

@@ -6,9 +6,10 @@ class AnswerView(View):
     class ButtonAnswer(Button):
 
         def __init__(self,answer):
-            self.answer = answer
+            self.answer = answer.answer_text
+            # self.emoji = answer.emoji
 
-            super().__init__(label=answer,style=ButtonStyle.primary)
+            super().__init__(label=self.answer,style=ButtonStyle.primary)
 
         async def callback(self,interaction):
 

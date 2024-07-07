@@ -17,7 +17,7 @@ class BattleRoyal(Quizz):
     async def show_question(self, altenative_sentence = None):
         await super().show_question("")
 
-    async def __init_players(self):
+    async def _init_players(self):
         for player in await self.channel.fetch_members():
             if not player.id == int(config.CHALOEIL_ID):
                 self.players.append(Player(await player.fetch_member(), life_point=self.life_point))

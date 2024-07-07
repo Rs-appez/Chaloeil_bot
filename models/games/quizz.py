@@ -42,7 +42,7 @@ class Quizz:
         await self.channel.send(self.statement_string, view=StartView(self))
 
     async def start(self):
-        await self.__init_players()
+        await self._init_players()
 
         if self.team:
             await self.__init_teams()
@@ -76,7 +76,7 @@ class Quizz:
             self.time_to_answer, self.check_result,time_message, asyncio.get_running_loop()
         )
 
-    async def __init_players(self):
+    async def _init_players(self):
         for player in await self.channel.fetch_members():
             if not player.id == int(config.CHALOEIL_ID):
                 self.players.append(Player(await player.fetch_member()))

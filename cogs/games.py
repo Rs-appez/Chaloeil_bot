@@ -16,6 +16,7 @@ class Game(commands.Cog):
         "Seulement les archimonstres" : "archimonstre",
         "Seulement les quêtes" : "quete",
         "Seulement les items" : "item",
+        "Seulement les sorts" : "sort",
     }
 
     def __init__(self,bot):

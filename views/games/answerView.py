@@ -7,9 +7,8 @@ class AnswerView(View):
 
         def __init__(self,answer):
             self.answer = answer.answer_text
-            # self.emoji = answer.emoji
 
-            super().__init__(label=self.answer,style=ButtonStyle.primary)
+            super().__init__(label=self.answer,style=ButtonStyle.primary,emoji=answer.emoji)
 
         async def callback(self,interaction):
 

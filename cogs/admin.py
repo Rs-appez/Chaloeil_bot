@@ -1,5 +1,4 @@
 from nextcord.ext import commands
-from nextcord import slash_command
 
 class Admin(commands.Cog):
     """Admin cmd"""

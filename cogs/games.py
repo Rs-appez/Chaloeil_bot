@@ -77,6 +77,9 @@ class Game(commands.Cog):
         team: bool = SlashOption(
             name="team", description="Jouer en équipe", required=False, default=False
         ),
+        flat: bool = SlashOption(
+            name="flat", description="Jouer en flat (toutes les questions raportent le même nombre de point)", required=False, default=False
+        ),
     ):
         """Start a quizz battle game"""
 
@@ -84,7 +87,7 @@ class Game(commands.Cog):
         if not channel:
             return
 
-        quizz = Quizz(channel, interaction.user.id, category, nb_question, team=team)
+        quizz = Quizz(channel, interaction.user.id, category, nb_question, team=team, flat=flat)
 
         await self.__init_game(interaction, quizz, channel)
 

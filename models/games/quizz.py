@@ -12,7 +12,7 @@ from views.games.startView import StartView
 
 class Quizz:
     def __init__(
-        self, channel, creator_id, category, nb_question=1, team=False
+        self, channel, creator_id, category, nb_question=1, team=False, flat=False
     ) -> None:
         self.channel = channel
         self.creator_id = creator_id
@@ -23,14 +23,25 @@ class Quizz:
         self.teams = []
         self.player_answer = []
         self.current_question = None
+        self.questions = None
         self.timer = None
         self.time_to_answer = 30
-
+        self.flat = flat
         self.list_team_msg = None
-        self.statement_string = f"Bienvenue dans le grand quiz du Chaloeil !\n\nVous allez devoir répondre à une série de {nb_question} questions.\n\n" \
-            f"**__Règles__** :\n\n> {self.time_to_answer} secondes par question\n> Fin de la question si tous les joueurs ont répondu\n" \
-            "> Vous pouvez changer de réponse tant que tous les joueurs n'ont pas répondu" 
-        self.questions = None
+
+        self.difficulty_point = {"Easy": 1, "Medium": 2, "Hard": 3, "HARDCORE": 5}
+
+        self.statement_string = (
+            f"Bienvenue dans le grand quiz du Chaloeil !\n\nVous allez devoir répondre à une série de {self.nb_question} questions.\n\n"
+            f"**__Règles__** :\n\n> {self.time_to_answer} secondes par question\n> Fin de la question si tous les joueurs ont répondu\n"
+            "> Vous pouvez changer de réponse tant que tous les joueurs n'ont pas répondu"
+            "\n\n**__Points__** :\n\n"
+        )
+        self.statement_string += (
+            "> 1 point par bonne réponse\n> 0 point par mauvaise réponse\n\n"
+            if self.flat
+            else f"> {self.difficulty_point['Easy']} point par question **Easy**\n> {self.difficulty_point['Medium']} point par question **Medium**\n> {self.difficulty_point['Hard']} point par question **Hard**\n> {self.difficulty_point['HARDCORE']} point par question **HARDCORE**\n> 0 point par mauvaise réponse\n\n"
+        )
 
     def __get_question(self):
         if self.questions is None or len(self.questions) == 0:
@@ -49,7 +60,7 @@ class Quizz:
         else:
             await self.show_question()
 
-    async def show_question(self, altenative_sentence = -1):
+    async def show_question(self, altenative_sentence=-1):
         self.current_question = self.__get_question()
         if self.current_question is None:
             await self.channel.send(
@@ -57,10 +68,14 @@ class Quizz:
                 view=ReloadQuestionView(self),
             )
             return
-        
+
         time_text = f"‎ ‎\n**Temps restant : {self.time_to_answer} secondes**"
 
-        altenative_sentence = f"__**Question n°{self.nb_question - len(self.questions)}**__ :" if  altenative_sentence == -1 else altenative_sentence
+        altenative_sentence = (
+            f"__**Question n°{self.nb_question - len(self.questions)}**__  *({self.current_question.level})* :"
+            if altenative_sentence == -1
+            else altenative_sentence
+        )
         question_msg = f"‎ ‎\n{altenative_sentence}\n" + self.current_question.question
 
         time_message = await self.channel.send(time_text)
@@ -71,9 +86,11 @@ class Quizz:
             question_msg, view=AnswerView(self, self.current_question)
         )
 
-
         self.timer = Timer(
-            self.time_to_answer, self.check_result,time_message, asyncio.get_running_loop()
+            self.time_to_answer,
+            self.check_result,
+            time_message,
+            asyncio.get_running_loop(),
         )
 
     async def _init_players(self):
@@ -118,7 +135,10 @@ class Quizz:
             if len(player_answer) > 0 and self.current_question.check_answer(
                 player_answer[0]
             ):
-                player.add_point()
+                if self.flat:
+                    player.add_point()
+                else:
+                    player.add_point(self.difficulty_point[self.current_question.level])
 
         return players
 

@@ -108,6 +108,9 @@ class Quizz:
             return True
         else:
             return False
+        
+    def remove_team(self, team: Team):
+        self.teams.remove(team)
 
     def check_team_player(self, players) -> bool:
         for team in self.teams:

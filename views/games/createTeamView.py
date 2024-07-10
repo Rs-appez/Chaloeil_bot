@@ -32,6 +32,15 @@ class CreateTeamView(View):
         else :
             await interaction.response.send_message("Seul celui qui a démarré le jeu peut le lancer.",ephemeral=True)
 
+    @button(label="Delete team",style=ButtonStyle.danger)
+    async def delete_team(self,button,interaction):
+
+        if interaction.user.id == self.game.creator_id or interaction.user.id in [member.id for team in self.game.teams for member in team.members]:
+            print("delete")
+
+        else :
+            await interaction.response.send_message("Tu dois être dans une équipe pour pouvoir la supprimer.",ephemeral=True)
+
 
 class SelectPlayerView(View):
 
@@ -62,6 +71,11 @@ class SelectPlayerView(View):
             list_team += f"> {team}\n"
 
         await self.game.list_team_msg.edit(content=list_team)
+
+    async def remove_team(self,team_name,team_members,interaction):
+
+        team_members = [player for player in self.game.players if str(player) in team_members]
+
 
     @button(label='Créer', style=ButtonStyle.primary,emoji="🆕")
     async def make_team(self,button,interaction):

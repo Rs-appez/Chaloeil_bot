@@ -40,7 +40,7 @@ class Quizz:
         self.statement_string += (
             "> 1 point par bonne réponse\n> 0 point par mauvaise réponse\n\n"
             if self.flat
-            else f"> {self.difficulty_point['Easy']} point par question **Easy**\n> {self.difficulty_point['Medium']} point par question **Medium**\n> {self.difficulty_point['Hard']} point par question **Hard**\n> {self.difficulty_point['HARDCORE']} point par question **HARDCORE**\n> 0 point par mauvaise réponse\n\n"
+            else f"> {self.difficulty_point['Easy']} point par question **Easy**\n> {self.difficulty_point['Medium']} points par question **Medium**\n> {self.difficulty_point['Hard']} points par question **Hard**\n> {self.difficulty_point['HARDCORE']} points par question **HARDCORE**\n> 0 point par mauvaise réponse\n\n"
         )
 
     def __get_question(self):

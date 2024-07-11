@@ -109,8 +109,22 @@ class Quizz:
         else:
             return False
         
+    async def display_teams(self):
+
+        if len(self.teams) == 0:
+            await self.list_team_msg.edit(content="Aucune équipe pour le moment")
+            return
+        
+        list_team = "Liste des équipes : \n"
+
+        for team in self.teams:
+            list_team += f"> {team}\n"
+
+        await self.list_team_msg.edit(content=list_team)
+
     def remove_team(self, team: Team):
         self.teams.remove(team)
+
 
     def check_team_player(self, players) -> bool:
         for team in self.teams:

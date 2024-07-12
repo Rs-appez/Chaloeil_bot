@@ -18,7 +18,7 @@ class CreateTeamView(View):
     @button(label='Team', style=ButtonStyle.primary,emoji="🆕")
     async def make_team(self,button,interaction):
 
-        await interaction.response.send_message("*Selectione **tout** les membres de ton équipe dans le menu déroulant*",view=SelectPlayerView(self.game),ephemeral=True)
+        await interaction.response.send_message("*Selectione **tout** les membres de ton équipe dans le menu déroulant (toi y compris)*",view=SelectPlayerView(self.game),ephemeral=True)
 
     @button(label="START !",style=ButtonStyle.primary)
     async def start(self,button,interaction):

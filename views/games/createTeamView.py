@@ -80,5 +80,6 @@ class SelectPlayerView(View):
     @button(label='Créer', style=ButtonStyle.primary,emoji="🆕")
     async def make_team(self,button,interaction):
         team = self.team_members.values
-        team.insert(0,str(self.chief_player))
+        if str(self.chief_player) not in team :
+            team.insert(0,str(self.chief_player))
         await interaction.response.send_modal(TeamModal(self,team))

@@ -18,7 +18,7 @@ class CreateTeamView(View):
     @button(label='Team', style=ButtonStyle.primary,emoji="🆕")
     async def make_team(self,button,interaction):
 
-        await interaction.response.send_message("*Selectione **tout** les membres de ton équipe dans le menu déroulant*",view=SelectPlayerView(self.game),ephemeral=True)
+        await interaction.response.send_message("*Selectione **tout** les membres de ton équipe dans le menu déroulant (toi y compris)*",view=SelectPlayerView(self.game),ephemeral=True)
 
     @button(label="START !",style=ButtonStyle.primary)
     async def start(self,button,interaction):
@@ -31,6 +31,19 @@ class CreateTeamView(View):
 
         else :
             await interaction.response.send_message("Seul celui qui a démarré le jeu peut le lancer.",ephemeral=True)
+
+    @button(label="Delete team",style=ButtonStyle.danger)
+    async def delete_team(self,button,interaction):
+#interaction.user.id == self.game.creator_id or
+        if  interaction.user.id in [member.member.id for team in self.game.teams for member in team.members]:
+            for team in self.game.teams:
+                if interaction.user.id in [member.member.id for member in team.members]:
+                    self.game.remove_team(team)
+                    await self.game.display_teams()
+                    break
+
+        else :
+            await interaction.response.send_message("Tu dois être dans une équipe pour pouvoir la supprimer.",ephemeral=True)
 
 
 class SelectPlayerView(View):
@@ -56,12 +69,8 @@ class SelectPlayerView(View):
             await interaction.response.send_message("Certains joueurs sont déjà dans une équipe.",ephemeral=True)
             return
 
-        list_team = "Liste des équipes : \n"
+        await self.game.display_teams()
 
-        for team in self.game.teams:
-            list_team += f"> {team}\n"
-
-        await self.game.list_team_msg.edit(content=list_team)
 
     @button(label='Créer', style=ButtonStyle.primary,emoji="🆕")
     async def make_team(self,button,interaction):

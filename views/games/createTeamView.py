@@ -18,7 +18,7 @@ class CreateTeamView(View):
     @button(label='Team', style=ButtonStyle.primary,emoji="🆕")
     async def make_team(self,button,interaction):
 
-        await interaction.response.send_message("*Selectione **tout** les membres de ton équipe dans le menu déroulant (toi y compris)*",view=SelectPlayerView(self.game),ephemeral=True)
+        await interaction.response.send_message("*Selectione les membres de ton équipe dans le menu déroulant*",view=SelectPlayerView(self.game,interaction.user),ephemeral=True)
 
     @button(label="START !",style=ButtonStyle.primary)
     async def start(self,button,interaction):
@@ -30,7 +30,7 @@ class CreateTeamView(View):
             await self.game.show_question()
 
         else :
-            await interaction.response.send_message("Seul celui qui a démarré le jeu peut le lancer.",ephemeral=True)
+            await interaction.response.send_message("Seul celui qui a démarré le jeu peut le lancer",ephemeral=True)
 
     @button(label="Delete team",style=ButtonStyle.danger)
     async def delete_team(self,button,interaction):
@@ -43,19 +43,24 @@ class CreateTeamView(View):
                     break
 
         else :
-            await interaction.response.send_message("Tu dois être dans une équipe pour pouvoir la supprimer.",ephemeral=True)
+            await interaction.response.send_message("Tu dois être dans une équipe pour pouvoir la supprimer",ephemeral=True)
 
 
 class SelectPlayerView(View):
 
-    def __init__(self,game) -> None:
+    def __init__(self,game,chief) -> None:
         super().__init__(timeout=None)
 
         self.game = game
+        self.chief_user = chief
+
+
 
         self.team_name = None
+        self.chief_player = [player for player in self.game.players if player.member.id == chief.id][0]
+        self.players = [player for player in self.game.players if player.member.id != chief.id]
 
-        self.players = [SelectOption(label=str(player)) for player in self.game.players]
+        self.players = [SelectOption(label=str(player)) for player in self.players]
         max_values = len(self.players) if len(self.players) < 4 else 4
 
         self.team_members = Select(placeholder='Team Members',min_values=1,max_values=max_values,options=self.players)
@@ -66,7 +71,7 @@ class SelectPlayerView(View):
         team_members = [player for player in self.game.players if str(player) in team_members]
         
         if not self.game.add_team(Team(team_members,team_name)):
-            await interaction.response.send_message("Certains joueurs sont déjà dans une équipe.",ephemeral=True)
+            await interaction.response.send_message("Certains joueurs sont déjà dans une équipe",ephemeral=True)
             return
 
         await self.game.display_teams()
@@ -74,5 +79,8 @@ class SelectPlayerView(View):
 
     @button(label='Créer', style=ButtonStyle.primary,emoji="🆕")
     async def make_team(self,button,interaction):
-
-        await interaction.response.send_modal(TeamModal(self,self.team_members.values))
+        print(self.team_members.values)
+        team = self.team_members.values
+        team.insert(0,str(self.chief_player))
+        print(team)
+        await interaction.response.send_modal(TeamModal(self,team))

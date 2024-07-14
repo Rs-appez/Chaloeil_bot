@@ -5,8 +5,8 @@ import config
 
 class BattleRoyal(Quizz):
 
-    def __init__(self, channel, creator_id, category, team = False, life_point = 3) -> None:
-        super().__init__(channel, creator_id, category, team=team)
+    def __init__(self, channel, creator_id, category, team = False, life_point = 3, keep = False) -> None:
+        super().__init__(channel, creator_id, category, team=team, keep=keep)
         self.life_point = life_point
         
         self.statement_string = f"Bienvenue dans le grand quiz du Chaloeil !\n\nVous allez devoir répondre à une série de questions.\nVous partez à {self.life_point} points de vie.\n" \

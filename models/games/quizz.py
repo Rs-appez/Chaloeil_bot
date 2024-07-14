@@ -12,7 +12,14 @@ from views.games.startView import StartView
 
 class Quizz:
     def __init__(
-        self, channel, creator_id, category, nb_question=1, team=False, flat=False
+        self,
+        channel,
+        creator_id,
+        category,
+        nb_question=1,
+        team=False,
+        flat=False,
+        keep=False,
     ) -> None:
         self.channel = channel
         self.creator_id = creator_id
@@ -27,6 +34,7 @@ class Quizz:
         self.timer = None
         self.time_to_answer = 30
         self.flat = flat
+        self.keep = keep
         self.list_team_msg = None
 
         self.difficulty_point = {"Easy": 1, "Medium": 2, "Hard": 3, "HARDCORE": 5}
@@ -108,13 +116,12 @@ class Quizz:
             return True
         else:
             return False
-        
-    async def display_teams(self):
 
+    async def display_teams(self):
         if len(self.teams) == 0:
             await self.list_team_msg.edit(content="Aucune équipe pour le moment")
             return
-        
+
         list_team = "Liste des équipes : \n"
 
         for team in self.teams:
@@ -124,7 +131,6 @@ class Quizz:
 
     def remove_team(self, team: Team):
         self.teams.remove(team)
-
 
     def check_team_player(self, players) -> bool:
         for team in self.teams:
@@ -216,12 +222,14 @@ class Quizz:
         else:
             await self.channel.send(f"\n** {players[0]} a gagné ! **")
 
-        await asyncio.sleep(10)
-        await self.channel.send(
-            "💥  *Ce channel va s'autodétruire dans 60 secondes !* 💥"
-        )
-        await self.channel.send(
-            "https://tenor.com/view/self-destruction-imminent-please-evacuate-gif-8912211"
-        )
-        await asyncio.sleep(60)
-        await self.self_destruct()
+        if not self.keep:
+
+            await asyncio.sleep(10)
+            await self.channel.send(
+                "💥  *Ce channel va s'autodétruire dans 60 secondes !* 💥"
+            )
+            await self.channel.send(
+                "https://tenor.com/view/self-destruction-imminent-please-evacuate-gif-8912211"
+            )
+            await asyncio.sleep(60)
+            await self.self_destruct()

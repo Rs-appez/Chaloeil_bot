@@ -35,6 +35,7 @@ class Quizz:
         self.time_to_answer = 30
         self.flat = flat
         self.keep = keep
+        self.life_point = None
         self.list_team_msg = None
 
         self.difficulty_point = {"Easy": 1, "Medium": 2, "Hard": 3, "HARDCORE": 5}

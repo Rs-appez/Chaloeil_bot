@@ -69,8 +69,13 @@ class SelectPlayerView(View):
     async def add_team(self,team_name,team_members,interaction):
 
         team_members = [player for player in self.game.players if str(player) in team_members]
+
+        if self.game.life_point:
+            team = Team(team_members,team_name, life_point=self.game.life_point)
+        else:
+            Team(team_members,team_name)
         
-        if not self.game.add_team(Team(team_members,team_name)):
+        if not self.game.add_team(team):
             await interaction.response.send_message("Certains joueurs sont déjà dans une équipe",ephemeral=True)
             return
 

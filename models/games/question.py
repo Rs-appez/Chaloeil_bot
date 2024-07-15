@@ -8,11 +8,13 @@ class Question:
     api_url = config.BACKEND_URL + "question/questions/"
 
     def __init__(self, json) -> None:
+        self.id = json["id"]
         self.question = json["question_text"]
         self.answers = [Answer(a) for a in json["answers"]]
         self.level = json["level"]
         self.cat = json["categories"]
         self.image_url = json["image_url"]
+        self.shuffle_answers = json["shuffle_answers"]
 
     @staticmethod
     def get_question(number, level=None, cat=None):
@@ -32,7 +34,9 @@ class Question:
 
     def get_answers(self):
         answers = self.answers
-        random.shuffle(answers)
+        if self.shuffle_answers:
+            random.shuffle(answers)
+            
         return answers
 
     def get_good_answers(self):

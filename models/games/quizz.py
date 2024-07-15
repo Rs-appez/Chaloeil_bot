@@ -35,7 +35,6 @@ class Quizz:
         self.time_to_answer = 30
         self.flat = flat
         self.keep = keep
-        self.life_point = None
         self.list_team_msg = None
 
         self.difficulty_point = {"Easy": 1, "Medium": 2, "Hard": 3, "HARDCORE": 5}
@@ -111,7 +110,10 @@ class Quizz:
         self.list_team_msg = await self.channel.send("Aucune équipe pour le moment")
         await self.channel.send("Crée ton équipe !", view=CreateTeamView(self))
 
-    def add_team(self, team: Team):
+    def make_team(self,team_members,team_name) -> Team:
+        return Team(team_members, team_name)
+
+    def add_team(self, team: Team) -> bool:
         if self.check_team_player(team.members):
             self.teams.append(team)
             return True

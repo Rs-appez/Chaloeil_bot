@@ -2,6 +2,7 @@ from models.games.quizz import Quizz
 from models.games.player import Player
 
 import config
+from models.games.team import Team
 
 class BattleRoyal(Quizz):
 
@@ -38,6 +39,9 @@ class BattleRoyal(Quizz):
                 player.add_life_point()
 
         return players
+    
+    def make_team(self, team_members,team_name) -> Team:
+        return Team(team_members,team_name,life_point=self.life_point)
     
     def _display_player(self, res_string,players):
         res_string += "\n__Joueur encore dans la course :__\n"

@@ -64,7 +64,8 @@ class SelectPlayerView(View):
         max_values = len(self.players) if len(self.players) < 4 else 4
 
         self.team_members = Select(placeholder='Team Members',min_values=1,max_values=max_values,options=self.players)
-        self.add_item(self.team_members)
+        if len(self.players) != 0:
+            self.add_item(self.team_members)
 
     async def add_team(self,team_name,team_members,interaction):
 

@@ -14,7 +14,7 @@ class AnswerView(View):
 
             player = [p for p in self.view.game.players if p.member.id == interaction.user.id]
 
-            if self.view.game.team :
+            if self.view.game.team and player:
                 player = [t for t in self.view.game.teams if player[0] in t.members]
                 
 

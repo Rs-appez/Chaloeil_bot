@@ -52,6 +52,7 @@ class Quizz:
         )
 
     def __get_question(self):
+        self.player_answer = []
         if self.questions is None or len(self.questions) == 0:
             self.questions = Question.get_question(self.nb_question, cat=self.category)
 
@@ -142,13 +143,16 @@ class Quizz:
 
         return True
 
-    async def set_player_answer(self, player: Player, answer: str):
+    def set_player_answer(self, player: Player, answer: str):
+        print(self.player_answer)
         if player in [p[0] for p in self.player_answer]:
             self.player_answer.remove(
                 [p for p in self.player_answer if p[0] == player][0]
             )
 
         self.player_answer.append((player, answer))
+        print(self.player_answer)
+        print('-'*20)
 
         nb_players = len(self.players) if not self.team else len(self.teams)
 

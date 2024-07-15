@@ -20,7 +20,7 @@ class AnswerView(View):
 
             if player :
                 await interaction.response.send_message(content=f"Tu as répondu : \"_{self.answer}_\"",ephemeral=True)
-                await self.view.game.set_player_answer(player[0],self.answer)
+                self.view.game.set_player_answer(player[0],self.answer)
                 
             else :
                 await interaction.response.send_message(content="https://tenor.com/view/the-sixth-sense-haley-joel-osment-cole-sear-i-see-dead-people-dead-gif-4431095",ephemeral=True)

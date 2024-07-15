@@ -35,7 +35,7 @@ class BattleRoyal(Quizz):
         if len(players_in_life) > 0:
             players = players_in_life
         else :
-            for player in self.players:
+            for player in players:
                 player.add_life_point()
 
         return players

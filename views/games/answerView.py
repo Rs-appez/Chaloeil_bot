@@ -33,3 +33,12 @@ class AnswerView(View):
         for answer in question.get_answers():
 
             self.add_item(self.ButtonAnswer(answer))
+    
+    async def disable_all(self):
+        self.stop()
+
+        for child in self.children:
+            child.disabled = True 
+        
+        await self.game.answer_msg.edit(view=self)
+        

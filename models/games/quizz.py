@@ -35,7 +35,10 @@ class Quizz:
         self.time_to_answer = 30
         self.flat = flat
         self.keep = keep
+
         self.list_team_msg = None
+        self.answer_msg = None
+        self.answer_view = None
 
         self.difficulty_point = {"Easy": 1, "Medium": 2, "Hard": 3, "HARDCORE": 5}
 
@@ -52,7 +55,6 @@ class Quizz:
         )
 
     def __get_question(self):
-        self.player_answer = []
         if self.questions is None or len(self.questions) == 0:
             self.questions = Question.get_question(self.nb_question, cat=self.category)
 
@@ -91,8 +93,11 @@ class Quizz:
 
         if self.current_question.image_url:
             await self.channel.send(self.current_question.image_url)
-        await self.channel.send(
-            question_msg, view=AnswerView(self, self.current_question)
+
+        self.answer_view = AnswerView(self, self.current_question)
+
+        self.answer_msg = await self.channel.send(
+            question_msg, view= self.answer_view
         )
 
         self.timer = Timer(
@@ -111,7 +116,7 @@ class Quizz:
         self.list_team_msg = await self.channel.send("Aucune équipe pour le moment")
         await self.channel.send("Crée ton équipe !", view=CreateTeamView(self))
 
-    def make_team(self,team_members,team_name) -> Team:
+    def make_team(self, team_members, team_name) -> Team:
         return Team(team_members, team_name)
 
     def add_team(self, team: Team) -> bool:
@@ -144,15 +149,12 @@ class Quizz:
         return True
 
     def set_player_answer(self, player: Player, answer: str):
-        print(self.player_answer)
         if player in [p[0] for p in self.player_answer]:
             self.player_answer.remove(
                 [p for p in self.player_answer if p[0] == player][0]
             )
 
         self.player_answer.append((player, answer))
-        print(self.player_answer)
-        print('-'*20)
 
         nb_players = len(self.players) if not self.team else len(self.teams)
 
@@ -182,6 +184,9 @@ class Quizz:
         return res_string
 
     async def check_result(self):
+
+        await self.answer_view.disable_all()
+
         players = self.players if not self.team else self.teams
 
         players = self._compute_score(players)
@@ -230,7 +235,6 @@ class Quizz:
             await self.channel.send(f"\n** {players[0]} a gagné ! **")
 
         if not self.keep:
-
             await asyncio.sleep(10)
             await self.channel.send(
                 "💥  *Ce channel va s'autodétruire dans 60 secondes !* 💥"

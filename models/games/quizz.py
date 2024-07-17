@@ -62,6 +62,9 @@ class Quizz:
         if self.questions is None or len(self.questions) == 0:
             self.questions = Question.get_question(self.nb_question, cat=self.category, id_range=self.id_range)
 
+        if self.questions is None:
+            return None
+
         return self.questions.pop(0)
 
     async def launch_statement(self):

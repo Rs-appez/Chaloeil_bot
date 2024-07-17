@@ -20,6 +20,7 @@ class Quizz:
         team=False,
         flat=False,
         keep=False,
+        debug=False,
     ) -> None:
         self.channel = channel
         self.creator_id = creator_id
@@ -35,6 +36,7 @@ class Quizz:
         self.time_to_answer = 30
         self.flat = flat
         self.keep = keep
+        self.debug = debug
 
         self.list_team_msg = None
         self.answer_msg = None
@@ -87,6 +89,9 @@ class Quizz:
             if altenative_sentence == -1
             else altenative_sentence
         )
+        if self.debug:
+            altenative_sentence += f"\n*(ID : **{self.current_question.id}**)*"
+
         question_msg = f"‎ ‎\n{altenative_sentence}\n" + self.current_question.question
 
         time_message = await self.channel.send(time_text)

@@ -52,6 +52,12 @@ class Game(commands.Cog):
             description="Garder le thread après la partie",
             required=False,
             default=False,
+        ),  
+        debug: bool = SlashOption(
+            name="debug",
+            description="Display id question",
+            required=False,
+            default=False,
         ),
     ):
         """Start a battle royal quizz game"""
@@ -67,6 +73,7 @@ class Game(commands.Cog):
             team=team,
             life_point=life_point,
             keep=keep,
+            debug=debug,
         )
 
         await self.__init_game(interaction, br, channel)
@@ -102,6 +109,12 @@ class Game(commands.Cog):
             required=False,
             default=False,
         ),
+        debug: bool = SlashOption(
+            name="debug",
+            description="Display id question",
+            required=False,
+            default=False,
+        ),
     ):
         """Start a quizz battle game"""
 
@@ -117,6 +130,7 @@ class Game(commands.Cog):
             team=team,
             flat=flat,
             keep=keep,
+            debug=debug,
         )
 
         await self.__init_game(interaction, quizz, channel)

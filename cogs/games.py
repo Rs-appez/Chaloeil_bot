@@ -59,6 +59,12 @@ class Game(commands.Cog):
             required=False,
             default=False,
         ),
+        time_to_answer: int = SlashOption(
+            name="time_to_answer",
+            description="Time to answer",
+            required=False,
+            default=30,
+        ),
     ):
         """Start a battle royal quizz game"""
 
@@ -74,6 +80,7 @@ class Game(commands.Cog):
             life_point=life_point,
             keep=keep,
             debug=debug,
+            time_to_answer=time_to_answer,
         )
 
         await self.__init_game(interaction, br, channel)
@@ -121,6 +128,12 @@ class Game(commands.Cog):
             required=False,
             default=None,
         ),
+        time_to_answer: int = SlashOption(
+            name="time_to_answer",
+            description="Time to answer",
+            required=False,
+            default=30,
+        ),
     ):
         """Start a quizz battle game"""
 
@@ -138,6 +151,7 @@ class Game(commands.Cog):
             keep=keep,
             debug=debug,
             id_range=id_range,
+            time_to_answer=time_to_answer,
         )
 
         await self.__init_game(interaction, quizz, channel)

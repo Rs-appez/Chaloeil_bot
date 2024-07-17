@@ -22,6 +22,7 @@ class Quizz:
         keep=False,
         debug=False,
         id_range=None,
+        time_to_answer=30,
     ) -> None:
         self.channel = channel
         self.creator_id = creator_id
@@ -34,7 +35,7 @@ class Quizz:
         self.current_question = None
         self.questions = None
         self.timer = None
-        self.time_to_answer = 30
+        self.time_to_answer = time_to_answer
         self.flat = flat
         self.keep = keep
         self.debug = debug

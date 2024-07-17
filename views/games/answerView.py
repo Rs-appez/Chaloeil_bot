@@ -29,7 +29,7 @@ class AnswerView(View):
 
         self.question = question
         self.game = game
-        super().__init__()
+        super().__init__(timeout=None)
         for answer in question.get_answers():
 
             self.add_item(self.ButtonAnswer(answer))

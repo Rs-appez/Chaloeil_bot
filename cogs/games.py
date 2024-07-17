@@ -115,6 +115,12 @@ class Game(commands.Cog):
             required=False,
             default=False,
         ),
+        id_range: str = SlashOption(
+            name="id_range",
+            description="Range of question id (ex: 1-10)",
+            required=False,
+            default=None,
+        ),
     ):
         """Start a quizz battle game"""
 
@@ -131,6 +137,7 @@ class Game(commands.Cog):
             flat=flat,
             keep=keep,
             debug=debug,
+            id_range=id_range,
         )
 
         await self.__init_game(interaction, quizz, channel)

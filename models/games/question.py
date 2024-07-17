@@ -17,10 +17,10 @@ class Question:
         self.shuffle_answers = json["shuffle_answers"]
 
     @staticmethod
-    def get_question(number, level=None, cat=None):
+    def get_question(number, level=None, cat=None, id_range=None):
         req = requests.get(
             Question.api_url + "random_question",
-            params={"level": level, "category": cat, "number": number},
+            params={"level": level, "category": cat, "number": number, "id_range": id_range},
             headers={"Authorization": config.BACKEND_TOKEN},
         )
 

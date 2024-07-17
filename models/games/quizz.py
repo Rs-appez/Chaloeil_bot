@@ -21,6 +21,7 @@ class Quizz:
         flat=False,
         keep=False,
         debug=False,
+        id_range=None,
     ) -> None:
         self.channel = channel
         self.creator_id = creator_id
@@ -37,6 +38,7 @@ class Quizz:
         self.flat = flat
         self.keep = keep
         self.debug = debug
+        self.id_range = id_range
 
         self.list_team_msg = None
         self.answer_msg = None
@@ -58,7 +60,7 @@ class Quizz:
 
     def __get_question(self):
         if self.questions is None or len(self.questions) == 0:
-            self.questions = Question.get_question(self.nb_question, cat=self.category)
+            self.questions = Question.get_question(self.nb_question, cat=self.category, id_range=self.id_range)
 
         return self.questions.pop(0)
 

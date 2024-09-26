@@ -63,7 +63,7 @@ class Game(commands.Cog):
             name="time_to_answer",
             description="Time to answer",
             required=False,
-            default=30,
+            default=15,
         ),
     ):
         """Start a battle royal quizz game"""
@@ -132,7 +132,7 @@ class Game(commands.Cog):
             name="time_to_answer",
             description="Time to answer",
             required=False,
-            default=30,
+            default=15,
         ),
     ):
         """Start a quizz battle game"""

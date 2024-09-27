@@ -134,6 +134,12 @@ class Game(commands.Cog):
             required=False,
             default=15,
         ),
+        spectator: str = SlashOption(
+            name="spectator",
+            description="Spectator",
+            required=False,
+            default=None,
+        ),
     ):
         """Start a quizz battle game"""
 
@@ -152,6 +158,7 @@ class Game(commands.Cog):
             debug=debug,
             id_range=id_range,
             time_to_answer=time_to_answer,
+            spectator_players_ids=[int(s) for s in spectator.split(",")],
         )
 
         await self.__init_game(interaction, quizz, channel)

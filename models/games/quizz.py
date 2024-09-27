@@ -23,12 +23,14 @@ class Quizz:
         debug=False,
         id_range=None,
         time_to_answer=30,
+        spectator_players_ids=[],
     ) -> None:
         self.channel = channel
         self.creator_id = creator_id
         self.category = category
         self.nb_question = nb_question
         self.team = team
+        self.spectator_players_ids = spectator_players_ids
         self.players = []
         self.teams = []
         self.player_answer = []
@@ -117,7 +119,7 @@ class Quizz:
 
     async def _init_players(self):
         for player in await self.channel.fetch_members():
-            if not player.id == int(config.CHALOEIL_ID):
+            if not player.id == int(config.CHALOEIL_ID) and player.id not in self.spectator_players_ids:
                 self.players.append(Player(await player.fetch_member()))
 
     async def __init_teams(self):

@@ -158,7 +158,7 @@ class Game(commands.Cog):
             debug=debug,
             id_range=id_range,
             time_to_answer=time_to_answer,
-            spectator_players_ids=[int(s) for s in spectator.split(",")],
+            spectator_players_ids=[int(s) for s in spectator.split(",")] if spectator else [],
         )
 
         await self.__init_game(interaction, quizz, channel)

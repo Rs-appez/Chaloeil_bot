@@ -5,7 +5,7 @@ attrs==24.2.0
 bleach==6.1.0
 certifi==2024.8.30
 charset-normalizer==3.4.0
-frozenlist==1.4.1
+frozenlist==1.5.0
 idna==3.10
 interaction_discord_bot==0.1.12
 multidict==6.1.0
@@ -16,5 +16,5 @@ webencodings==0.5.1
 requests==2.32.3
 typing_extensions==4.12.2
 urllib3==2.2.3
-yarl==1.15.5
+yarl==1.16.0
 zipp>=3.19.1 # not directly required, pinned by Snyk to avoid a vulnerability

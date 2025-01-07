@@ -7,6 +7,7 @@ from views.games.joinGameView import JoinGameView
 from views.games.statementView import StatementView
 from nextcord import SlashOption
 
+from nextcord import InteractionContextType
 
 class Game(commands.Cog):
     """some games"""
@@ -26,7 +27,7 @@ class Game(commands.Cog):
     @slash_command(
         name="battle_royal_quizz",
         description="Get the 👑",
-        dm_permission=False,
+        contexts=[InteractionContextType.guild],
         default_member_permissions=0,
     )
     async def br(
@@ -52,7 +53,7 @@ class Game(commands.Cog):
             description="Garder le thread après la partie",
             required=False,
             default=False,
-        ),  
+        ),
         debug: bool = SlashOption(
             name="debug",
             description="Display id question",
@@ -88,7 +89,7 @@ class Game(commands.Cog):
     @slash_command(
         name="quizz_battle",
         description="Get the 🪜",
-        dm_permission=False,
+        contexts=[InteractionContextType.guild],
         default_member_permissions=0,
     )
     async def quizz(
@@ -158,10 +159,22 @@ class Game(commands.Cog):
             debug=debug,
             id_range=id_range,
             time_to_answer=time_to_answer,
-            spectator_players_ids=[int(s) for s in spectator.split(",")] if spectator else [],
+            spectator_players_ids=[int(s) for s in spectator.split(",")]
+            if spectator
+            else [],
         )
 
         await self.__init_game(interaction, quizz, channel)
+
+    # @slash_command(
+    #     name="mofus",
+    #     description="Find the word",
+    #     contexts=[InteractionContextType.guild],
+    # )
+    # async def mofus(self, interaction: Interaction):
+    #     """Start a mofus game"""
+
+    #     await interaction.response.send_message("Mofus",ephemeral=True)
 
     async def __create_game_channel(self, interaction: Interaction, name_channel):
         if interaction.channel.type in [

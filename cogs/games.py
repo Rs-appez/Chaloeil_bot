@@ -3,11 +3,14 @@ from nextcord.interactions import Interaction
 from nextcord import slash_command, ChannelType
 from models.games.battleRoyal import BattleRoyal
 from models.games.quizz import Quizz
+from models.games.question import Question
 from views.games.joinGameView import JoinGameView
 from views.games.statementView import StatementView
 from nextcord import SlashOption
+from nextcord import Member
 
 from nextcord import InteractionContextType
+
 
 class Game(commands.Cog):
     """some games"""
@@ -165,6 +168,36 @@ class Game(commands.Cog):
         )
 
         await self.__init_game(interaction, quizz, channel)
+
+    @slash_command(
+        name="question",
+        description="Ask one question",
+        contexts=[InteractionContextType.guild],
+        default_member_permissions=0,
+    )
+    async def question(
+        self,
+        interaction: Interaction,
+        player: Member = SlashOption(
+            name="player",
+            description="Select a player",
+            required=True,
+        ),
+        category: str = SlashOption(
+            name="categorie",
+            description="Choisi une categorie",
+            required=False,
+            choices=choices,
+        ),
+    ):
+        """Ask one question"""
+        question = Question.get_question(1, cat=category)
+        if question:
+            await question[0].ask_standalone(player=player, interaction=interaction)
+        else:
+            await interaction.response.send_message(
+                "Erreur lors de la récupération de la question 😭"
+            )
 
     # @slash_command(
     #     name="mofus",

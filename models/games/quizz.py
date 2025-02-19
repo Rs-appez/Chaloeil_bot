@@ -47,7 +47,8 @@ class Quizz:
         self.answer_msg = None
         self.answer_view = None
 
-        self.difficulty_point = {"Easy": 1, "Medium": 2, "Hard": 3, "HARDCORE": 5}
+        self.difficulty_point = {"Easy": 1,
+                                 "Medium": 2, "Hard": 3, "HARDCORE": 5}
 
         self.statement_string = (
             f"Bienvenue dans le grand quiz du Chaloeil !\n\nVous allez devoir répondre à une série de {self.nb_question} questions.\n\n"
@@ -63,7 +64,9 @@ class Quizz:
 
     def __get_question(self):
         if self.questions is None or len(self.questions) == 0:
-            self.questions = Question.get_question(self.nb_question, cat=self.category, id_range=self.id_range)
+            self.questions = Question.get_question(
+                self.nb_question, cat=self.category, id_range=self.id_range
+            )
 
         return self.questions.pop(0) if self.questions else None
 
@@ -97,18 +100,17 @@ class Quizz:
         if self.debug:
             altenative_sentence += f"\n*(ID : **{self.current_question.id}**)*"
 
-        question_msg = f"‎ ‎\n{altenative_sentence}\n" + self.current_question.question
+        question_msg = f"‎ ‎\n{altenative_sentence}\n" + \
+            self.current_question.question
 
         time_message = await self.channel.send(time_text)
 
         if self.current_question.image_url:
             await self.channel.send(self.current_question.image_url)
 
-        self.answer_view = AnswerView(self, self.current_question)
+        self.answer_view = AnswerView(self.current_question, game=self)
 
-        self.answer_msg = await self.channel.send(
-            question_msg, view= self.answer_view
-        )
+        self.answer_msg = await self.channel.send(question_msg, view=self.answer_view)
 
         self.timer = Timer(
             self.time_to_answer,
@@ -119,7 +121,10 @@ class Quizz:
 
     async def _init_players(self):
         for player in await self.channel.fetch_members():
-            if not player.id == int(config.CHALOEIL_ID) and player.id not in self.spectator_players_ids:
+            if (
+                not player.id == int(config.CHALOEIL_ID)
+                and player.id not in self.spectator_players_ids
+            ):
                 self.players.append(Player(await player.fetch_member()))
 
     async def __init_teams(self):
@@ -173,14 +178,16 @@ class Quizz:
 
     def _compute_score(self, players):
         for player in players:
-            player_answer = [pa[1] for pa in self.player_answer if pa[0] == player]
+            player_answer = [pa[1]
+                             for pa in self.player_answer if pa[0] == player]
             if len(player_answer) > 0 and self.current_question.check_answer(
                 player_answer[0]
             ):
                 if self.flat:
                     player.add_point()
                 else:
-                    player.add_point(self.difficulty_point[self.current_question.level])
+                    player.add_point(
+                        self.difficulty_point[self.current_question.level])
 
         return players
 
@@ -194,7 +201,6 @@ class Quizz:
         return res_string
 
     async def check_result(self):
-
         await self.answer_view.disable_all()
 
         players = self.players if not self.team else self.teams

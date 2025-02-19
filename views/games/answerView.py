@@ -1,5 +1,5 @@
-from nextcord.enums import ButtonStyle
 from nextcord.ui import View, Button
+from nextcord.enums import ButtonStyle
 
 
 class AnswerView(View):
@@ -12,28 +12,30 @@ class AnswerView(View):
             )
 
         async def callback(self, interaction):
-            player = [
-                p for p in self.view.game.players if p.member.id == interaction.user.id
-            ]
-
-            if self.view.game.team and player:
+            if self.view.game:
                 player = [
-                    t for t in self.view.game.teams if player[0] in t.members]
+                    p
+                    for p in self.view.game.players
+                    if p.member.id == interaction.user.id
+                ]
 
-            if player:
-                await interaction.response.send_message(
-                    content=f'Tu as répondu : "_{self.answer}_"', ephemeral=True
-                )
-                self.view.game.set_player_answer(player[0], self.answer)
+                if self.view.game.team and player:
+                    player = [
+                        t for t in self.view.game.teams if player[0] in t.members]
 
-            else:
-                await interaction.response.send_message(
-                    content="https://tenor.com/view/the-sixth-sense-haley-joel-osment-cole-sear-i-see-dead-people-dead-gif-4431095",
-                    ephemeral=True,
-                )
+                if player:
+                    await interaction.response.send_message(
+                        content=f'Tu as répondu : "_{self.answer}_"', ephemeral=True
+                    )
+                    self.view.game.set_player_answer(player[0], self.answer)
 
-    def __init__(self, game, question):
-        self.question = question
+                else:
+                    await interaction.response.send_message(
+                        content="https://tenor.com/view/the-sixth-sense-haley-joel-osment-cole-sear-i-see-dead-people-dead-gif-4431095",
+                        ephemeral=True,
+                    )
+
+    def __init__(self, question, game=None):
         self.game = game
         super().__init__(timeout=None)
         for answer in question.get_answers():

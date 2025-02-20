@@ -29,4 +29,7 @@ class Dice:
     def image_roll(self):
         if not self.result:
             self.roll()
-        return " ".join([str(self.emojis[d]) for d in self.result])
+        return " ".join(
+            [str(self.emojis[d]) if 1 <= d <= 6 else str(d)
+             for d in self.result]
+        )

@@ -56,7 +56,7 @@ class Question:
         ] != []
 
     async def ask_standalone(self, player: Member, interaction: Interaction):
-        question_msg = f"‎ ‎\n**{self.question}**\n‎ ‎"
+        question_msg = f"‎ ‎\n{self.question}\n‎ ‎"
 
         if self.image_url:
             await interaction.response.send_message(self.image_url)

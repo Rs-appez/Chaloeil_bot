@@ -16,12 +16,18 @@ class AnswerView(View):
                 await self.view._answer_for_game(interaction, self.answer)
 
             elif self.view.player:
-                if self.view.question.check_answer(self.answer):
-                    self.style = ButtonStyle.green
-                else:
-                    self.style = ButtonStyle.danger
+                if self.view.player.id == interaction.user.id:
+                    if self.view.question.check_answer(self.answer):
+                        self.style = ButtonStyle.green
+                    else:
+                        self.style = ButtonStyle.danger
 
-                await self.view._answer_for_player(interaction, self.answer)
+                    await self.view._answer_for_player(interaction, self.answer)
+                else:
+                    await interaction.response.send_message(
+                        content="Seulement la personne interrogée peut répondre à la question",
+                        ephemeral=True,
+                    )
 
     def __init__(self, question, game=None, player=None):
         self.game = game
@@ -61,31 +67,25 @@ class AnswerView(View):
             )
 
     async def _answer_for_player(self, interaction, answer):
-        if self.player.id == interaction.user.id:
-            await self.disable_all()
-            username = self.player.nick or self.player.name
+        await self.disable_all()
+        username = self.player.nick or self.player.name
 
-            message = f'**{username}** as répondu : "_{answer}_"\n'
+        message = f'**{username}** as répondu : "_{answer}_"\n'
 
-            if self.question.check_answer(answer):
-                message += "C'est **la bonne** réponse !"
-                
-            else:
-                message += "Ce **n'est pas la bonne** réponse 😭\n"
-                good_answers = self.question.get_good_answers()
-                if len(good_answers) > 1:
-                    message += (
-                        f"Les bonnes réponses étaient : || {', '.join(good_answers)} ||"
-                    )
-                else:
-                    message += "La bonne réponse était :"
-                    if len(good_answers) > 0:
-                        message += f" || {good_answers[0]} ||"
+        if self.question.check_answer(answer):
+            message += "C'est **la bonne** réponse !"
 
-            await interaction.message.edit(view=self)
-            await interaction.response.send_message(content=message)
         else:
-            await interaction.response.send_message(
-                content="Seulement la personne interrogée peut répondre à la question",
-                ephemeral=True,
-            )
+            message += "Ce **n'est pas la bonne** réponse 😭\n"
+            good_answers = self.question.get_good_answers()
+            if len(good_answers) > 1:
+                message += (
+                    f"Les bonnes réponses étaient : || {', '.join(good_answers)} ||"
+                )
+            else:
+                message += "La bonne réponse était :"
+                if len(good_answers) > 0:
+                    message += f" || {good_answers[0]} ||"
+
+        await interaction.message.edit(view=self)
+        await interaction.response.send_message(content=message)

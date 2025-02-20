@@ -191,11 +191,12 @@ class Game(commands.Cog):
         ),
     ):
         """Ask one question"""
+        await interaction.response.defer()
         question = Question.get_question(1, cat=category)
         if question:
             await question[0].ask_standalone(player=player, interaction=interaction)
         else:
-            await interaction.response.send_message(
+            await interaction.followup.send(
                 "Erreur lors de la récupération de la question 😭"
             )
 

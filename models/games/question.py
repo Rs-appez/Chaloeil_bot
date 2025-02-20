@@ -57,7 +57,16 @@ class Question:
 
     async def ask_standalone(self, player: Member, interaction: Interaction):
         question_msg = f"‎ ‎\n**{self.question}**\n‎ ‎"
-        await interaction.response.send_message(
-            content=question_msg,
-            view=AnswerView(question=self, player=player),
-        )
+
+        if self.image_url:
+            await interaction.response.send_message(self.image_url)
+
+            await interaction.channel.send(
+                content=question_msg,
+                view=AnswerView(question=self, player=player),
+            )
+        else:
+            await interaction.response.send_message(
+                content=question_msg,
+                view=AnswerView(question=self, player=player),
+            )

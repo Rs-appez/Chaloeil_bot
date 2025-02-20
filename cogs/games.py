@@ -4,6 +4,7 @@ from nextcord import slash_command, ChannelType
 from models.games.battleRoyal import BattleRoyal
 from models.games.quizz import Quizz
 from models.games.question import Question
+from models.games.dice import Dice
 from views.games.joinGameView import JoinGameView
 from views.games.statementView import StatementView
 from nextcord import SlashOption
@@ -199,6 +200,21 @@ class Game(commands.Cog):
             await interaction.followup.send(
                 "Erreur lors de la récupération de la question 😭"
             )
+
+    @slash_command(
+        name="dice",
+        description="Roll the dice 🎲",
+        contexts=[InteractionContextType.guild],
+    )
+    async def dice(
+        self, interaction: Interaction, number_of_dice: int = 1, sides: int = 6
+    ):
+        """Roll the dice"""
+
+        await interaction.response.send_message("Les dés sont jetés !", ephemeral=True)
+        dice = Dice(self.bot, number_of_dice, sides)
+        await interaction.channel.send(dice.verbal_roll())
+        await interaction.channel.send(dice.image_roll())
 
     # @slash_command(
     #     name="mofus",

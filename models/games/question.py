@@ -59,14 +59,9 @@ class Question:
         question_msg = f"‎ ‎\n{self.question}\n‎ ‎"
 
         if self.image_url:
-            await interaction.followup.send(self.image_url)
+            await interaction.channel.send(self.image_url)
 
-            await interaction.channel.send(
-                content=question_msg,
-                view=AnswerView(question=self, player=player),
-            )
-        else:
-            await interaction.followup.send(
-                content=question_msg,
-                view=AnswerView(question=self, player=player),
-            )
+        await interaction.channel.send(
+            content=question_msg,
+            view=AnswerView(question=self, player=player),
+        )

@@ -28,6 +28,8 @@ class AnswerView(View):
                         content="Seulement la personne interrogée peut répondre à la question",
                         ephemeral=True,
                     )
+            else:
+                await self.view._answer_for_player(interaction, self.answer)
 
     def __init__(self, question, game=None, player=None):
         self.game = game
@@ -68,7 +70,7 @@ class AnswerView(View):
 
     async def _answer_for_player(self, interaction, answer):
         await self.disable_all()
-        username = self.player.nick or self.player.name
+        username = interaction.user.nick or interaction.user.name
 
         message = f'**{username}** as répondu : "_{answer}_"\n'
 

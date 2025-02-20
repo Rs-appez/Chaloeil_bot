@@ -182,7 +182,8 @@ class Game(commands.Cog):
         player: Member = SlashOption(
             name="player",
             description="Select a player",
-            required=True,
+            required=False,
+            default=None,
         ),
         category: str = SlashOption(
             name="categorie",
@@ -195,6 +196,12 @@ class Game(commands.Cog):
         await interaction.response.defer()
         question = Question.get_question(1, cat=category)
         if question:
+            if player:
+                await interaction.followup.send(
+                    "Question pour " + player.mention + " !!!"
+                )
+            else:
+                await interaction.followup.send("Question pour tout le monde !!!")
             await question[0].ask_standalone(player=player, interaction=interaction)
         else:
             await interaction.followup.send(

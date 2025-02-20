@@ -21,10 +21,10 @@ class Dice:
         self.result = [random.randint(1, self.sides)
                        for _ in range(self.number)]
 
-    def verbal_roll(self):
+    def verbal_roll(self, user="Tu"):
         if not self.result:
             self.roll()
-        return f"Tu as obtenu : {sum(self.result)}"
+        return f"{user} as obtenu : {sum(self.result)}"
 
     def image_roll(self):
         if not self.result:

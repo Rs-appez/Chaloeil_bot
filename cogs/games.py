@@ -213,7 +213,8 @@ class Game(commands.Cog):
 
         await interaction.response.send_message("Les dés sont jetés !", ephemeral=True)
         dice = Dice(self.bot, number_of_dice, sides)
-        await interaction.channel.send(dice.verbal_roll())
+        username = interaction.user.nick or interaction.user.name
+        await interaction.channel.send(dice.verbal_roll(username))
         await interaction.channel.send(dice.image_roll())
 
     # @slash_command(

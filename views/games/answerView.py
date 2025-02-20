@@ -16,6 +16,11 @@ class AnswerView(View):
                 await self.view._answer_for_game(interaction, self.answer)
 
             elif self.view.player:
+                if self.view.question.check_answer(self.answer):
+                    self.style = ButtonStyle.green
+                else:
+                    self.style = ButtonStyle.danger
+
                 await self.view._answer_for_player(interaction, self.answer)
 
     def __init__(self, question, game=None, player=None):
@@ -33,12 +38,12 @@ class AnswerView(View):
         for child in self.children:
             child.disabled = True
 
-        await self.game.answer_msg.edit(view=self)
+        if self.game:
+            await self.game.answer_msg.edit(view=self)
 
     async def _answer_for_game(self, interaction, answer):
-        player = [
-            p for p in self.game.players if p.member.id == interaction.user.id
-        ]
+        player = [p for p in self.game.players if p.member.id ==
+                  interaction.user.id]
 
         if self.game.team and player:
             player = [t for t in self.game.teams if player[0] in t.members]
@@ -57,19 +62,28 @@ class AnswerView(View):
 
     async def _answer_for_player(self, interaction, answer):
         if self.player.id == interaction.user.id:
+            await self.disable_all()
             username = self.player.nick or self.player.name
 
             message = f'**{username}** as répondu : "_{answer}_"\n'
 
             if self.question.check_answer(answer):
                 message += "C'est **la bonne** réponse !"
+                
             else:
-                message += "Ce **n'est pas la bonne** réponse 😭"
+                message += "Ce **n'est pas la bonne** réponse 😭\n"
+                good_answers = self.question.get_good_answers()
+                if len(good_answers) > 1:
+                    message += (
+                        f"Les bonnes réponses étaient : || {', '.join(good_answers)} ||"
+                    )
+                else:
+                    message += "La bonne réponse était :"
+                    if len(good_answers) > 0:
+                        message += f" || {good_answers[0]} ||"
 
-            await interaction.response.send_message(
-                content=message
-            )
-
+            await interaction.message.edit(view=self)
+            await interaction.response.send_message(content=message)
         else:
             await interaction.response.send_message(
                 content="Seulement la personne interrogée peut répondre à la question",

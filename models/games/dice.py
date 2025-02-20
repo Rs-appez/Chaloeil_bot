@@ -29,7 +29,4 @@ class Dice:
     def image_roll(self):
         if not self.result:
             self.roll()
-        message = ""
-        for d in self.result:
-            message += self.emojis[d] + " "
-        return message
+        return " ".join([str(self.emojis[d]) for d in self.result])

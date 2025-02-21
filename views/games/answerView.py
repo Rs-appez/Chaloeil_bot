@@ -29,7 +29,9 @@ class AnswerView(View):
                         ephemeral=True,
                     )
             else:
-                await self.view._answer_for_player(interaction, self.answer)
+                if self.view.question.check_answer(self.answer):
+                    self.style = ButtonStyle.green
+                    await self.view._answer_for_player(interaction, self.answer)
 
     def __init__(self, question, game=None, player=None):
         self.game = game

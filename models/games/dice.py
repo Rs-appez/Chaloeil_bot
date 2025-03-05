@@ -24,7 +24,7 @@ class Dice:
     def verbal_roll(self, user="Tu"):
         if not self.result:
             self.roll()
-        return f"{user} as obtenu : {sum(self.result)}"
+        return f"{user} a obtenu : {sum(self.result)}"
 
     def image_roll(self):
         if not self.result:

@@ -3,7 +3,7 @@ import nextcord
 from nextcord.ext import commands
 import config
 import bleach
-from interaction_discord_bot.utils.message import transfer_message
+from speakNextcordBot.utils.message import transfer_message
 
 class ChaloeilBot(commands.Bot):
 

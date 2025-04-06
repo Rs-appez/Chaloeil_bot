@@ -2,7 +2,7 @@ import os
 from bot.chaloeilBot import ChaloeilBot
 import config
 
-from interaction_discord_bot.init_cog import init_cog
+from speakNextcordBot.init_cog import init_cog
 
 debug = config.DEBUG
 

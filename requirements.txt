@@ -14,7 +14,7 @@ propcache==0.3.2
 python-decouple==3.8
 requests==2.32.4
 six==1.17.0
-SpeakNextcordBot==1.0.0
+SpeakNextcordBot==1.1.1
 typing_extensions==4.14.0
 urllib3==2.4.0
 webencodings==0.5.1

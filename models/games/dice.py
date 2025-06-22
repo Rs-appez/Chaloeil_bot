@@ -2,17 +2,17 @@ import random
 
 
 class Dice:
-    def __init__(self, bot, number=1, sides=6):
+    def __init__(self, number=1, sides=6):
         self.sides = sides
         self.number = number
 
         self.emojis = {
-            1: bot.ch_emojis["dice_1"] if "dice_1" in bot.ch_emojis else "1",
-            2: bot.ch_emojis["dice_2"] if "dice_2" in bot.ch_emojis else "2",
-            3: bot.ch_emojis["dice_3"] if "dice_3" in bot.ch_emojis else "3",
-            4: bot.ch_emojis["dice_4"] if "dice_4" in bot.ch_emojis else "4",
-            5: bot.ch_emojis["dice_5"] if "dice_5" in bot.ch_emojis else "5",
-            6: bot.ch_emojis["dice_6"] if "dice_6" in bot.ch_emojis else "6",
+            1: "<:dice_1:1386378550956920902>",
+            2: "<:dice_2:1386378565410623498>",
+            3: "<:dice_3:1386378574436499456>",
+            4: "<:dice_4:1386378583210983536>",
+            5: "<:dice_5:1386378592581320775>",
+            6: "<:dice_6:1386378600776859870>",
         }
 
         self.result = None

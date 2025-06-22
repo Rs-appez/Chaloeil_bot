@@ -43,15 +43,6 @@ class ChaloeilBot(commands.Bot):
         if guild:
             self.ch_emojis["delire"] = await guild.fetch_emoji(1027165356168593478)
 
-        guild = self.get_guild(int(config.CHALOEIL_GUILD_ID))
-        if guild:
-            self.ch_emojis["dice_1"] = await guild.fetch_emoji(1341967505568301098)
-            self.ch_emojis["dice_2"] = await guild.fetch_emoji(1341967529115127909)
-            self.ch_emojis["dice_3"] = await guild.fetch_emoji(1341967547020345366)
-            self.ch_emojis["dice_4"] = await guild.fetch_emoji(1341967565093863424)
-            self.ch_emojis["dice_5"] = await guild.fetch_emoji(1341967586354659338)
-            self.ch_emojis["dice_6"] = await guild.fetch_emoji(1341967602054070333)
-
     async def on_message(self, message: Message):
         if message.author == self.user:
             return

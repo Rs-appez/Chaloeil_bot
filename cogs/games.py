@@ -215,7 +215,20 @@ class Game(commands.Cog):
         contexts=[InteractionContextType.guild],
     )
     async def dice(
-        self, interaction: Interaction, number_of_dice: int = 1, sides: int = 6
+        self,
+        interaction: Interaction,
+        number_of_dice: int = SlashOption(
+            name="nombre_de_dés",
+            description="Nombre de dés à lancer",
+            required=False,
+            default=1,
+        ),
+        sides: int = SlashOption(
+            name="nombre_de_faces",
+            description="Nombre de faces des dés",
+            required=False,
+            default=6,
+        ),
     ):
         """Roll the dice"""
 

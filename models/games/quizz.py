@@ -224,6 +224,8 @@ class Quizz:
 
         res_string = self._display_player(res_string, players)
 
+        Statisics.send_answers(self.player_answer, self.current_question)
+
         self.player_answer = []
         await self.channel.send(res_string)
 

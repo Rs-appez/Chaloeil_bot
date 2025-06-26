@@ -48,11 +48,6 @@ class Question:
     def get_good_answers(self):
         return [a.answer_text for a in self.answers if a.is_correct]
 
-    def check_answer(self, answer):
-        return [
-            a for a in self.answers if a.is_correct and a.answer_text == answer
-        ] != []
-
     async def ask_standalone(self, player: Member, interaction: Interaction):
         from views.games.answerView import AnswerView
 

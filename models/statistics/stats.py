@@ -4,6 +4,7 @@ import json
 from typing import List
 
 from models.games.player import Player, Team
+from models.games.question import Question, Answer
 
 
 class Statisics:
@@ -48,6 +49,33 @@ class Statisics:
         response = requests.post(
             Statisics.stats_url + "teams/add_teams/",
             json=data,
+            headers=Statisics.headers,
+        )
+
+        return response.status_code == 201
+
+    @staticmethod
+    def send_answers(players: List[tuple[Player, Answer]], question: Question) -> bool:
+        """Send players's answer to the backend."""
+
+        data = {
+            "question_id": question.id,
+            "answers": [
+                {
+                    "player_id" if player.member else "players_id": str(
+                        player.member.id
+                    )
+                    if player.member
+                    else [str(p.member.id) for p in player],
+                    "answer": answer.id,
+                }
+                for player, answer in players
+            ],
+        }
+
+        response = requests.post(
+            Statisics.stats_url + "statistics/add_answer/",
+            json=json.dumps(data),
             headers=Statisics.headers,
         )
 

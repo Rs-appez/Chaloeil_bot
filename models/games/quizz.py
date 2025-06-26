@@ -1,9 +1,10 @@
 import asyncio
 import config
+from typing import List
 
 from models.games.timer import Timer
 from models.games.player import Player, Team
-from models.games.question import Question
+from models.games.question import Question, Answer
 from models.statistics.stats import Statisics
 
 from views.games.answerView import AnswerView
@@ -29,20 +30,20 @@ class Quizz:
     ) -> None:
         self.channel = channel
         self.creator_id = creator_id
-        self.category = category
-        self.nb_question = nb_question
-        self.team = team
+        self.category: str = category
+        self.nb_question: int = nb_question
+        self.team: bool = team
         self.spectator_players_ids = spectator_players_ids
-        self.players = []
-        self.teams = []
-        self.player_answer = []
-        self.current_question = None
-        self.questions = None
+        self.players: List[Player] = []
+        self.teams: List[Team] = []
+        self.player_answer: List[tuple[Player, Answer]] = []
+        self.current_question: Question = None
+        self.questions: List[Question] = None
         self.timer = None
-        self.time_to_answer = time_to_answer
-        self.flat = flat
-        self.keep = keep
-        self.debug = debug
+        self.time_to_answer: int = time_to_answer
+        self.flat: bool = flat
+        self.keep: bool = keep
+        self.debug: bool = debug
         self.id_range = id_range
 
         self.list_team_msg = None
@@ -167,7 +168,7 @@ class Quizz:
 
         return True
 
-    def set_player_answer(self, player: Player, answer: str):
+    def set_player_answer(self, player: Player, answer: Answer):
         if player in [p[0] for p in self.player_answer]:
             self.player_answer.remove(
                 [p for p in self.player_answer if p[0] == player][0]
@@ -184,9 +185,7 @@ class Quizz:
         for player in players:
             player_answer = [pa[1]
                              for pa in self.player_answer if pa[0] == player]
-            if len(player_answer) > 0 and self.current_question.check_answer(
-                player_answer[0]
-            ):
+            if len(player_answer) > 0 and player_answer[0].is_correct:
                 if self.flat:
                     player.add_point()
                 else:

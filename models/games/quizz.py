@@ -224,12 +224,20 @@ class Quizz:
 
         res_string = self._display_player(res_string, players)
 
-        Statisics.send_answers(self.player_answer, self.current_question)
+        self._send_stats()
 
         self.player_answer = []
         await self.channel.send(res_string)
 
         await self.__next_question(players)
+
+    def _send_stats(self):
+        players_answers = self.player_answer.copy()
+        for player in self.players:
+            if player not in [pa[0] for pa in self.player_answer]:
+                players_answers.append((player, None))
+
+        Statisics.send_answers(players_answers, self.current_question)
 
     def _check_winner(self, players):
         return len(self.questions) == 0

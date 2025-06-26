@@ -3,7 +3,6 @@ import requests
 import random
 
 from nextcord import Member, Interaction
-from views.games.answerView import AnswerView
 
 
 class Question:
@@ -55,6 +54,8 @@ class Question:
         ] != []
 
     async def ask_standalone(self, player: Member, interaction: Interaction):
+        from views.games.answerView import AnswerView
+
         question_msg = f"‎ ‎\n{self.question}\n‎ ‎"
 
         if self.image_url:

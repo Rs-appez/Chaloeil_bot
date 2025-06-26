@@ -2,8 +2,7 @@ import asyncio
 import config
 
 from models.games.timer import Timer
-from models.games.player import Player
-from models.games.team import Team
+from models.games.player import Player, Team
 from models.games.question import Question
 from views.games.answerView import AnswerView
 from views.games.createTeamView import CreateTeamView

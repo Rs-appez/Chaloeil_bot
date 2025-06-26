@@ -1,9 +1,8 @@
-from nextcord import ButtonStyle
-from nextcord.ui import View, button
+from nextcord import ButtonStyle, SelectOption
+from nextcord.ui import Select, View, button
 
 from views.games.teamModal import TeamModal
-from nextcord.ui import Select
-from nextcord import SelectOption
+from models.statistics.stats import Statisics
 
 
 class CreateTeamView(View):
@@ -27,6 +26,7 @@ class CreateTeamView(View):
                 btn.disabled = True
             await interaction.response.edit_message(view=self)
             await self.game.show_question()
+            Statisics.init_teams(self.game.teams)
 
         else:
             await interaction.response.send_message(

@@ -57,7 +57,6 @@ class Statisics:
     @staticmethod
     def send_answers(players: List[tuple[Player, Answer]], question: Question) -> bool:
         """Send players's answer to the backend."""
-
         data = {
             "question_id": question.id,
             "answers": json.dumps(
@@ -68,7 +67,7 @@ class Statisics:
                         )
                         if player.member
                         else [str(p.member.id) for p in player],
-                        "answer_id": answer.id,
+                        "answer_id": answer.id if answer else -1,
                     }
                     for player, answer in players
                 ]

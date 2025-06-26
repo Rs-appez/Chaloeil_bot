@@ -1,14 +1,17 @@
 from nextcord.ui import View, Button
 from nextcord.enums import ButtonStyle
 
+from models.games.question import Answer
 
 class AnswerView(View):
     class ButtonAnswer(Button):
-        def __init__(self, answer):
-            self.answer = answer.answer_text
+        def __init__(self, answer: Answer):
+            self.answer = answer
 
             super().__init__(
-                label=self.answer, style=ButtonStyle.primary, emoji=answer.emoji
+                label=self.answer.answer_text,
+                style=ButtonStyle.primary,
+                emoji=answer.emoji,
             )
 
         async def callback(self, interaction):
@@ -17,7 +20,7 @@ class AnswerView(View):
 
             elif self.view.player:
                 if self.view.player.id == interaction.user.id:
-                    if self.view.question.check_answer(self.answer):
+                    if self.answer.is_correct:
                         self.style = ButtonStyle.green
                     else:
                         self.style = ButtonStyle.danger
@@ -29,7 +32,7 @@ class AnswerView(View):
                         ephemeral=True,
                     )
             else:
-                if self.view.question.check_answer(self.answer):
+                if self.answer.is_correct:
                     self.style = ButtonStyle.green
                     await self.view._answer_for_player(interaction, self.answer)
 
@@ -51,7 +54,7 @@ class AnswerView(View):
         if self.game:
             await self.game.answer_msg.edit(view=self)
 
-    async def _answer_for_game(self, interaction, answer):
+    async def _answer_for_game(self, interaction, answer: Answer):
         player = [p for p in self.game.players if p.member.id ==
                   interaction.user.id]
 
@@ -60,7 +63,7 @@ class AnswerView(View):
 
         if player:
             await interaction.response.send_message(
-                content=f'Tu as répondu : "_{answer}_"', ephemeral=True
+                content=f'Tu as répondu : "_{answer.answer_text}_"', ephemeral=True
             )
             self.game.set_player_answer(player[0], answer)
 
@@ -70,13 +73,13 @@ class AnswerView(View):
                 ephemeral=True,
             )
 
-    async def _answer_for_player(self, interaction, answer):
+    async def _answer_for_player(self, interaction, answer: Answer):
         await self.disable_all()
         username = interaction.user.nick or interaction.user.name
 
-        message = f'**{username}** as répondu : "_{answer}_"\n'
+        message = f'**{username}** as répondu : "_{answer.answer_text}_"\n'
 
-        if self.question.check_answer(answer):
+        if answer.is_correct:
             message += "C'est **la bonne** réponse !"
 
         else:

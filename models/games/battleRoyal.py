@@ -49,9 +49,7 @@ class BattleRoyal(Quizz):
         for player in players:
             player_answer = [pa[1]
                              for pa in self.player_answer if pa[0] == player]
-            if not player_answer or not self.current_question.check_answer(
-                player_answer[0]
-            ):
+            if not player_answer or not player_answer[0]:
                 player.loose_life_point()
 
         players_in_life = [p for p in players if p.life_point > 0]

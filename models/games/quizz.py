@@ -4,6 +4,8 @@ import config
 from models.games.timer import Timer
 from models.games.player import Player, Team
 from models.games.question import Question
+from models.statistics.stats import Statisics
+
 from views.games.answerView import AnswerView
 from views.games.createTeamView import CreateTeamView
 from views.games.reloadQuestionView import ReloadQuestionView
@@ -126,6 +128,8 @@ class Quizz:
                 and player.id not in self.spectator_players_ids
             ):
                 self.players.append(Player(await player.fetch_member()))
+
+        Statisics.init_players(self.players)
 
     async def __init_teams(self):
         self.list_team_msg = await self.channel.send("Aucune équipe pour le moment")

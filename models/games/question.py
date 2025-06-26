@@ -1,4 +1,3 @@
-from models.games.answer import Answer
 import config
 import requests
 import random
@@ -65,3 +64,10 @@ class Question:
             content=question_msg,
             view=AnswerView(question=self, player=player),
         )
+
+
+class Answer:
+    def __init__(self, json) -> None:
+        self.answer_text = json["answer_text"]
+        self.is_correct = json["is_correct"]
+        self.emoji = json["emoticon"]

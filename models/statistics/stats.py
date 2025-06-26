@@ -60,22 +60,24 @@ class Statisics:
 
         data = {
             "question_id": question.id,
-            "answers": [
-                {
-                    "player_id" if player.member else "players_id": str(
-                        player.member.id
-                    )
-                    if player.member
-                    else [str(p.member.id) for p in player],
-                    "answer": answer.id,
-                }
-                for player, answer in players
-            ],
+            "answers": json.dumps(
+                [
+                    {
+                        "player_id" if player.member else "players_id": str(
+                            player.member.id
+                        )
+                        if player.member
+                        else [str(p.member.id) for p in player],
+                        "answer_id": answer.id,
+                    }
+                    for player, answer in players
+                ]
+            ),
         }
 
         response = requests.post(
             Statisics.stats_url + "statistics/add_answer/",
-            json=json.dumps(data),
+            json=data,
             headers=Statisics.headers,
         )
 

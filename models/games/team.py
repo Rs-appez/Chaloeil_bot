@@ -1,9 +1,8 @@
-
 from models.games.player import Player
 
-class Team(Player):
 
-    def __init__(self, members ,name, life_point=3, points=0) -> None:
+class Team(Player):
+    def __init__(self, members, name, life_point=3, points=0) -> None:
         super().__init__(None, life_point, points)
 
         self.members = members
@@ -12,8 +11,9 @@ class Team(Player):
     def __str__(self) -> str:
         string = f"**{self.name}** ( "
         for member in self.members:
-                string += f"{member}, "
+            string += f"{member}, "
         return string[:-2] + " )"
-        
-    async def dm(self,msg,view = None):
+
+    async def dm(self, msg, view=None):
         return
+

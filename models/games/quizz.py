@@ -1,10 +1,11 @@
 import asyncio
+import config
+
 from models.games.timer import Timer
 from models.games.player import Player
 from models.games.team import Team
 from models.games.question import Question
 from views.games.answerView import AnswerView
-import config
 from views.games.createTeamView import CreateTeamView
 from views.games.reloadQuestionView import ReloadQuestionView
 from views.games.startView import StartView

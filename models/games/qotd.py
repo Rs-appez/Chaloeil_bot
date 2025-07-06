@@ -10,8 +10,10 @@ class QuestionsOfTheDay(Quizz):
             category=None,
             time_to_answer=time_to_answer,
         )
+        self.__init_question()
         self.statement_string = (
-            f"Bienvenue dans le **Quizz du jour!**\n\nVous allez devoir répondre à la série de questions sélectionnées pour aujourd'hui.\n"
+            f"Bienvenue dans le **Quizz du jour!**\n\nVous allez devoir répondre à la série de questions sélectionnées pour aujourd'hui."
+            f" *({self.nb_question} questions)*\n"
             "Une fois le Quizz commencé, il n'y aura pas de pause possible avant la fin de la série.\n\n"
             f"**__Règles__** :\n\n> {self.time_to_answer} secondes par question\n> Tous les participants ont la même série *(dans le même ordre)*\n"
             "> **__Il est strictement interdit de communiquer les questions ou les réponses avec quiconque__ !!!**\n"
@@ -20,10 +22,11 @@ class QuestionsOfTheDay(Quizz):
             f"> {self.difficulty_point['Easy']} point par question **Easy**\n> {self.difficulty_point['Medium']} points par question **Medium**\n> {self.difficulty_point['Hard']} points par question **Hard**\n> {self.difficulty_point['HARDCORE']} points par question **HARDCORE**\n> 0 point par mauvaise réponse\n\n"
             "\nUne fois fois avoir lu et compris ces règles, vous pouvez commencer le Quizz en cliquant sur le bouton ci-dessous.\n"
             "<:chaloeil:1386369580275994775> Bonne chance ! <:chaloeil:1386369580275994775>\n\n"
-
         )
-    def _get_question(self) -> Question:
-        if self.questions is None:
-            self.questions = Question.get_questions_of_the_day()
 
+    def __init_question(self) -> None:
+        self.questions = Question.get_questions_of_the_day()
+        self.nb_question = len(self.questions)
+
+    def _get_question(self) -> Question:
         return self.questions.pop(0) if self.questions else None

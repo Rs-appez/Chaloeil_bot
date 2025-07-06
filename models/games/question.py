@@ -7,6 +7,7 @@ from nextcord import Member, Interaction
 
 class Question:
     api_url = config.BACKEND_URL + "question/questions/"
+    qoth_url = config.BACKEND_URL + "question/qotd/"
 
     def __init__(self, json) -> None:
         self.id = json["id"]
@@ -35,6 +36,18 @@ class Question:
                 return [Question(req.json()[0])]
             else:
                 return [Question(q) for q in req.json()]
+        else:
+            return None
+
+    @staticmethod
+    def get_questions_of_the_day():
+        req = requests.get(
+            Question.qoth_url + "qotd",
+            headers={"Authorization": config.BACKEND_TOKEN},
+        )
+
+        if req.status_code == 200:
+            return [Question(q) for q in req.json()["questions"]]
         else:
             return None
 

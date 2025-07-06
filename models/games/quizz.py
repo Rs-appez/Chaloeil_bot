@@ -65,7 +65,7 @@ class Quizz:
             else f"> {self.difficulty_point['Easy']} point par question **Easy**\n> {self.difficulty_point['Medium']} points par question **Medium**\n> {self.difficulty_point['Hard']} points par question **Hard**\n> {self.difficulty_point['HARDCORE']} points par question **HARDCORE**\n> 0 point par mauvaise réponse\n\n"
         )
 
-    def _get_question(self):
+    def _get_question(self) -> Question:
         if self.questions is None or len(self.questions) == 0:
             self.questions = Question.get_question(
                 self.nb_question, cat=self.category, id_range=self.id_range

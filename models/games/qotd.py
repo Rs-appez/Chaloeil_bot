@@ -8,16 +8,20 @@ class QuestionsOfTheDay(Quizz):
             channel,
             creator_id,
             category=None,
-            team=False,
             time_to_answer=time_to_answer,
         )
         self.statement_string = (
-            f"Bienvenue dans le QOTD !\n\nVous allez devoir répondre à une question du jour.\n\n"
-            f"**__Règles__** :\n\n> {self.time_to_answer} secondes pour répondre\n> Fin de la question si tous les joueurs ont répondu\n"
-            "> Vous pouvez changer de réponse tant que tous les joueurs n'ont pas répondu"
-            "\n\n**__Points__** :\n\n> 1 point par bonne réponse\n> 0 point par mauvaise réponse\n\n"
-        )
+            f"Bienvenue dans le **Quizz du jour!**\n\nVous allez devoir répondre à la série de questions sélectionnées pour aujourd'hui.\n"
+            "Une fois le Quizz commencé, il n'y aura pas de pause possible avant la fin de la série.\n\n"
+            f"**__Règles__** :\n\n> {self.time_to_answer} secondes par question\n> Tous les participants ont la même série *(dans le même ordre)*\n"
+            "> **__Il est strictement interdit de communiquer les questions ou les réponses avec quiconque__ !!!**\n"
+            "> **__Il est strictement interdit de s'aider de n'importe quelle aide durant le Quizz__ !!!**\n"
+            "\n\n**__Points__** :\n\n"
+            f"> {self.difficulty_point['Easy']} point par question **Easy**\n> {self.difficulty_point['Medium']} points par question **Medium**\n> {self.difficulty_point['Hard']} points par question **Hard**\n> {self.difficulty_point['HARDCORE']} points par question **HARDCORE**\n> 0 point par mauvaise réponse\n\n"
+            "\nUne fois fois avoir lu et compris ces règles, vous pouvez commencer le Quizz en cliquant sur le bouton ci-dessous.\n"
+            "<:chaloeil:1386369580275994775> Bonne chance ! <:chaloeil:1386369580275994775>\n\n"
 
+        )
     def _get_question(self) -> Question:
         if self.questions is None:
             self.questions = Question.get_questions_of_the_day()

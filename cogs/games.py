@@ -238,16 +238,6 @@ class Game(commands.Cog):
         await interaction.channel.send(dice.verbal_roll(username))
         await interaction.channel.send(dice.image_roll())
 
-    # @slash_command(
-    #     name="mofus",
-    #     description="Find the word",
-    #     contexts=[InteractionContextType.guild],
-    # )
-    # async def mofus(self, interaction: Interaction):
-    #     """Start a mofus game"""
-
-    #     await interaction.response.send_message("Mofus",ephemeral=True)
-
     async def __create_game_channel(self, interaction: Interaction, name_channel):
         if interaction.channel.type in [
             ChannelType.news_thread,

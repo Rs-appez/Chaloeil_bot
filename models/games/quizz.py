@@ -50,8 +50,7 @@ class Quizz:
         self.answer_msg = None
         self.answer_view = None
 
-        self.difficulty_point = {"Easy": 1,
-                                 "Medium": 2, "Hard": 3, "HARDCORE": 5}
+        self.difficulty_point = {"Easy": 1, "Medium": 2, "Hard": 3, "HARDCORE": 5}
 
         self.statement_string = (
             f"Bienvenue dans le grand quiz du Chaloeil !\n\nVous allez devoir répondre à une série de {self.nb_question} questions.\n\n"
@@ -103,8 +102,7 @@ class Quizz:
         if self.debug:
             altenative_sentence += f"\n*(ID : **{self.current_question.id}**)*"
 
-        question_msg = f"‎ ‎\n{altenative_sentence}\n" + \
-            self.current_question.question
+        question_msg = f"‎ ‎\n{altenative_sentence}\n" + self.current_question.question
 
         time_message = await self.channel.send(time_text)
 
@@ -183,14 +181,12 @@ class Quizz:
 
     def _compute_score(self, players):
         for player in players:
-            player_answer = [pa[1]
-                             for pa in self.player_answer if pa[0] == player]
+            player_answer = [pa[1] for pa in self.player_answer if pa[0] == player]
             if len(player_answer) > 0 and player_answer[0].is_correct:
                 if self.flat:
                     player.add_point()
                 else:
-                    player.add_point(
-                        self.difficulty_point[self.current_question.level])
+                    player.add_point(self.difficulty_point[self.current_question.level])
 
         return players
 
@@ -245,6 +241,7 @@ class Quizz:
     async def __next_question(self, players):
         if self._check_winner(players):
             await self._display_winner(players)
+            await self._clear_channel()
         else:
             await asyncio.sleep(5)
             await self.show_question()
@@ -263,6 +260,7 @@ class Quizz:
         else:
             await self.channel.send(f"\n** {players[0]} a gagné ! **")
 
+    async def _clear_channel(self):
         if not self.keep:
             await asyncio.sleep(10)
             await self.channel.send(

@@ -244,7 +244,7 @@ class Quizz:
 
     async def __next_question(self, players):
         if self._check_winner(players):
-            await self.display_winner(players)
+            await self._display_winner(players)
         else:
             await asyncio.sleep(5)
             await self.show_question()
@@ -252,7 +252,7 @@ class Quizz:
     async def self_destruct(self):
         await self.channel.delete()
 
-    async def display_winner(self, players):
+    async def _display_winner(self, players):
         players = sorted(players, key=lambda p: p.points, reverse=True)
         winners = [p for p in players if p.points == players[0].points]
 

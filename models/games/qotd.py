@@ -30,3 +30,7 @@ class QuestionsOfTheDay(Quizz):
 
     def _get_question(self) -> Question:
         return self.questions.pop(0) if self.questions else None
+
+    async def _display_winner(self, players) -> None:
+        msg = f"Vous avez terminé le Quizz du jour avec un score de **{players[0].points}** points !\n"
+        await self.channel.send(msg)

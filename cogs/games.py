@@ -3,6 +3,7 @@ from nextcord.interactions import Interaction
 from nextcord import slash_command, ChannelType
 from models.games.battleRoyal import BattleRoyal
 from models.games.quizz import Quizz
+from models.games.qotd import QuestionsOfTheDay
 from models.games.question import Question
 from models.games.dice import Dice
 from views.games.joinGameView import JoinGameView
@@ -238,6 +239,19 @@ class Game(commands.Cog):
         await interaction.channel.send(dice.verbal_roll(username))
         await interaction.channel.send(dice.image_roll())
 
+    @slash_command(
+        name="daily_quizz",
+        description="Get the daily quizz",
+    )
+    async def daily_quizz(self, interaction: Interaction):
+        """Get the daily quizz"""
+        channel = await self.__create_game_channel(interaction, "daily quizz")
+
+        if not channel:
+            return
+        qotd = QuestionsOfTheDay(channel, interaction.user.id)
+        await self.__init_game(interaction, qotd, channel)
+
     async def __create_game_channel(self, interaction: Interaction, name_channel):
         if interaction.channel.type in [
             ChannelType.news_thread,
@@ -259,7 +273,7 @@ class Game(commands.Cog):
             )
         return game_channel
 
-    async def __init_game(self, interaction: Interaction, game, game_channel):
+    async def __init_game(self, interaction: Interaction, game: Quizz, game_channel):
         chaloeil_emoji = (
             self.bot.ch_emojis["chaloeil"] if "chaloeil" in self.bot.ch_emojis else None
         )

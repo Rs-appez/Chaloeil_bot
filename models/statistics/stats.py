@@ -81,3 +81,22 @@ class Statisics:
         )
 
         return response.status_code == 201
+
+    @staticmethod
+    def send_score(player : Player) -> bool:
+        """Send player's score to the backend."""
+        data = {
+            "player_id": player.member.id,
+            "score": player.points,
+        }
+
+        response = requests.post(
+            Statisics.stats_url + "qotdStatistics/add_score/",
+            json=data,
+            headers=Statisics.headers,
+        )
+        if response.status_code == 200:
+            return True
+
+        return False
+

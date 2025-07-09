@@ -1,5 +1,6 @@
 from .quizz import Quizz
 from .question import Question
+from models.statistics.stats import Statisics
 
 
 class QuestionsOfTheDay(Quizz):
@@ -32,5 +33,7 @@ class QuestionsOfTheDay(Quizz):
         return self.questions.pop(0) if self.questions else None
 
     async def _display_winner(self, players) -> None:
-        msg = f"Vous avez terminé le Quizz du jour avec un score de **{players[0].points}** points !\n"
+        player = players[0]
+        Statisics.send_score(player)
+        msg = f"Vous avez terminé le Quizz du jour avec un score de **{player.points}** points !\n"
         await self.channel.send(msg)

@@ -9,6 +9,8 @@ class Question:
     api_url = config.BACKEND_URL + "question/questions/"
     qoth_url = config.BACKEND_URL + "question/qotd/"
 
+    headers = ({"Authorization": config.BACKEND_TOKEN},)
+
     def __init__(self, json) -> None:
         self.id = json["id"]
         self.question = json["question_text"]
@@ -28,7 +30,7 @@ class Question:
                 "number": number,
                 "id_range": id_range,
             },
-            headers={"Authorization": config.BACKEND_TOKEN},
+            headers=Question.headers,
         )
 
         if req.status_code == 200:
@@ -43,13 +45,19 @@ class Question:
     def get_questions_of_the_day():
         req = requests.get(
             Question.qoth_url + "qotd",
-            headers={"Authorization": config.BACKEND_TOKEN},
+            headers=Question.headers,
+        )
+
+    @staticmethod
+    def generate_questions_of_the_day():
+        req = requests.post(
+            Question.qoth_url + "generate_qotd",
+            headers=Question.headers,
         )
 
         if req.status_code == 200:
-            return [Question(q) for q in req.json()["questions"]]
-        else:
-            return None
+            return True
+        return False
 
     def get_answers(self):
         answers = self.answers

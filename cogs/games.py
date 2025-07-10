@@ -6,6 +6,7 @@ from models.games.quizz import Quizz
 from models.games.qotd import QuestionsOfTheDay
 from models.games.question import Question
 from models.games.dice import Dice
+from models.games.qotdscheduler import QOTDScheduler
 from views.games.joinGameView import JoinGameView
 from views.games.statementView import StatementView
 from nextcord import SlashOption
@@ -29,6 +30,7 @@ class Game(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
+        self.qotd_scheduler = QOTDScheduler()
 
     @slash_command(
         name="battle_royal_quizz",

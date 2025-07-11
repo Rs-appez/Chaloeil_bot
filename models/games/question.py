@@ -9,7 +9,7 @@ class Question:
     api_url = config.BACKEND_URL + "question/questions/"
     qoth_url = config.BACKEND_URL + "question/qotd/"
 
-    headers = ({"Authorization": config.BACKEND_TOKEN},)
+    headers = {"Authorization": config.BACKEND_TOKEN}
 
     def __init__(self, json) -> None:
         self.id = json["id"]
@@ -51,7 +51,7 @@ class Question:
     @staticmethod
     def generate_questions_of_the_day():
         req = requests.post(
-            Question.qoth_url + "generate_qotd",
+            Question.qoth_url + "generate_qotd/",
             headers=Question.headers,
         )
 

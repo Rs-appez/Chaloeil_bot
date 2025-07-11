@@ -47,6 +47,11 @@ class Question:
             Question.qoth_url + "qotd",
             headers=Question.headers,
         )
+        if req.status_code == 200:
+            return [Question(q) for q in req.json()["questions"]]
+
+        else:
+            return None
 
     @staticmethod
     def generate_questions_of_the_day():

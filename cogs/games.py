@@ -251,18 +251,28 @@ class Game(commands.Cog):
 
         if not channel:
             return
-        qotd = QuestionsOfTheDay(channel, interaction.user.id)
-        chaloeil_emoji = (
-            self.bot.ch_emojis["chaloeil"] if "chaloeil" in self.bot.ch_emojis else None
-        )
 
-        await qotd.launch_statement()
+        try:
+            qotd = QuestionsOfTheDay(channel, interaction.user.id)
+            chaloeil_emoji = (
+                self.bot.ch_emojis["chaloeil"]
+                if "chaloeil" in self.bot.ch_emojis
+                else None
+            )
 
-        await interaction.response.send_message(
-            f"{chaloeil_emoji} **Démarre la série de question du jour !** {chaloeil_emoji}",
-            view=JoinGameView(qotd, chaloeil_emoji),
-            ephemeral=True,
-        )
+            await qotd.launch_statement()
+            await interaction.response.send_message(
+                f"{chaloeil_emoji} **Démarre la série de question du jour !** {chaloeil_emoji}",
+                view=JoinGameView(qotd, chaloeil_emoji),
+                ephemeral=True,
+            )
+
+        except ValueError:
+            await interaction.response.send_message(
+                f"Les questions du jour ne sont pas encore disponibles. Veuillez réessayer plus tard. <:chaloeil:1386369580275994775>",
+                ephemeral=True,
+            )
+            await channel.delete()
 
     async def __create_game_channel(self, interaction: Interaction, name_channel):
         if interaction.channel.type in [

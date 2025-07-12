@@ -27,6 +27,8 @@ class QuestionsOfTheDay(Quizz):
 
     def __init_question(self) -> None:
         self.questions = Question.get_questions_of_the_day()
+        if not self.questions:
+            raise ValueError("No questions available for the day.")
         self.nb_question = len(self.questions)
 
     def _get_question(self) -> Question:

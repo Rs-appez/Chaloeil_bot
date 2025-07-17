@@ -247,12 +247,13 @@ class Game(commands.Cog):
     )
     async def daily_quizz(self, interaction: Interaction):
         """Get the daily quizz"""
-        channel = await self.__create_game_channel(interaction, "daily quizz")
-
-        if not channel:
-            return
 
         try:
+            channel = await self.__create_game_channel(interaction, "daily quizz")
+
+            if not channel:
+                raise Exception("Channel creation failed")
+
             qotd = QuestionsOfTheDay(channel, interaction.user.id)
             chaloeil_emoji = (
                 self.bot.ch_emojis["chaloeil"]
@@ -273,6 +274,14 @@ class Game(commands.Cog):
                 ephemeral=True,
             )
             await channel.delete()
+
+        except Exception as e:
+            await interaction.response.send_message(
+                f"Une erreur est survenue lors de la création du Quizz du jour : {str(e)}",
+                ephemeral=True,
+            )
+            if channel:
+                await channel.delete()
 
     async def __create_game_channel(self, interaction: Interaction, name_channel):
         if interaction.channel.type in [

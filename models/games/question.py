@@ -42,9 +42,9 @@ class Question:
             return None
 
     @staticmethod
-    def get_questions_of_the_day():
+    def get_questions_of_the_day(player_id: int):
         req = requests.get(
-            Question.qoth_url + "qotd",
+            Question.qoth_url + f"qotd?player={player_id}",
             headers=Question.headers,
         )
         if req.status_code == 200:

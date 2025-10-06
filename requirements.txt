@@ -4,13 +4,13 @@ aiosignal==1.4.0
 async-timeout==5.0.1
 attrs==25.3.0
 bleach==6.2.0
-certifi==2025.8.3
+certifi==2025.10.5
 charset-normalizer==3.4.3
-frozenlist==1.7.0
+frozenlist==1.8.0
 idna==3.10
 multidict==6.6.4
 nextcord==3.0.1
-propcache==0.3.2
+propcache==0.4.0
 python-decouple==3.8
 requests==2.32.5
 six==1.17.0
@@ -18,5 +18,5 @@ SpeakNextcordBot==1.1.1
 typing_extensions==4.15.0
 urllib3==2.5.0
 webencodings==0.5.1
-yarl==1.20.1
+yarl==1.21.0
 zipp==3.23.0

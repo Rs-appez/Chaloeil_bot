@@ -1,3 +1,4 @@
+from models.games.player import Player
 from .quizz import Quizz
 from .question import Question
 from models.statistics.stats import Statisics
@@ -11,6 +12,7 @@ class QuestionsOfTheDay(Quizz):
             category=None,
             time_to_answer=time_to_answer,
         )
+        self.qotd_id: int = None
         self.__init_question()
         self.statement_string = (
             f"Bienvenue dans le **Quizz du jour!**\n\nVous allez devoir répondre à la série de questions sélectionnées pour aujourd'hui."
@@ -25,10 +27,16 @@ class QuestionsOfTheDay(Quizz):
             "<:chaloeil:1386369580275994775> Bonne chance ! <:chaloeil:1386369580275994775>\n\n"
         )
 
+    async def _init_players(self) -> None:
+        await super()._init_players()
+        Statisics.log_player_participation(self.players[0], self.qotd_id)
+
     def __init_question(self) -> None:
-        self.questions = Question.get_questions_of_the_day(self.creator_id)
-        if not self.questions:
+        qotd = Question.get_questions_of_the_day(self.creator_id)
+        if not qotd:
             raise ValueError("No questions available for the day.")
+
+        self.questions, self.qotd_id = qotd
         self.nb_question = len(self.questions)
 
     def _get_question(self) -> Question:

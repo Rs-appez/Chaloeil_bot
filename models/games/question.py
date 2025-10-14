@@ -42,13 +42,16 @@ class Question:
             return None
 
     @staticmethod
-    def get_questions_of_the_day(player_id: int):
+    def get_questions_of_the_day(player_id: int) -> tuple[list["Question"], int] | None:
         req = requests.get(
             Question.qoth_url + f"qotd?player={player_id}",
             headers=Question.headers,
         )
         if req.status_code == 200:
-            return [Question(q["question"]) for q in req.json()["questions"]]
+            return (
+                [Question(q["question"]) for q in req.json()["questions"]],
+                req.json()["id"],
+            )
 
         else:
             return None

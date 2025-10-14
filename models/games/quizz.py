@@ -1,12 +1,14 @@
 import asyncio
-import config
 from typing import List
 
-from models.games.timer import Timer
-from models.games.player import Player, Team
-from models.games.question import Question, Answer
-from models.statistics.stats import Statisics
+from nextcord import DMChannel, Thread
 
+import config
+from models.exceptions import LogException
+from models.games.player import Player, Team
+from models.games.question import Answer, Question
+from models.games.timer import Timer
+from models.statistics.stats import Statisics
 from views.games.answerView import AnswerView
 from views.games.createTeamView import CreateTeamView
 from views.games.reloadQuestionView import ReloadQuestionView
@@ -28,7 +30,7 @@ class Quizz:
         time_to_answer=30,
         spectator_players_ids=[],
     ) -> None:
-        self.channel = channel
+        self.channel: DMChannel | Thread = channel
         self.creator_id = creator_id
         self.category: str = category
         self.nb_question: int = nb_question
@@ -76,7 +78,16 @@ class Quizz:
         await self.channel.send(self.statement_string, view=StartView(self))
 
     async def start(self):
-        await self._init_players()
+        try:
+            await self._init_players()
+        except LogException as e:
+            await self.channel.send(e)
+            return
+        except Exception :
+            await self.channel.send(
+                "Erreur lors de la récupération des joueurs 😭\nLe quizz ne peut pas commencer.",
+            )
+            return
 
         if self.team:
             await self.__init_teams()
@@ -121,7 +132,12 @@ class Quizz:
         )
 
     async def _init_players(self):
-        for player in await self.channel.fetch_members():
+        match self.channel:
+            case DMChannel():
+                players = [self.channel.recipient]
+            case Thread():
+                players = await self.channel.fetch_members()
+        for player in players:
             if (
                 not player.id == int(config.CHALOEIL_ID)
                 and player.id not in self.spectator_players_ids

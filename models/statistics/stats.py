@@ -1,5 +1,7 @@
+from models.exceptions import LogException
 import config
 import requests
+from requests.models import Response
 import json
 from typing import List
 
@@ -83,14 +85,14 @@ class Statisics:
         return response.status_code == 201
 
     @staticmethod
-    def send_score(player : Player) -> bool:
+    def send_score(player: Player) -> bool:
         """Send player's score to the backend."""
         data = {
             "player_id": player.member.id,
             "score": player.points,
         }
 
-        response = requests.post(
+        response: Response = requests.post(
             Statisics.stats_url + "qotdStatistics/add_score/",
             json=data,
             headers=Statisics.headers,
@@ -100,3 +102,25 @@ class Statisics:
 
         return False
 
+    @staticmethod
+    def log_player_participation(player: Player, qotd_id: int):
+        """Log player's participation to the backend."""
+        data = {
+            "player_id": player.member.id,
+            "qotd_id": qotd_id,
+        }
+
+        response: Response = requests.post(
+            Statisics.stats_url + "qotdStatistics/log_player/",
+            json=data,
+            headers=Statisics.headers,
+        )
+
+        if response.status_code == 403:
+            print(response.json())
+            raise LogException("Vous avez déjà participé au Quizz du jour aujourd'hui.")
+
+        if response.status_code != 201:
+            raise Exception(
+                "Une erreur est survenue lors de l'enregistrement de votre participation au Quizz du jour. Veuillez réessayer plus tard."
+            )

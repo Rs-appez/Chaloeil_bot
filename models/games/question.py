@@ -48,7 +48,7 @@ class Question:
             headers=Question.headers,
         )
         if req.status_code == 200:
-            return [Question(q) for q in req.json()["questions"]]
+            return [Question(q["question"]) for q in req.json()["questions"]]
 
         else:
             return None

@@ -270,7 +270,7 @@ class Game(commands.Cog):
 
         except ValueError:
             await interaction.response.send_message(
-                f"Les questions du jour ne sont pas encore disponibles. Veuillez réessayer plus tard. <:chaloeil:1386369580275994775>",
+                "Les questions du jour ne sont pas encore disponibles. Veuillez réessayer plus tard. <:chaloeil:1386369580275994775>",
                 ephemeral=True,
             )
             await channel.delete()

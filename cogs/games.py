@@ -215,7 +215,6 @@ class Game(commands.Cog):
     @slash_command(
         name="dice",
         description="Roll the dice 🎲",
-        contexts=[InteractionContextType.guild],
     )
     async def dice(
         self,

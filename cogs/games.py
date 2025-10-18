@@ -243,6 +243,7 @@ class Game(commands.Cog):
     @slash_command(
         name="daily_quizz",
         description="Get the daily quizz",
+        contexts=[InteractionContextType.guild],
     )
     async def daily_quizz(self, interaction: Interaction):
         """Get the daily quizz"""

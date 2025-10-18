@@ -1,3 +1,4 @@
+#!venv/bin/python3
 import os
 from bot.chaloeilBot import ChaloeilBot
 import config

@@ -3,8 +3,10 @@ from nextcord.interactions import Interaction
 from nextcord import slash_command, ChannelType
 from models.games.battleRoyal import BattleRoyal
 from models.games.quizz import Quizz
+from models.games.qotd import QuestionsOfTheDay
 from models.games.question import Question
 from models.games.dice import Dice
+from models.games.qotdscheduler import QOTDScheduler
 from views.games.joinGameView import JoinGameView
 from views.games.statementView import StatementView
 from nextcord import SlashOption
@@ -28,6 +30,7 @@ class Game(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
+        self.qotd_scheduler = QOTDScheduler()
 
     @slash_command(
         name="battle_royal_quizz",
@@ -212,7 +215,6 @@ class Game(commands.Cog):
     @slash_command(
         name="dice",
         description="Roll the dice 🎲",
-        contexts=[InteractionContextType.guild],
     )
     async def dice(
         self,
@@ -238,15 +240,48 @@ class Game(commands.Cog):
         await interaction.channel.send(dice.verbal_roll(username))
         await interaction.channel.send(dice.image_roll())
 
-    # @slash_command(
-    #     name="mofus",
-    #     description="Find the word",
-    #     contexts=[InteractionContextType.guild],
-    # )
-    # async def mofus(self, interaction: Interaction):
-    #     """Start a mofus game"""
+    @slash_command(
+        name="daily_quizz",
+        description="Get the daily quizz",
+        contexts=[InteractionContextType.guild],
+    )
+    async def daily_quizz(self, interaction: Interaction):
+        """Get the daily quizz"""
 
-    #     await interaction.response.send_message("Mofus",ephemeral=True)
+        try:
+            channel = await self.__create_game_channel(interaction, "daily quizz")
+
+            if not channel:
+                raise Exception("Channel creation failed")
+
+            qotd = QuestionsOfTheDay(channel, interaction.user.id)
+            chaloeil_emoji = (
+                self.bot.ch_emojis["chaloeil"]
+                if "chaloeil" in self.bot.ch_emojis
+                else None
+            )
+
+            await qotd.launch_statement()
+            await interaction.response.send_message(
+                f"{chaloeil_emoji} **Démarre la série de question du jour !** {chaloeil_emoji}",
+                view=JoinGameView(qotd, chaloeil_emoji),
+                ephemeral=True,
+            )
+
+        except ValueError:
+            await interaction.response.send_message(
+                "Les questions du jour ne sont pas encore disponibles. Veuillez réessayer plus tard. <:chaloeil:1386369580275994775>",
+                ephemeral=True,
+            )
+            await channel.delete()
+
+        except Exception as e:
+            await interaction.response.send_message(
+                f"Une erreur est survenue lors de la création du Quizz du jour : {str(e)}",
+                ephemeral=True,
+            )
+            if channel:
+                await channel.delete()
 
     async def __create_game_channel(self, interaction: Interaction, name_channel):
         if interaction.channel.type in [
@@ -269,7 +304,7 @@ class Game(commands.Cog):
             )
         return game_channel
 
-    async def __init_game(self, interaction: Interaction, game, game_channel):
+    async def __init_game(self, interaction: Interaction, game: Quizz, game_channel):
         chaloeil_emoji = (
             self.bot.ch_emojis["chaloeil"] if "chaloeil" in self.bot.ch_emojis else None
         )

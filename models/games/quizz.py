@@ -1,12 +1,14 @@
 import asyncio
-import config
 from typing import List
 
-from models.games.timer import Timer
-from models.games.player import Player, Team
-from models.games.question import Question, Answer
-from models.statistics.stats import Statisics
+from nextcord import DMChannel, Thread
 
+import config
+from models.exceptions import LogException
+from models.games.player import Player, Team
+from models.games.question import Answer, Question
+from models.games.timer import Timer
+from models.statistics.stats import Statisics
 from views.games.answerView import AnswerView
 from views.games.createTeamView import CreateTeamView
 from views.games.reloadQuestionView import ReloadQuestionView
@@ -28,7 +30,7 @@ class Quizz:
         time_to_answer=30,
         spectator_players_ids=[],
     ) -> None:
-        self.channel = channel
+        self.channel: DMChannel | Thread = channel
         self.creator_id = creator_id
         self.category: str = category
         self.nb_question: int = nb_question
@@ -50,8 +52,7 @@ class Quizz:
         self.answer_msg = None
         self.answer_view = None
 
-        self.difficulty_point = {"Easy": 1,
-                                 "Medium": 2, "Hard": 3, "HARDCORE": 5}
+        self.difficulty_point = {"Easy": 1, "Medium": 2, "Hard": 3, "HARDCORE": 5}
 
         self.statement_string = (
             f"Bienvenue dans le grand quiz du Chaloeil !\n\nVous allez devoir répondre à une série de {self.nb_question} questions.\n\n"
@@ -65,7 +66,7 @@ class Quizz:
             else f"> {self.difficulty_point['Easy']} point par question **Easy**\n> {self.difficulty_point['Medium']} points par question **Medium**\n> {self.difficulty_point['Hard']} points par question **Hard**\n> {self.difficulty_point['HARDCORE']} points par question **HARDCORE**\n> 0 point par mauvaise réponse\n\n"
         )
 
-    def __get_question(self):
+    def _get_question(self) -> Question:
         if self.questions is None or len(self.questions) == 0:
             self.questions = Question.get_question(
                 self.nb_question, cat=self.category, id_range=self.id_range
@@ -77,7 +78,16 @@ class Quizz:
         await self.channel.send(self.statement_string, view=StartView(self))
 
     async def start(self):
-        await self._init_players()
+        try:
+            await self._init_players()
+        except LogException as e:
+            await self.channel.send(e)
+            return
+        except Exception :
+            await self.channel.send(
+                "Erreur lors de la récupération des joueurs 😭\nLe quizz ne peut pas commencer.",
+            )
+            return
 
         if self.team:
             await self.__init_teams()
@@ -85,7 +95,7 @@ class Quizz:
             await self.show_question()
 
     async def show_question(self, altenative_sentence=-1):
-        self.current_question = self.__get_question()
+        self.current_question = self._get_question()
         if self.current_question is None:
             await self.channel.send(
                 "Erreur lors de la récupération de la question 😭",
@@ -103,8 +113,7 @@ class Quizz:
         if self.debug:
             altenative_sentence += f"\n*(ID : **{self.current_question.id}**)*"
 
-        question_msg = f"‎ ‎\n{altenative_sentence}\n" + \
-            self.current_question.question
+        question_msg = f"‎ ‎\n{altenative_sentence}\n" + self.current_question.question
 
         time_message = await self.channel.send(time_text)
 
@@ -123,7 +132,12 @@ class Quizz:
         )
 
     async def _init_players(self):
-        for player in await self.channel.fetch_members():
+        match self.channel:
+            case DMChannel():
+                players = [self.channel.recipient]
+            case Thread():
+                players = await self.channel.fetch_members()
+        for player in players:
             if (
                 not player.id == int(config.CHALOEIL_ID)
                 and player.id not in self.spectator_players_ids
@@ -183,14 +197,12 @@ class Quizz:
 
     def _compute_score(self, players):
         for player in players:
-            player_answer = [pa[1]
-                             for pa in self.player_answer if pa[0] == player]
+            player_answer = [pa[1] for pa in self.player_answer if pa[0] == player]
             if len(player_answer) > 0 and player_answer[0].is_correct:
                 if self.flat:
                     player.add_point()
                 else:
-                    player.add_point(
-                        self.difficulty_point[self.current_question.level])
+                    player.add_point(self.difficulty_point[self.current_question.level])
 
         return players
 
@@ -244,7 +256,8 @@ class Quizz:
 
     async def __next_question(self, players):
         if self._check_winner(players):
-            await self.display_winner(players)
+            await self._display_winner(players)
+            await self._clear_channel()
         else:
             await asyncio.sleep(5)
             await self.show_question()
@@ -252,7 +265,7 @@ class Quizz:
     async def self_destruct(self):
         await self.channel.delete()
 
-    async def display_winner(self, players):
+    async def _display_winner(self, players):
         players = sorted(players, key=lambda p: p.points, reverse=True)
         winners = [p for p in players if p.points == players[0].points]
 
@@ -263,6 +276,7 @@ class Quizz:
         else:
             await self.channel.send(f"\n** {players[0]} a gagné ! **")
 
+    async def _clear_channel(self):
         if not self.keep:
             await asyncio.sleep(10)
             await self.channel.send(

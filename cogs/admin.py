@@ -11,7 +11,7 @@ class Admin(commands.Cog):
     @slash_command(
         name="delete_messages",
         description="Delete a messages in a channel",
-        default_member_permissions=1,
+        default_member_permissions=0,
     )
     async def delete_messages(self, interaction, message_id: str):
         """Delete a message by its"""

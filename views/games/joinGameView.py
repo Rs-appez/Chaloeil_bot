@@ -21,4 +21,3 @@ class JoinGameView(View):
         self.emoji = emoji
 
         self.add_item(self.JoinButton(emoji))
-

@@ -249,6 +249,7 @@ class Game(commands.Cog):
         """Get the daily quizz"""
 
         try:
+            await interaction.response.defer(ephemeral=True)
             channel = await self.__create_game_channel(interaction, "daily quizz")
 
             if not channel:
@@ -262,21 +263,21 @@ class Game(commands.Cog):
             )
 
             await qotd.launch_statement()
-            await interaction.response.send_message(
+            await interaction.followup.send(
                 f"{chaloeil_emoji} **Démarre la série de question du jour !** {chaloeil_emoji}",
                 view=JoinGameView(qotd, chaloeil_emoji),
                 ephemeral=True,
             )
 
         except ValueError:
-            await interaction.response.send_message(
+            await interaction.followup.send(
                 "Les questions du jour ne sont pas encore disponibles. Veuillez réessayer plus tard. <:chaloeil:1386369580275994775>",
                 ephemeral=True,
             )
             await channel.delete()
 
         except Exception as e:
-            await interaction.response.send_message(
+            await interaction.followup.send(
                 f"Une erreur est survenue lors de la création du Quizz du jour : {str(e)}",
                 ephemeral=True,
             )

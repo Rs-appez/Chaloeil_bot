@@ -13,7 +13,6 @@ class QuestionsOfTheDay(Quizz):
             time_to_answer=time_to_answer,
         )
         self.qotd_id: int = None
-        self.__init_question()
         self.statement_string = (
             f"Bienvenue dans le **Quizz du jour!**\n\nVous allez devoir répondre à la série de questions sélectionnées pour aujourd'hui."
             f" *({self.nb_question} questions)*\n"
@@ -26,20 +25,25 @@ class QuestionsOfTheDay(Quizz):
             "\nUne fois fois avoir lu et compris ces règles, vous pouvez commencer le Quizz en cliquant sur le bouton ci-dessous.\n"
             "<:chaloeil:1386369580275994775> Bonne chance ! <:chaloeil:1386369580275994775>\n\n"
         )
+    @classmethod
+    async def create(cls, channel, creator_id, time_to_answer=30) -> "QuestionsOfTheDay":
+        self = cls(channel, creator_id, time_to_answer)
+        await self.__init_question()
+        return self
 
     async def _init_players(self) -> None:
         await super()._init_players()
         Statisics.log_player_participation(self.players[0], self.qotd_id)
 
-    def __init_question(self) -> None:
-        qotd = Question.get_questions_of_the_day(self.creator_id)
+    async def __init_question(self) -> None:
+        qotd = await Question.get_questions_of_the_day(self.creator_id)
         if not qotd:
             raise ValueError("No questions available for the day.")
 
         self.questions, self.qotd_id = qotd
         self.nb_question = len(self.questions)
 
-    def _get_question(self) -> Question:
+    async def _get_question(self) -> Question:
         return self.questions.pop(0) if self.questions else None
 
     async def _display_winner(self, players) -> None:

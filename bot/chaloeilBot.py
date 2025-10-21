@@ -1,3 +1,4 @@
+from models.games.question import Question
 from nextcord import CustomActivity, ChannelType, Message
 import nextcord
 from nextcord.ext import commands
@@ -56,3 +57,5 @@ class ChaloeilBot(commands.Bot):
             guild = self.get_guild(int(config.CHALOEIL_GUILD_ID))
             if guild:
                 await transfer_message(message, guild, int(config.CHANEL_DM_ID))
+    async def on_close(self):
+        await Question.close_client()

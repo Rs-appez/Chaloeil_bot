@@ -1,5 +1,5 @@
 import config
-import requests
+import httpx
 import random
 
 from nextcord import Member, Interaction
@@ -11,6 +11,20 @@ class Question:
 
     headers = {"Authorization": config.BACKEND_TOKEN}
 
+    _client = None
+
+    @classmethod
+    async def get_client(cls):
+        if cls._client is None:
+            cls._client = httpx.AsyncClient(timeout=30.0, follow_redirects=True)
+        return cls._client
+
+    @classmethod
+    async def close_client(cls):
+        if cls._client is not None:
+            await cls._client.aclose()
+            cls._client = None
+
     def __init__(self, json) -> None:
         self.id = json["id"]
         self.question = json["question_text"]
@@ -21,8 +35,9 @@ class Question:
         self.shuffle_answers = json["shuffle_answers"]
 
     @staticmethod
-    def get_question(number, level=None, cat=None, id_range=None):
-        req = requests.get(
+    async def get_question(number, level=None, cat=None, id_range=None):
+        client = await Question.get_client()
+        req = await client.get(
             Question.api_url + "random_question",
             params={
                 "level": level,
@@ -42,11 +57,15 @@ class Question:
             return None
 
     @staticmethod
-    def get_questions_of_the_day(player_id: int) -> tuple[list["Question"], int] | None:
-        req = requests.get(
+    async def get_questions_of_the_day(
+        player_id: int,
+    ) -> tuple[list["Question"], int] | None:
+        client = await Question.get_client()
+        req = await client.get(
             Question.qoth_url + f"qotd?player={player_id}",
             headers=Question.headers,
         )
+
         if req.status_code == 200:
             return (
                 [Question(q["question"]) for q in req.json()["questions"]],
@@ -57,8 +76,9 @@ class Question:
             return None
 
     @staticmethod
-    def generate_questions_of_the_day():
-        req = requests.post(
+    async def generate_questions_of_the_day():
+        client = await Question.get_client()
+        req = await client.post(
             Question.qoth_url + "generate_qotd/",
             headers=Question.headers,
         )

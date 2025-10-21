@@ -255,7 +255,7 @@ class Game(commands.Cog):
             if not channel:
                 raise Exception("Channel creation failed")
 
-            qotd = QuestionsOfTheDay(channel, interaction.user.id)
+            qotd = await QuestionsOfTheDay.create(channel, interaction.user.id)
             chaloeil_emoji = (
                 self.bot.ch_emojis["chaloeil"]
                 if "chaloeil" in self.bot.ch_emojis
@@ -323,6 +323,11 @@ class Game(commands.Cog):
         await interaction.response.send_message(
             "Afficher l'énoncé", view=StatementView(game), ephemeral=True
         )
+
+    @commands.Cog.listener()
+    async def on_ready(self):
+        self.qotd_scheduler.start()
+        print("QOTD Scheduler started")
 
 
 def setup(bot):

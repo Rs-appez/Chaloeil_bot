@@ -66,9 +66,9 @@ class Quizz:
             else f"> {self.difficulty_point['Easy']} point par question **Easy**\n> {self.difficulty_point['Medium']} points par question **Medium**\n> {self.difficulty_point['Hard']} points par question **Hard**\n> {self.difficulty_point['HARDCORE']} points par question **HARDCORE**\n> 0 point par mauvaise réponse\n\n"
         )
 
-    def _get_question(self) -> Question:
+    async def _get_question(self) -> Question:
         if self.questions is None or len(self.questions) == 0:
-            self.questions = Question.get_question(
+            self.questions = await Question.get_question(
                 self.nb_question, cat=self.category, id_range=self.id_range
             )
 
@@ -83,7 +83,7 @@ class Quizz:
         except LogException as e:
             await self.channel.send(e)
             return
-        except Exception :
+        except Exception as e:
             await self.channel.send(
                 "Erreur lors de la récupération des joueurs 😭\nLe quizz ne peut pas commencer.",
             )
@@ -95,7 +95,7 @@ class Quizz:
             await self.show_question()
 
     async def show_question(self, altenative_sentence=-1):
-        self.current_question = self._get_question()
+        self.current_question = await self._get_question()
         if self.current_question is None:
             await self.channel.send(
                 "Erreur lors de la récupération de la question 😭",

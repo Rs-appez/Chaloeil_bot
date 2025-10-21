@@ -1,4 +1,4 @@
-from apscheduler.schedulers.background import BackgroundScheduler
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.cron import CronTrigger
 
 from .question import Question
@@ -6,9 +6,11 @@ from .question import Question
 
 class QOTDScheduler:
     def __init__(self):
-        self.scheduler = BackgroundScheduler()
+        self.scheduler = AsyncIOScheduler()
         self.__init_schedule()
         self.__add_job()
+
+    def start(self):
         self.scheduler.start()
 
     def __init_schedule(self):
@@ -29,5 +31,5 @@ class QOTDScheduler:
             id="create_qotd",
         )
 
-    def __create_qotd(self):
-        Question.generate_questions_of_the_day()
+    async def __create_qotd(self):
+        await Question.generate_questions_of_the_day()

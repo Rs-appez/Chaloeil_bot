@@ -143,7 +143,7 @@ class Quizz:
             ):
                 self.players.append(Player(await player.fetch_member()))
 
-        await Statisics.init_players(self.players)
+        asyncio.create_task(Statisics.init_players(self.players))
 
     async def __init_teams(self):
         self.list_team_msg = await self.channel.send("Aucune équipe pour le moment")
@@ -248,7 +248,9 @@ class Quizz:
             if player not in [pa[0] for pa in self.player_answer]:
                 players_answers.append((player, None))
 
-        await Statisics.send_answers(players_answers, self.current_question)
+        asyncio.create_task(
+            Statisics.send_answers(players_answers, self.current_question)
+        )
 
     def _check_winner(self, players):
         return len(self.questions) == 0

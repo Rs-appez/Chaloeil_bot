@@ -1,3 +1,4 @@
+import asyncio
 from .quizz import Quizz
 from .question import Question
 from models.statistics.stats import Statisics
@@ -62,7 +63,7 @@ class QuestionsOfTheDay(Quizz):
 
     async def _display_winner(self, players) -> None:
         player = players[0]
-        await Statisics.send_score(player)
+        asyncio.create_task(Statisics.send_score(player))
         msg = f"Vous avez terminé le Quizz du jour avec un score de **{
             player.points
         }** points !\n"

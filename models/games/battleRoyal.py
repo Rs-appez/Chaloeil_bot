@@ -1,5 +1,6 @@
 from models.games.quizz import Quizz
 from models.games.player import Player
+from views.games.startView import StartView
 
 import config
 from models.games.player import Team
@@ -28,12 +29,14 @@ class BattleRoyal(Quizz):
         )
         self.life_point = life_point
 
-        self.statement_string = (
+    async def launch_statement(self):
+        statement_string = (
             f"Bienvenue dans le grand quiz du Chaloeil !\n\nVous allez devoir répondre à une série de questions.\nVous partez à {self.life_point} points de vie.\n"
             f"Ne pas répondre correctement à une question vous fait perdre 1 point de vie.\n\n**__Règles__** :\n\n> {self.time_to_answer} secondes par question\n"
             "> fin de la question si tous les joueurs ont répondu\n> vous pouvez changer de réponse tant que tous les joueurs n'ont pas répondu\n"
             "> si tous les joueurs meurent en même temps, le round est annulé."
         )
+        await self.channel.send(statement_string, view=StartView(self))
 
     async def show_question(self, altenative_sentence=None):
         await super().show_question("")
@@ -47,8 +50,7 @@ class BattleRoyal(Quizz):
 
     def _compute_score(self, players):
         for player in players:
-            player_answer = [pa[1]
-                             for pa in self.player_answer if pa[0] == player]
+            player_answer = [pa[1] for pa in self.player_answer if pa[0] == player]
             if not player_answer or not player_answer[0]:
                 player.loose_life_point()
 

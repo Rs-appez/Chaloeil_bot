@@ -1,7 +1,7 @@
-from models.games.player import Player
 from .quizz import Quizz
 from .question import Question
 from models.statistics.stats import Statisics
+from views.games.startView import StartView
 
 
 class QuestionsOfTheDay(Quizz):
@@ -13,7 +13,17 @@ class QuestionsOfTheDay(Quizz):
             time_to_answer=time_to_answer,
         )
         self.qotd_id: int = None
-        self.statement_string = (
+
+    @classmethod
+    async def create(
+        cls, channel, creator_id, time_to_answer=30
+    ) -> "QuestionsOfTheDay":
+        self = cls(channel, creator_id, time_to_answer)
+        await self.__init_question()
+        return self
+
+    async def launch_statement(self):
+        statement_string = (
             f"Bienvenue dans le **Quizz du jour!**\n\nVous allez devoir répondre à la série de questions sélectionnées pour aujourd'hui."
             f" *({self.nb_question} questions)*\n"
             "Une fois le Quizz commencé, il n'y aura pas de pause possible avant la fin de la série.\n\n"
@@ -33,14 +43,7 @@ class QuestionsOfTheDay(Quizz):
             "\nUne fois fois avoir lu et compris ces règles, vous pouvez commencer le Quizz en cliquant sur le bouton ci-dessous.\n"
             "<:chaloeil:1386369580275994775> Bonne chance ! <:chaloeil:1386369580275994775>\n\n"
         )
-
-    @classmethod
-    async def create(
-        cls, channel, creator_id, time_to_answer=30
-    ) -> "QuestionsOfTheDay":
-        self = cls(channel, creator_id, time_to_answer)
-        await self.__init_question()
-        return self
+        await self.channel.send(statement_string, view=StartView(self))
 
     async def _init_players(self) -> None:
         await super()._init_players()

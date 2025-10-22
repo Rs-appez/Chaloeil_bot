@@ -54,18 +54,6 @@ class Quizz:
 
         self.difficulty_point = {"Easy": 1, "Medium": 2, "Hard": 3, "HARDCORE": 5}
 
-        self.statement_string = (
-            f"Bienvenue dans le grand quiz du Chaloeil !\n\nVous allez devoir répondre à une série de {self.nb_question} questions.\n\n"
-            f"**__Règles__** :\n\n> {self.time_to_answer} secondes par question\n> Fin de la question si tous les joueurs ont répondu\n"
-            "> Vous pouvez changer de réponse tant que tous les joueurs n'ont pas répondu"
-            "\n\n**__Points__** :\n\n"
-        )
-        self.statement_string += (
-            "> 1 point par bonne réponse\n> 0 point par mauvaise réponse\n\n"
-            if self.flat
-            else f"> {self.difficulty_point['Easy']} point par question **Easy**\n> {self.difficulty_point['Medium']} points par question **Medium**\n> {self.difficulty_point['Hard']} points par question **Hard**\n> {self.difficulty_point['HARDCORE']} points par question **HARDCORE**\n> 0 point par mauvaise réponse\n\n"
-        )
-
     async def _get_question(self) -> Question:
         if self.questions is None or len(self.questions) == 0:
             self.questions = await Question.get_question(
@@ -75,7 +63,18 @@ class Quizz:
         return self.questions.pop(0) if self.questions else None
 
     async def launch_statement(self):
-        await self.channel.send(self.statement_string, view=StartView(self))
+        statement_string = (
+            f"Bienvenue dans le grand quiz du Chaloeil !\n\nVous allez devoir répondre à une série de {self.nb_question} questions.\n\n"
+            f"**__Règles__** :\n\n> {self.time_to_answer} secondes par question\n> Fin de la question si tous les joueurs ont répondu\n"
+            "> Vous pouvez changer de réponse tant que tous les joueurs n'ont pas répondu"
+            "\n\n**__Points__** :\n\n"
+        )
+        statement_string += (
+            "> 1 point par bonne réponse\n> 0 point par mauvaise réponse\n\n"
+            if self.flat
+            else f"> {self.difficulty_point['Easy']} point par question **Easy**\n> {self.difficulty_point['Medium']} points par question **Medium**\n> {self.difficulty_point['Hard']} points par question **Hard**\n> {self.difficulty_point['HARDCORE']} points par question **HARDCORE**\n> 0 point par mauvaise réponse\n\n"
+        )
+        await self.channel.send(statement_string, view=StartView(self))
 
     async def start(self):
         try:

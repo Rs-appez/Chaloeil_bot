@@ -26,7 +26,7 @@ class CreateTeamView(View):
                 btn.disabled = True
             await interaction.response.edit_message(view=self)
             await self.game.show_question()
-            Statisics.init_teams(self.game.teams)
+            await Statisics.init_teams(self.game.teams)
 
         else:
             await interaction.response.send_message(

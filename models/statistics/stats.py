@@ -1,6 +1,6 @@
 from models.exceptions import LogException
 import config
-import requests
+import httpx
 from requests.models import Response
 import json
 from typing import List
@@ -17,17 +17,32 @@ class Statisics:
         "Content-Type": "application/json",
     }
 
+    _client = None
+
+    @classmethod
+    async def get_client(cls):
+        if cls._client is None:
+            cls._client = httpx.AsyncClient(timeout=30.0, follow_redirects=True)
+        return cls._client
+
+    @classmethod
+    async def close_client(cls):
+        if cls._client is not None:
+            await cls._client.aclose()
+            cls._client = None
+
     @staticmethod
-    def init_players(players: List[Player]) -> bool:
+    async def init_players(players: List[Player]) -> bool:
         """Initialize player statistics in the backend."""
 
+        client = await Question.get_client()
         player_ids = [
             {"discord_id": str(player.member.id), "name": player.member.name}
             for player in players
         ]
         data = {"players": json.dumps(player_ids)}
 
-        response = requests.post(
+        response = await client.post(
             Statisics.stats_url + "players/add_players/",
             json=data,
             headers=Statisics.headers,
@@ -36,9 +51,10 @@ class Statisics:
         return response.status_code == 201
 
     @staticmethod
-    def init_teams(teams: List[Team]) -> bool:
+    async def init_teams(teams: List[Team]) -> bool:
         """Initialize team statistics in the backend."""
 
+        client = await Question.get_client()
         team_data = [
             {
                 "name": team.name,
@@ -48,7 +64,7 @@ class Statisics:
         ]
         data = {"teams": json.dumps(team_data)}
 
-        response = requests.post(
+        response = await client.post(
             Statisics.stats_url + "teams/add_teams/",
             json=data,
             headers=Statisics.headers,
@@ -57,8 +73,12 @@ class Statisics:
         return response.status_code == 201
 
     @staticmethod
-    def send_answers(players: List[tuple[Player, Answer]], question: Question) -> bool:
+    async def send_answers(
+        players: List[tuple[Player, Answer]], question: Question
+    ) -> bool:
         """Send players's answer to the backend."""
+        client = await Question.get_client()
+
         data = {
             "question_id": question.id,
             "answers": json.dumps(
@@ -76,7 +96,7 @@ class Statisics:
             ),
         }
 
-        response = requests.post(
+        response = await client.post(
             Statisics.stats_url + "statistics/add_answer/",
             json=data,
             headers=Statisics.headers,
@@ -85,14 +105,16 @@ class Statisics:
         return response.status_code == 201
 
     @staticmethod
-    def send_score(player: Player) -> bool:
+    async def send_score(player: Player) -> bool:
         """Send player's score to the backend."""
+        client = await Question.get_client()
+
         data = {
             "player_id": player.member.id,
             "score": player.points,
         }
 
-        response: Response = requests.post(
+        response: Response = await client.post(
             Statisics.stats_url + "qotdStatistics/add_score/",
             json=data,
             headers=Statisics.headers,
@@ -103,21 +125,22 @@ class Statisics:
         return False
 
     @staticmethod
-    def log_player_participation(player: Player, qotd_id: int):
+    async def log_player_participation(player: Player, qotd_id: int):
+        client = await Question.get_client()
+
         """Log player's participation to the backend."""
         data = {
             "player_id": player.member.id,
             "qotd_id": qotd_id,
         }
 
-        response: Response = requests.post(
+        response: Response = await client.post(
             Statisics.stats_url + "qotdStatistics/log_player/",
             json=data,
             headers=Statisics.headers,
         )
 
         if response.status_code == 403:
-            print(response.json())
             raise LogException("Vous avez déjà participé au Quizz du jour aujourd'hui.")
 
         if response.status_code != 201:

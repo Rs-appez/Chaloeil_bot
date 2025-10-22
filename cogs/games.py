@@ -278,7 +278,9 @@ class Game(commands.Cog):
 
         except Exception as e:
             await interaction.followup.send(
-                f"Une erreur est survenue lors de la création du Quizz du jour : {str(e)}",
+                f"Une erreur est survenue lors de la création du Quizz du jour : {
+                    str(e)
+                }",
                 ephemeral=True,
             )
             if channel:

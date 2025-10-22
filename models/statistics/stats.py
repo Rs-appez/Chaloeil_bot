@@ -1,7 +1,6 @@
 from models.exceptions import LogException
 import config
 import httpx
-from requests.models import Response
 import json
 from typing import List
 
@@ -114,7 +113,7 @@ class Statisics:
             "score": player.points,
         }
 
-        response: Response = await client.post(
+        response = await client.post(
             Statisics.stats_url + "qotdStatistics/add_score/",
             json=data,
             headers=Statisics.headers,
@@ -134,7 +133,7 @@ class Statisics:
             "qotd_id": qotd_id,
         }
 
-        response: Response = await client.post(
+        response = await client.post(
             Statisics.stats_url + "qotdStatistics/log_player/",
             json=data,
             headers=Statisics.headers,

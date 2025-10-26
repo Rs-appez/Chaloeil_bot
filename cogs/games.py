@@ -328,7 +328,8 @@ class Game(commands.Cog):
 
     @commands.Cog.listener()
     async def on_ready(self):
-        self.qotd_scheduler.start()
+        ...
+        # self.qotd_scheduler.start()
 
 
 def setup(bot):

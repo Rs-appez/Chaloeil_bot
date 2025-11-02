@@ -1,5 +1,5 @@
 class Rune:
-    image_url = "https://media.discordapp.net/attachments/212589998245937152/579307851047108618/radin_tableau_transcendance_BLANC.png"
+    image_url = "https://media.discordapp.net/attachments/1370085525708341258/1434334943391125524/radin_tableau_transcendance_BLANC.png"
     stats = {
         "fo": {"ta": 61, "pata": 41, "rata": 21},
         "ine": {"ta": 61, "pata": 41, "rata": 21},
@@ -28,7 +28,9 @@ class Rune:
     def get_rune_info(stat: str) -> str:
         if stat in Rune.stats:
             rune_info = Rune.stats[stat]
-            info_lines = [f"### Maximum stats pour les runes **{stat}** de transcendence:"]
+            info_lines = [
+                f"### Maximum stats pour les runes **{stat}** de transcendence:"
+            ]
             for rune_type, value in rune_info.items():
                 info_lines.append(f"* {rune_type:<4} : {value}")
             return "\n".join(info_lines)

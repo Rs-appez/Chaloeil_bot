@@ -34,7 +34,6 @@ class Statisics:
     async def init_players(players: List[Player]) -> bool:
         """Initialize player statistics in the backend."""
 
-        print("url stat : ", Statisics.stats_url)
         client = await Question.get_client()
         player_ids = [
             {"discord_id": str(player.member.id), "name": player.member.name}

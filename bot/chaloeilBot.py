@@ -26,6 +26,7 @@ class ChaloeilBot(commands.Bot):
 
     async def on_ready(self):
         print(f"{self.user.display_name} est pret")
+        print(f"Back end URL: {config.BACKEND_URL}")
         if not config.DEBUG:
             cellar = self.get_guild(int(config.CELLAR_GUILD_ID))
             chaloeil = self.get_guild(int(config.CHALOEIL_GUILD_ID))

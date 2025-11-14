@@ -36,7 +36,6 @@ class Question:
 
     @staticmethod
     async def get_question(number, level=None, cat=None, id_range=None):
-        print("Debug : url : ", Question.api_url)
         client = await Question.get_client()
         req = await client.get(
             Question.api_url + "random_question",

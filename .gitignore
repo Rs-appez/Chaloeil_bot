@@ -9,3 +9,4 @@ cogs/test.py
 .env
 
 script_populate/
+production.log

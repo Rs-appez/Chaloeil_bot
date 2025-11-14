@@ -4,18 +4,10 @@ import nextcord
 from nextcord.ext import commands
 import config
 import bleach
-import logging
 from speakNextcordBot.utils.message import transfer_message
 
 
 class ChaloeilBot(commands.Bot):
-    logging.basicConfig(
-        level=logging.INFO,
-        format="%(asctime)s %(levelname)s %(name)s %(message)s",
-        filename="production.log",  # Or use config.LOG_FILE if you have one
-        filemode="a"
-    )
-    logger = logging.getLogger("chaloeilBot")
     def __init__(self, command_prefix):
         self.voice_client = None
         intents = nextcord.Intents.default()
@@ -34,7 +26,6 @@ class ChaloeilBot(commands.Bot):
 
     async def on_ready(self):
         print(f"{self.user.display_name} est pret")
-        self.logger.info(f"Back end URL: {config.BACKEND_URL}")
         if not config.DEBUG:
             cellar = self.get_guild(int(config.CELLAR_GUILD_ID))
             chaloeil = self.get_guild(int(config.CHALOEIL_GUILD_ID))

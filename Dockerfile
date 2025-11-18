@@ -1,14 +1,10 @@
-FROM python:3.13.3-slim
+FROM python:3.13-alpine
 
 ENV TZ="Europe/Brussels"
 
-RUN apt-get update && apt-get install -y 
-
 WORKDIR /chaloeil
 
-
-COPY requirements.txt /chaloeil/
+COPY . /chaloeil/
 RUN pip install -r requirements.txt
 
-COPY . /chaloeil/
-CMD python main.py
+CMD ["python3", "main.py"]

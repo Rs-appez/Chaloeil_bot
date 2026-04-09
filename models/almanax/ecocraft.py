@@ -23,7 +23,7 @@ class EcoCraft:
         res_json = res.json()
         data = []
         data.extend(res_json.get("results", []))
-        while res_json.get("next"):
+        while res_json.get("next", None):
             res = httpx.get(res_json["next"], headers=EcoCraft.headers)
             res_json = res.json()
             data.extend(res_json.get("results", []))

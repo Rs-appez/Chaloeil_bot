@@ -10,7 +10,7 @@ class EcoCraft:
     def __init__(self, job: str):
         self.job = job
 
-    def get_date(self):
+    def get_date(self) -> tuple[int, int]:
         res: httpx.Response = httpx.get(
             self.api_url + "get_job/", params={"job": self.job}, headers=self.headers
         )
@@ -18,7 +18,7 @@ class EcoCraft:
         return (data.get("day"), data.get("month"))
 
     @staticmethod
-    def get_all_dates():
+    def get_all_dates() -> list[tuple[str, int, int]]:
         res: httpx.Response = httpx.get(EcoCraft.api_url, headers=EcoCraft.headers)
         res_json = res.json()
         data = []

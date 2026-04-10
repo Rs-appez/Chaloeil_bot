@@ -41,17 +41,18 @@ class Almanax(commands.Cog):
         metier: str = job_choices,
     ) -> None:
         """Affiche l'almanax du jour."""
+        await interaction.response.defer(ephemeral=True)
         if not metier:
             dates = EcoCraft.get_all_dates()
             message = "Voici les jours de l'écocraft pour tous les métiers :\n"
             for bonus, day, month in dates:
                 message += f"> **{day}/{month}** : {bonus}\n"
-            _ = await interaction.response.send_message(message, ephemeral=True)
+            await interaction.followup.send(message, ephemeral=True)
 
         else:
             eco_craft = EcoCraft(metier)
             date = eco_craft.get_date()
-            _ = await interaction.response.send_message(
+            await interaction.followup.send(
                 f"Le jour de l'écocraft pour le métier {next((k for k, v in self.JOBS.items() if v == metier))} est le  **{date[0]}/{date[1]}**",
                 ephemeral=True,
             )

@@ -85,7 +85,7 @@ class Question:
             headers=Question.headers,
         )
 
-        if req.status_code == 200:
+        if req.status_code == 201:
             return True
         return False
 

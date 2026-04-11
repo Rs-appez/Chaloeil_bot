@@ -186,8 +186,7 @@ class Game(commands.Cog):
         player: Member = SlashOption(
             name="player",
             description="Select a player",
-            required=False,
-            default=None,
+            required=True,
         ),
         category: str = SlashOption(
             name="categorie",

@@ -198,7 +198,7 @@ class Game(commands.Cog):
     ):
         """Ask one question"""
         await interaction.response.defer()
-        question = Question.get_question(1, cat=category)
+        question = await Question.get_question(1, cat=category)
         if question:
             if player:
                 await interaction.followup.send(

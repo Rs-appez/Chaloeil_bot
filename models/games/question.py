@@ -35,7 +35,9 @@ class Question:
         self.shuffle_answers = json["shuffle_answers"]
 
     @staticmethod
-    async def get_question(number, level=None, cat=None, id_range=None):
+    async def get_question(
+        number, level=None, cat=None, id_range=None
+    ) -> list["Question"] | None:
         client = await Question.get_client()
         req = await client.get(
             Question.api_url + "random_question",

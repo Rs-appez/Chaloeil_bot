@@ -1,5 +1,4 @@
 import asyncio
-from typing import List
 
 from nextcord import DMChannel, Thread
 
@@ -36,11 +35,11 @@ class Quizz:
         self.nb_question: int = nb_question
         self.team: bool = team
         self.spectator_players_ids = spectator_players_ids
-        self.players: List[Player] = []
-        self.teams: List[Team] = []
-        self.player_answer: List[tuple[Player, Answer]] = []
-        self.current_question: Question = None
-        self.questions: List[Question] = None
+        self.players: list[Player] = []
+        self.teams: list[Team] = []
+        self.player_answer: list[tuple[Player, Answer]] = []
+        self.current_question: Question | None = None
+        self.questions: list[Question] | None = None
         self.timer = None
         self.time_to_answer: int = time_to_answer
         self.flat: bool = flat

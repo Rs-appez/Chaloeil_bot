@@ -56,6 +56,8 @@ class AnswerView(View):
             await self.game.answer_msg.edit(view=self)
 
     async def _answer_for_game(self, interaction, answer: Answer):
+        if not self.game:
+            return
         player = [p for p in self.game.players if p.member.id == interaction.user.id]
 
         if self.game.team and player:

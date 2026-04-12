@@ -10,6 +10,7 @@ from models.games.timer import Timer
 from models.statistics.stats import Statisics
 from views.games.answerView import AnswerView
 from views.games.createTeamView import CreateTeamView
+from views.games.flagQuestionView import FlagQuestionView
 from views.games.reloadQuestionView import ReloadQuestionView
 from views.games.startView import StartView
 
@@ -237,7 +238,10 @@ class Quizz:
         await self._send_stats()
 
         self.player_answer = []
-        await self.channel.send(res_string)
+        _ = await self.channel.send(
+            res_string,
+            view=FlagQuestionView(self.creator_id, question=self.current_question),
+        )
 
         await self.__next_question(players)
 

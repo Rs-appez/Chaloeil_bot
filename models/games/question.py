@@ -1,11 +1,12 @@
 import random
 
 import httpx
-from nextcord import Member
-from nextcord.types.channel import TextChannel
-from nextcord.types.threads import Thread
+from nextcord import Member, TextChannel
+from nextcord.threads import Thread
 
 import config
+from models.games.answer import Answer
+from views.games.answerView import AnswerView
 
 
 class Question:
@@ -103,7 +104,6 @@ class Question:
         return [a.answer_text for a in self.answers if a.is_correct]
 
     async def ask_standalone(self, player: Member, channel: TextChannel | Thread):
-        from views.games.answerView import AnswerView
 
         question_msg = f"‎ ‎\n{self.question}\n‎ ‎"
 
@@ -114,11 +114,3 @@ class Question:
             content=question_msg,
             view=AnswerView(question=self, player=player),
         )
-
-
-class Answer:
-    def __init__(self, json) -> None:
-        self.id = json["id"]
-        self.answer_text = json["answer_text"]
-        self.is_correct = json["is_correct"]
-        self.emoji = json["emoticon"]

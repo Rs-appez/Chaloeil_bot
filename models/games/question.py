@@ -114,3 +114,13 @@ class Question:
             content=question_msg,
             view=AnswerView(question=self, player=player),
         )
+
+    async def flag(self, player_id: int):
+        client = await Question.get_client()
+        req = await client.post(
+            Question.api_url + f"{self.id}/flag_for_review/",
+            headers=Question.headers,
+            json={"player_id": player_id},
+        )
+
+        return req.status_code == 200

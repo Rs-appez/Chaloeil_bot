@@ -1,7 +1,8 @@
 from nextcord.ui import View, Button
 from nextcord.enums import ButtonStyle
 
-from models.games.question import Answer
+from models.games.answer import Answer
+
 
 class AnswerView(View):
     class ButtonAnswer(Button):
@@ -55,8 +56,7 @@ class AnswerView(View):
             await self.game.answer_msg.edit(view=self)
 
     async def _answer_for_game(self, interaction, answer: Answer):
-        player = [p for p in self.game.players if p.member.id ==
-                  interaction.user.id]
+        player = [p for p in self.game.players if p.member.id == interaction.user.id]
 
         if self.game.team and player:
             player = [t for t in self.game.teams if player[0] in t.members]

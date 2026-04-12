@@ -1,8 +1,11 @@
-import config
-import httpx
 import random
 
-from nextcord import Member, Interaction
+import httpx
+from nextcord import Member
+from nextcord.types.channel import TextChannel
+from nextcord.types.threads import Thread
+
+import config
 
 
 class Question:
@@ -99,15 +102,15 @@ class Question:
     def get_good_answers(self):
         return [a.answer_text for a in self.answers if a.is_correct]
 
-    async def ask_standalone(self, player: Member, interaction: Interaction):
+    async def ask_standalone(self, player: Member, channel: TextChannel | Thread):
         from views.games.answerView import AnswerView
 
         question_msg = f"‎ ‎\n{self.question}\n‎ ‎"
 
         if self.image_url:
-            await interaction.channel.send(self.image_url)
+            _ = await channel.send(self.image_url)
 
-        await interaction.channel.send(
+        _ = await channel.send(
             content=question_msg,
             view=AnswerView(question=self, player=player),
         )

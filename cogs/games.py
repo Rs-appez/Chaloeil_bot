@@ -1,18 +1,23 @@
+from nextcord import (
+    ChannelType,
+    InteractionContextType,
+    Member,
+    SlashOption,
+    TextChannel,
+    slash_command,
+)
 from nextcord.ext import commands
 from nextcord.interactions import Interaction
-from nextcord import slash_command, ChannelType
+from nextcord.threads import Thread
+
 from models.games.battleRoyal import BattleRoyal
-from models.games.quizz import Quizz
-from models.games.qotd import QuestionsOfTheDay
-from models.games.question import Question
 from models.games.dice import Dice
+from models.games.qotd import QuestionsOfTheDay
 from models.games.qotdscheduler import QOTDScheduler
+from models.games.question import Question
+from models.games.quizz import Quizz
 from views.games.joinGameView import JoinGameView
 from views.games.statementView import StatementView
-from nextcord import SlashOption
-from nextcord import Member
-
-from nextcord import InteractionContextType
 
 
 class Game(commands.Cog):
@@ -199,13 +204,12 @@ class Game(commands.Cog):
         await interaction.response.defer()
         question = await Question.get_question(1, cat=category)
         if question:
-            if player:
-                await interaction.followup.send(
-                    "Question pour " + player.mention + " !!!"
+            await interaction.followup.send("Question pour " + player.mention + " !!!")
+            if isinstance(interaction.channel, (Thread, TextChannel)):
+                await question[0].ask_standalone(
+                    player=player, channel=interaction.channel
                 )
-            else:
-                await interaction.followup.send("Question pour tout le monde !!!")
-            await question[0].ask_standalone(player=player, interaction=interaction)
+
         else:
             await interaction.followup.send(
                 "Erreur lors de la récupération de la question 😭"

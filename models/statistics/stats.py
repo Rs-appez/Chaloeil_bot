@@ -2,10 +2,10 @@ from models.exceptions import LogException
 import config
 import httpx
 import json
-from typing import List
 
 from models.games.player import Player, Team
-from models.games.question import Question, Answer
+from models.games.question import Question
+from models.games.answer import Answer
 
 
 class Statisics:
@@ -31,7 +31,7 @@ class Statisics:
             cls._client = None
 
     @staticmethod
-    async def init_players(players: List[Player]) -> bool:
+    async def init_players(players: list[Player]) -> bool:
         """Initialize player statistics in the backend."""
 
         client = await Question.get_client()
@@ -50,7 +50,7 @@ class Statisics:
         return response.status_code == 201
 
     @staticmethod
-    async def init_teams(teams: List[Team]) -> bool:
+    async def init_teams(teams: list[Team]) -> bool:
         """Initialize team statistics in the backend."""
 
         client = await Question.get_client()
@@ -73,7 +73,7 @@ class Statisics:
 
     @staticmethod
     async def send_answers(
-        players: List[tuple[Player, Answer]], question: Question
+        players: list[tuple[Player, Answer]], question: Question
     ) -> bool:
         """Send players's answer to the backend."""
         client = await Question.get_client()

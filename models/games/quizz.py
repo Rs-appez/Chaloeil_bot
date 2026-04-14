@@ -5,7 +5,8 @@ from nextcord import DMChannel, Thread
 import config
 from models.exceptions import LogException
 from models.games.player import Player, Team
-from models.games.question import Answer, Question
+from models.games.question import Question
+from models.games.answer import Answer
 from models.games.timer import Timer
 from models.statistics.stats import Statisics
 from views.games.answerView import AnswerView

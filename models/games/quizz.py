@@ -236,7 +236,8 @@ class Quizz:
 
         res_string = self._display_player(res_string, players)
 
-        await self._send_stats()
+        if not self.debug:
+            await self._send_stats()
 
         self.player_answer = []
         _ = await self.channel.send(

@@ -16,6 +16,9 @@ class AnswerView(View):
             )
 
         async def callback(self, interaction):
+            if interaction.response.is_done():
+                print("Interaction already responded to, ignoring.")
+                return
             if self.view.game:
                 await self.view._answer_for_game(interaction, self.answer)
 

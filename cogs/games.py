@@ -82,6 +82,8 @@ class Game(commands.Cog):
     ):
         """Start a battle royal quizz game"""
 
+        await interaction.response.defer(ephemeral=True)
+
         channel = await self.__create_game_channel(interaction, "battle royal")
         if not channel:
             return
@@ -156,6 +158,8 @@ class Game(commands.Cog):
         ),
     ):
         """Start a quizz battle game"""
+
+        await interaction.response.defer(ephemeral=True)
 
         channel = await self.__create_game_channel(interaction, "quizz battle")
         if not channel:
@@ -295,7 +299,7 @@ class Game(commands.Cog):
             ChannelType.public_thread,
             ChannelType.private_thread,
         ]:
-            await interaction.response.send_message(
+            _ = await interaction.followup.send(
                 "Tu ne peux pas lancer un jeu dans un thread", ephemeral=True
             )
             return None
@@ -325,7 +329,7 @@ class Game(commands.Cog):
             f"{chaloeil_emoji} **Participez au grand quiz du Chaloeil !** {chaloeil_emoji}",
             view=JoinGameView(game, chaloeil_emoji),
         )
-        await interaction.response.send_message(
+        await interaction.followup.send(
             "Afficher l'énoncé", view=StatementView(game), ephemeral=True
         )
 

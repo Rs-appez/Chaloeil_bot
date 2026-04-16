@@ -114,7 +114,7 @@ class Statisics:
         }
 
         response = await client.post(
-            Statisics.stats_url + "qotdStatistics/add_score/",
+            Statisics.stats_url + "sessions/add_score/",
             json=data,
             headers=Statisics.headers,
         )

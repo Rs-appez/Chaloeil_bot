@@ -55,7 +55,7 @@ class Quizz:
 
         self.difficulty_point = {"Easy": 1, "Medium": 2, "Hard": 3, "HARDCORE": 5}
 
-    async def _get_question(self) -> Question:
+    async def _get_question(self) -> Question | None:
         if self.questions is None or len(self.questions) == 0:
             self.questions = await Question.get_question(
                 self.nb_question, cat=self.category, id_range=self.id_range
@@ -257,8 +257,10 @@ class Quizz:
             Statisics.send_answers(players_answers, self.current_question)
         )
 
-    def _check_winner(self, players):
-        return len(self.questions) == 0
+    def _check_winner(self, players) -> bool:
+        if not self.questions or len(self.questions) == 0:
+            return True
+        return False
 
     async def __next_question(self, players):
         if self._check_winner(players):

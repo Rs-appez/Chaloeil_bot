@@ -31,6 +31,7 @@ class Game(commands.Cog):
         "Seulement les items": "item",
         "Seulement les sorts": "sort",
         "Seulement la géographie": "géographie",
+        "Seulement l'élevage": "elevage",
     }
 
     def __init__(self, bot):

@@ -1,5 +1,7 @@
 import asyncio
 from typing import override
+
+from views.games.chooseCategoryView import ChooseCategoryView
 from .quizz import Quizz
 from .question import Question
 from models.statistics.stats import Statisics
@@ -7,7 +9,7 @@ from views.games.startView import StartView
 
 
 class QuestionsOfTheDay(Quizz):
-    def __init__(self, channel, creator_id, time_to_answer=30) -> None:
+    def __init__(self, channel, creator_id, time_to_answer=25) -> None:
         super().__init__(
             channel,
             creator_id,
@@ -19,7 +21,7 @@ class QuestionsOfTheDay(Quizz):
 
     @classmethod
     async def create(
-        cls, channel, creator_id, time_to_answer=30
+        cls, channel, creator_id, time_to_answer=25
     ) -> "QuestionsOfTheDay":
         self = cls(channel, creator_id, time_to_answer)
         await self.__init_question()
@@ -62,11 +64,46 @@ class QuestionsOfTheDay(Quizz):
             raise ValueError("No questions available for the day.")
 
         self.questions, self.qotd_id = qotd
-        self.nb_question = len(self.questions)
+        self.nb_question = len(self.questions) + 1
 
     @override
     async def _get_question(self) -> Question | None:
         return self.questions.pop(0) if self.questions else None
+
+    @override
+    def _check_winner(self, players) -> bool:
+
+        if self.questions and len(self.questions) > 0:
+            return False
+        elif not self.ask_final_question:
+            self.ask_final_question = True
+            return False
+        return True
+
+    @override
+    async def _next_question(self, players):
+        if self._check_winner(players):
+            await self._display_winner(players)
+            await self._clear_channel()
+        elif self.ask_final_question:
+            await self.__ask_final_question()
+        else:
+            await asyncio.sleep(5)
+            await self.show_question()
+
+    async def __ask_final_question(self):
+        _ = await self.channel.send(
+            content=(
+                "**Dernière question !**\nMais je vais etre sympa, "
+                "je vais vous laisser choisir la catégorie de la question finale !\n"
+                "Choisissez la catégorie qui vous portera chance ci-dessous"
+            ),
+            view=ChooseCategoryView(self),
+        )
+
+    async def load_final_question(self, category):
+        self.questions = [await Question.get_question(1, cat=category)][0]
+        await self.show_question()
 
     @override
     async def _display_winner(self, players) -> None:

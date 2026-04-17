@@ -245,7 +245,7 @@ class Quizz:
             view=FlagQuestionView(self.creator_id, question=self.current_question),
         )
 
-        await self.__next_question(players)
+        await self._next_question(players)
 
     async def _send_stats(self):
         players_answers = self.player_answer.copy()
@@ -262,7 +262,7 @@ class Quizz:
             return True
         return False
 
-    async def __next_question(self, players):
+    async def _next_question(self, players):
         if self._check_winner(players):
             await self._display_winner(players)
             await self._clear_channel()

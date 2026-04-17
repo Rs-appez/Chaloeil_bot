@@ -1,4 +1,5 @@
 import asyncio
+from typing import override
 from .quizz import Quizz
 from .question import Question
 from models.statistics.stats import Statisics
@@ -13,7 +14,8 @@ class QuestionsOfTheDay(Quizz):
             category=None,
             time_to_answer=time_to_answer,
         )
-        self.qotd_id: int = None
+        self.qotd_id: int | None = None
+        self.ask_final_question: bool = False
 
     @classmethod
     async def create(
@@ -23,6 +25,7 @@ class QuestionsOfTheDay(Quizz):
         await self.__init_question()
         return self
 
+    @override
     async def launch_statement(self):
         statement_string = (
             f"Bienvenue dans le **Quizz du jour!**\n\nVous allez devoir répondre à la série de questions sélectionnées pour aujourd'hui."
@@ -44,9 +47,12 @@ class QuestionsOfTheDay(Quizz):
             "\nUne fois fois avoir lu et compris ces règles, vous pouvez commencer le Quizz en cliquant sur le bouton ci-dessous.\n"
             "<:chaloeil:1386369580275994775> Bonne chance ! <:chaloeil:1386369580275994775>\n\n"
         )
-        await self.channel.send(statement_string, view=StartView(self))
+        _ = await self.channel.send(statement_string, view=StartView(self))
 
+    @override
     async def _init_players(self) -> None:
+        if not self.qotd_id:
+            raise ValueError("QOTD ID must be set before initializing players.")
         await super()._init_players()
         await Statisics.log_player_participation(self.players[0], self.qotd_id)
 
@@ -58,12 +64,13 @@ class QuestionsOfTheDay(Quizz):
         self.questions, self.qotd_id = qotd
         self.nb_question = len(self.questions)
 
-    async def _get_question(self) -> Question:
+    @override
+    async def _get_question(self) -> Question | None:
         return self.questions.pop(0) if self.questions else None
 
     async def _display_winner(self, players) -> None:
         player = players[0]
-        asyncio.create_task(Statisics.send_score(player))
+        _ = asyncio.create_task(Statisics.send_score(player))
         msg = f"Vous avez terminé le Quizz du jour avec un score de **{
             player.points
         }** points !\n"

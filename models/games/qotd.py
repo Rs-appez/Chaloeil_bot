@@ -68,10 +68,11 @@ class QuestionsOfTheDay(Quizz):
     async def _get_question(self) -> Question | None:
         return self.questions.pop(0) if self.questions else None
 
+    @override
     async def _display_winner(self, players) -> None:
         player = players[0]
         _ = asyncio.create_task(Statisics.send_score(player))
         msg = f"Vous avez terminé le Quizz du jour avec un score de **{
             player.points
         }** points !\n"
-        await self.channel.send(msg)
+        _ = await self.channel.send(msg)

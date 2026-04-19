@@ -124,3 +124,13 @@ class Question:
         )
 
         return req.status_code == 200
+
+    async def lock_for_qotd_session(self) -> bool:
+        client = await Question.get_client()
+        req = await client.post(
+            Question.qoth_url + "create_standalone_qotd/",
+            headers=Question.headers,
+            json={"question_id": self.id},
+        )
+
+        return req.status_code == 201

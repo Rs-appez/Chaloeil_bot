@@ -102,14 +102,11 @@ class QuestionsOfTheDay(Quizz):
         )
 
     async def load_final_question(self, category):
-        last_question = await Question.get_question(1, cat=category)
+        last_question = await Question.create_standalone_qotd(category)
         if not last_question:
             raise ValueError("No question found for the final question.")
 
-        self.questions = last_question
-        last_question = self.questions[0]
-        if last_question:
-            _ = asyncio.create_task(last_question.lock_for_qotd_session())
+        self.questions = [last_question]
         await self.show_question()
 
     @override

@@ -12,6 +12,7 @@ from views.games.answerView import AnswerView
 class Question:
     api_url = config.BACKEND_URL + "question/questions/"
     qoth_url = config.BACKEND_URL + "question/qotd/"
+    qotd_standalone_url = config.BACKEND_URL + "question/qotd-standalone/"
 
     headers = {"Authorization": config.BACKEND_TOKEN}
 
@@ -125,12 +126,16 @@ class Question:
 
         return req.status_code == 200
 
-    async def lock_for_qotd_session(self) -> bool:
+    @staticmethod
+    async def create_standalone_qotd(categories="") -> "Question | None":
         client = await Question.get_client()
         req = await client.post(
-            Question.qoth_url + "create_standalone_qotd/",
+            Question.qotd_standalone_url + "create_standalone_qotd/",
             headers=Question.headers,
-            json={"question_id": self.id},
+            json={"category": categories},
         )
 
-        return req.status_code == 201
+        if req.status_code == 201:
+            return Question(req.json()["question"])
+
+        return None

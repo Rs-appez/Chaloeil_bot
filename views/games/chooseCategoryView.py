@@ -9,8 +9,10 @@ class ChooseCategoryView(View):
         "Une question sur les archimonstres": "archimonstre",
         "Une question sur les items": "item",
         "Une question sur les sorts": "sort",
+        "Une question sur les classes": "classe",
         "Une question sur la géographie": "géographie",
-        "Une question sur l'élevage": "elevage",
+        "Une question sur les quêtes": "quete",
+        "Une question de la catégorie divers s'il vous plaît": "divers",
     }
 
     def __init__(self, game) -> None:

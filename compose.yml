@@ -1,0 +1,15 @@
+services:
+  bot:
+    build: .
+    container_name: chaloeil-bot
+    env_file:
+      - .env.docker
+    environment:
+      - CHALOEIL_TOKEN=${CHALOEIL_TOKEN}
+      - BACKEND_TOKEN=${BACKEND_TOKEN}
+      - BACKEND_URL=${BACKEND_URL}
+      - CHALOEIL_ID=${CHALOEIL_ID}
+      - CELLAR_GUILD_ID=${CELLAR_GUILD_ID}
+      - DELIRE_GUILD_ID=${DELIRE_GUILD_ID}
+      - CHALOEIL_GUILD_ID=${CHALOEIL_GUILD_ID}
+    restart: unless-stopped

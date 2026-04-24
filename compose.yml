@@ -1,0 +1,6 @@
+services:
+  chabot:
+    build: .
+    container_name: chaloeilBot
+    env_file: .env.prod
+    restart: unless-stopped

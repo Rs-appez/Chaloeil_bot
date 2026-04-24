@@ -9,4 +9,4 @@ RUN pip install -r requirements.txt
 
 COPY . /chaloeil/
 
-ENTRYPOINT ["python3", "main.py"]
+ENTRYPOINT ["python3","-u", "main.py"]

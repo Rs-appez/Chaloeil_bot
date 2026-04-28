@@ -2,10 +2,12 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.cron import CronTrigger
 
 from .question import Question
+from config import EVENT_ROLE_ID
 
 
 class QOTDScheduler:
-    def __init__(self):
+    def __init__(self, bot):
+        self.bot = bot
         self.scheduler = AsyncIOScheduler()
         self.__init_schedule()
         self.__add_job()
@@ -32,4 +34,10 @@ class QOTDScheduler:
         )
 
     async def __create_qotd(self):
-        await Question.generate_questions_of_the_day()
+        is_generated = await Question.generate_questions_of_the_day()
+        if is_generated:
+            await self.bot.channel_announce.send(
+                f"<@&{EVENT_ROLE_ID}> Les questions du jour sont disponibles !"
+            )
+        else:
+            print("Failed to generate questions of the day")

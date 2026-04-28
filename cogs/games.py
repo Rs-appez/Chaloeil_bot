@@ -36,7 +36,7 @@ class Game(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
-        self.qotd_scheduler = QOTDScheduler()
+        self.qotd_scheduler = QOTDScheduler(bot)
 
     @slash_command(
         name="battle_royal_quizz",

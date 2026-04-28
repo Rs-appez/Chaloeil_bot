@@ -46,7 +46,7 @@ class ChooseCategoryView(View):
 
 class LaunchCategoryView(View):
     def __init__(self, game, choice) -> None:
-        super().__init__()
+        super().__init__(timeout=None)
 
         self.game = game
         self.choice = choice

@@ -29,11 +29,14 @@ class Timer(object):
                 self.last_second = math.floor(time.time() - self.start_time)
                 asyncio.run_coroutine_threadsafe(self.edit(), loop)
 
+            time.sleep(0.5)
+
         asyncio.run_coroutine_threadsafe(self.end(), loop)
 
     async def end(self):
+        await asyncio.sleep(2)
         await self.end_method()
-    
+
     async def edit(self):
         s_text = "secondes" if self.seconds - self.last_second > 1 else "seconde"
         await self.time_msg.edit(

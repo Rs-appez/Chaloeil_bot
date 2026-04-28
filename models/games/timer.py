@@ -2,9 +2,10 @@ import threading
 import time
 import asyncio
 import math
-class Timer(object):
 
-    def __init__(self, seconds, end_method, time_msg ,loop ):
+
+class Timer(object):
+    def __init__(self, seconds, end_method, time_msg, loop):
         self.seconds = seconds
         self.start_time = time.time()
         self.finished = False
@@ -20,8 +21,8 @@ class Timer(object):
         thread.daemon = True
         thread.start()
 
-    def run(self,loop):
-        while not self.finished :
+    def run(self, loop):
+        while not self.finished:
             if time.time() - self.start_time >= self.seconds:
                 self.finished = True
             if math.floor(time.time() - self.start_time) != self.last_second:
@@ -35,7 +36,10 @@ class Timer(object):
     
     async def edit(self):
         s_text = "secondes" if self.seconds - self.last_second > 1 else "seconde"
-        await self.time_msg.edit(content=f"‎ ‎\n**Temps restant : {self.seconds - self.last_second} {s_text}**")
+        await self.time_msg.edit(
+            content=f"‎ ‎\n**Temps restant : {self.seconds - self.last_second} {s_text}**"
+        )
 
     def stop(self):
         self.finished = True
+

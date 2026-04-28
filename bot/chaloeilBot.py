@@ -23,26 +23,33 @@ class ChaloeilBot(commands.Bot):
         )
 
         self.ch_emojis = {}
+        self.channel_announce = None
+        self.channel_log = None
 
     async def on_ready(self):
         print(f"{self.user.display_name} est pret")
         if not config.DEBUG:
             cellar = self.get_guild(int(config.CELLAR_GUILD_ID))
             chaloeil = self.get_guild(int(config.CHALOEIL_GUILD_ID))
+            delire = self.get_guild(int(config.DELIRE_GUILD_ID))
             if cellar:
                 self.ch_emojis["chaloeil"] = await cellar.fetch_emoji(
                     1119363924907790406
                 )
-                msg = await chaloeil.get_channel(int(config.CHANNELBOT_LOG_ID)).send(
-                    "UP !"
+            if chaloeil:
+                self.channel_log = chaloeil.get_channel(int(config.CHANNELBOT_LOG_ID))
+                if self.channel_log:
+                    msg = await self.channel_log.send("UP !")
+                    _ = await msg.add_reaction(self.ch_emojis["chaloeil"])
+                else:
+                    print("Channel log not found")
+            if delire:
+                # self.ch_emojis["delire"] = await guild.fetch_emoji(1027165356168593478)
+                self.channel_announce = delire.get_channel(
+                    int(config.CHANNEL_ANNOUNCE_ID)
                 )
-                await msg.add_reaction(self.ch_emojis["chaloeil"])
-            await self.get_emojis()
-
-    async def get_emojis(self):
-        guild = self.get_guild(int(config.DELIRE_GUILD_ID))
-        if guild:
-            self.ch_emojis["delire"] = await guild.fetch_emoji(1027165356168593478)
+                if not self.channel_announce:
+                    print("Channel announce not found")
 
     async def on_message(self, message: Message):
         if message.author == self.user:

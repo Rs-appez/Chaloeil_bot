@@ -34,12 +34,12 @@ class ChooseCategoryView(View):
         selected = interaction.data["values"][0]
         if not self.message:
             self.message = await interaction.response.send_message(
-                content=f"Tu as choisi la catégorie {selected}. Est-tu prêt ???",
+                content=f"Tu as choisi la catégorie {selected}. Es-tu prêt ???",
                 view=LaunchCategoryView(self.game, selected),
             )
         else:
             await self.message.edit(
-                content=f"Tu as choisi la catégorie {selected}. Est-tu prêt ???",
+                content=f"Tu as choisi la catégorie {selected}. Es-tu prêt ???",
                 view=LaunchCategoryView(self.game, selected),
             )
 

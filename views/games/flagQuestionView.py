@@ -11,7 +11,9 @@ class FlagQuestionView(View):
         self.admin_id = admin_id
         self.question = question
 
-    @button(label="Réponse ou Question incorect", style=ButtonStyle.grey, emoji="🚩")
+    @button(
+        label="Signaler question/réponse incorrecte", style=ButtonStyle.gray, emoji="🚩"
+    )
     async def statement(self, button, interaction):
 
         if self.admin_id != interaction.user.id:

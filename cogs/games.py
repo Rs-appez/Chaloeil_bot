@@ -272,7 +272,7 @@ class Game(commands.Cog):
 
             await qotd.launch_statement()
             await interaction.followup.send(
-                f"{chaloeil_emoji} **Démarre la série de question du jour !** {chaloeil_emoji}",
+                f"{chaloeil_emoji} **Démarre la série de questions du jour !** {chaloeil_emoji}",
                 view=JoinGameView(qotd, chaloeil_emoji),
                 ephemeral=True,
             )

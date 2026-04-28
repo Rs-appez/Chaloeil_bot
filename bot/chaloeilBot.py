@@ -44,7 +44,7 @@ class ChaloeilBot(commands.Bot):
                 else:
                     print("Channel log not found")
             if delire:
-                # self.ch_emojis["delire"] = await guild.fetch_emoji(1027165356168593478)
+                self.ch_emojis["delire"] = await delire.fetch_emoji(1027165356168593478)
                 self.channel_announce = delire.get_channel(
                     int(config.CHANNEL_ANNOUNCE_ID)
                 )

@@ -34,7 +34,6 @@ class Timer(object):
         asyncio.run_coroutine_threadsafe(self.end(), loop)
 
     async def end(self):
-        await asyncio.sleep(2)
         await self.end_method()
 
     async def edit(self):

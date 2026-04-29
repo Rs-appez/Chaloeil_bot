@@ -218,8 +218,6 @@ class Quizz:
     async def check_result(self):
         await self.answer_view.disable_all()
 
-        await asyncio.sleep(2)
-
         players = self.players if not self.team else self.teams
 
         players = self._compute_score(players)

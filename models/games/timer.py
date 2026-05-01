@@ -5,43 +5,51 @@ import math
 
 
 class Timer(object):
-    def __init__(self, seconds, end_method, time_msg, loop):
+    def __init__(self, seconds, end_method, time_msg, loop=None):
         self.seconds = seconds
-        self.start_time = time.time()
-        self.finished = False
-        self.loop = loop
         self.end_method = end_method
         self.time_msg = time_msg
+        self.finished = False
+        self._editing = False
+        self._task = asyncio.create_task(self.run())
 
-        self.last_second = 0
+    async def run(self):
+        start = time.monotonic()
+        last_displayed = self.seconds + 1
 
-        # file deepcode ignore MissingAPI: <please specify a reason of ignoring this>
-        thread = threading.Thread(target=self.run, args=[self.loop])
-
-        thread.daemon = True
-        thread.start()
-
-    def run(self, loop):
         while not self.finished:
-            if time.time() - self.start_time >= self.seconds:
-                self.finished = True
-            if math.floor(time.time() - self.start_time) != self.last_second:
-                self.last_second = math.floor(time.time() - self.start_time)
-                asyncio.run_coroutine_threadsafe(self.edit(), loop)
+            elapsed = time.monotonic() - start
+            remaining = max(0, self.seconds - elapsed)
+            remaining_int = int(remaining) + (1 if remaining % 1 > 0 else 0)
 
-            time.sleep(0.5)
+            if remaining_int < last_displayed:
+                last_displayed = remaining_int
+                if not self._editing:
+                    _ = asyncio.create_task(self._edit(remaining_int))
 
-        asyncio.run_coroutine_threadsafe(self.end(), loop)
+            if elapsed >= self.seconds:
+                break
 
-    async def end(self):
-        await self.end_method()
+            await asyncio.sleep(0.3)
 
-    async def edit(self):
-        s_text = "secondes" if self.seconds - self.last_second > 1 else "seconde"
-        await self.time_msg.edit(
-            content=f"‎ ‎\n**Temps restant : {self.seconds - self.last_second} {s_text}**"
-        )
+        if not self.finished:
+            self.finished = True
+            await self.end_method()
+
+    async def _edit(self, remaining):
+        self._editing = True
+        s_text = "seconde" if remaining <= 1 else "secondes"
+        try:
+            await self.time_msg.edit(
+                content=f"‎ ‎\n**Temps restant : {remaining} {s_text}**"
+            )
+        except Exception:
+            pass
+        finally:
+            self._editing = False
 
     def stop(self):
-        self.finished = True
-
+        if not self.finished:
+            self.finished = True
+            self._task.cancel()
+            asyncio.create_task(self.end_method())

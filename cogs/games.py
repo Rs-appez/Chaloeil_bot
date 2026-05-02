@@ -10,6 +10,8 @@ from nextcord.ext import commands
 from nextcord.interactions import Interaction
 from nextcord.threads import Thread
 
+from bot.chaloeilBot import ChaloeilBot
+from config import EVENT_ROLE_ID
 from models.games.battleRoyal import BattleRoyal
 from models.games.dice import Dice
 from models.games.qotd import QuestionsOfTheDay
@@ -37,6 +39,36 @@ class Game(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.qotd_scheduler = QOTDScheduler(bot)
+
+    @slash_command(default_member_permissions=0)
+    async def reset_event_role(
+        self,
+        interaction: Interaction[ChaloeilBot],
+    ) -> None:
+        """Reset le rôle d'événement en supprimant tous les membres qui l'ont."""
+
+        guild = interaction.guild
+        if not guild:
+            _ = await interaction.response.send_message(
+                "Cette commande doit être utilisée dans un serveur.",
+                ephemeral=True,
+            )
+            return
+        event_role = guild.get_role(int(EVENT_ROLE_ID))
+        if not event_role:
+            _ = await interaction.response.send_message(
+                "Le rôle d'événement n'a pas été trouvé sur ce serveur.",
+                ephemeral=True,
+            )
+            return
+
+        for member in [member for member in event_role.members]:
+            await member.remove_roles(event_role)
+
+        _ = await interaction.response.send_message(
+            "Le rôle d'événement a été réinitialisé.",
+            ephemeral=True,
+        )
 
     @slash_command(
         name="battle_royal_quizz",

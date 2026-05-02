@@ -274,11 +274,13 @@ class Game(commands.Cog):
     ):
         """Roll the dice"""
 
-        await interaction.response.send_message("Les dés sont jetés !", ephemeral=True)
+        _ = await interaction.response.send_message(
+            "Les dés sont jetés !", ephemeral=True
+        )
         dice = Dice(number_of_dice, sides)
         username = interaction.user.nick or interaction.user.name
-        await interaction.channel.send(dice.verbal_roll(username))
-        await interaction.channel.send(dice.image_roll())
+        _ = await interaction.channel.send(dice.verbal_roll(username))
+        _ = await interaction.channel.send(dice.image_roll())
 
     @slash_command(
         name="daily_quizz",
@@ -314,7 +316,8 @@ class Game(commands.Cog):
                 "Les questions du jour ne sont pas encore disponibles. Veuillez réessayer plus tard. <:chaloeil:1386369580275994775>",
                 ephemeral=True,
             )
-            await channel.delete()
+            if channel:
+                _ = await channel.delete()
 
         except Exception as e:
             await interaction.followup.send(
@@ -324,9 +327,14 @@ class Game(commands.Cog):
                 ephemeral=True,
             )
             if channel:
-                await channel.delete()
+                _ = await channel.delete()
 
     async def __create_game_channel(self, interaction: Interaction, name_channel):
+        if not interaction.channel:
+            _ = await interaction.followup.send(
+                "Impossible de créer un channel de jeu dans ce contexte", ephemeral=True
+            )
+            return None
         if interaction.channel.type in [
             ChannelType.news_thread,
             ChannelType.public_thread,
@@ -337,14 +345,21 @@ class Game(commands.Cog):
             )
             return None
 
-        if interaction.channel.type == ChannelType.private:
+        channel = interaction.channel
+
+        if channel.type == ChannelType.private:
             game_channel = interaction.channel
-        else:
-            game_channel = await interaction.channel.create_thread(
+        elif isinstance(channel, TextChannel):
+            game_channel = await channel.create_thread(
                 name=name_channel,
                 reason=f"{name_channel} started",
                 type=ChannelType.private_thread,
             )
+        else:
+            _ = await interaction.followup.send(
+                "Type de channel non supporté pour lancer un jeu", ephemeral=True
+            )
+            return None
         return game_channel
 
     async def __init_game(self, interaction: Interaction, game: Quizz, game_channel):
@@ -358,13 +373,14 @@ class Game(commands.Cog):
         await game_channel.send(
             f"{delire_blason} {chaloeil_emoji} WELCOME {chaloeil_emoji} {delire_blason}"
         )
-        await interaction.channel.send(
-            f"{chaloeil_emoji} **Participez au grand quiz du Chaloeil !** {chaloeil_emoji}",
-            view=JoinGameView(game, chaloeil_emoji),
-        )
-        await interaction.followup.send(
-            "Afficher l'énoncé", view=StatementView(game), ephemeral=True
-        )
+        if isinstance(interaction.channel, (Thread, TextChannel)):
+            _ = await interaction.channel.send(
+                f"{chaloeil_emoji} **Participez au grand quiz du Chaloeil !** {chaloeil_emoji}",
+                view=JoinGameView(game, chaloeil_emoji),
+            )
+            await interaction.followup.send(
+                "Afficher l'énoncé", view=StatementView(game), ephemeral=True
+            )
 
     @commands.Cog.listener()
     async def on_ready(self):

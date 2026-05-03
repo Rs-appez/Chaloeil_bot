@@ -14,6 +14,14 @@ class Player:
         else:
             return self.member.name
 
+    def __eq__(self, __o: object) -> bool:
+        if isinstance(__o, Player):
+            return self.member.id == __o.member.id
+        return False
+
+    def __hash__(self) -> int:
+        return hash(self.member.id)
+
     async def dm(self, msg, view=None):
         if not self.dm_chan:
             self.dm_chan = await self.member.create_dm()

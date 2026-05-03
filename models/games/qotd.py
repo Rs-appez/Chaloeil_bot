@@ -31,7 +31,7 @@ class QuestionsOfTheDay(Quizz):
     async def launch_statement(self):
         statement_string = (
             f"Bienvenue dans le **Quizz du jour!**\n\nVous allez devoir répondre à la série de questions sélectionnées pour aujourd'hui."
-            f" *({self.nb_question} questions)*\n"
+            f" *({self.nb_question + 1} questions)*\n"
             "Une fois le Quizz commencé, il n'y aura pas de pause possible avant la fin de la série.\n\n"
             f"**__Règles__** :\n\n> {
                 self.time_to_answer
@@ -64,7 +64,7 @@ class QuestionsOfTheDay(Quizz):
             raise ValueError("No questions available for the day.")
 
         self.questions, self.qotd_id = qotd
-        self.nb_question = len(self.questions) + 1
+        self.nb_question = len(self.questions)
 
     @override
     async def _get_question(self) -> Question | None:
@@ -107,7 +107,9 @@ class QuestionsOfTheDay(Quizz):
             raise ValueError("No question found for the final question.")
 
         self.questions = [last_question]
-        await self.show_question()
+        await self.show_question(
+            altenative_sentence="## Voici la question que j'ai sélectionnée rien que pour toi !"
+        )
 
     @override
     async def _display_winner(self, players) -> None:

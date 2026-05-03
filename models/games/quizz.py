@@ -94,10 +94,10 @@ class Quizz:
         else:
             await self.show_question()
 
-    async def show_question(self, altenative_sentence=-1):
+    async def show_question(self, altenative_sentence: int | str = -1):
         self.current_question = await self._get_question()
         if self.current_question is None:
-            await self.channel.send(
+            _ = await self.channel.send(
                 "Erreur lors de la récupération de la question 😭",
                 view=ReloadQuestionView(self),
             )

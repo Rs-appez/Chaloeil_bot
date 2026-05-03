@@ -41,7 +41,7 @@ class Question:
 
     @staticmethod
     async def get_question(
-        number, level=None, cat=None, id_range=None
+        number, level=None, cat=None, id_range=None, event=False
     ) -> list["Question"] | None:
         client = await Question.get_client()
         req = await client.get(
@@ -51,6 +51,7 @@ class Question:
                 "category": cat,
                 "number": number,
                 "id_range": id_range,
+                "event": event,
             },
             headers=Question.headers,
         )

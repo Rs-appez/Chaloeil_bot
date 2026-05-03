@@ -153,6 +153,7 @@ class Game(commands.Cog):
         team: bool = SlashOption(
             name="team", description="Jouer en équipe", required=False, default=False
         ),
+        event: bool = SlashOption(name="event", default=False),
         flat: bool = SlashOption(
             name="flat",
             description="Jouer en flat (toutes les questions raportent le même nombre de point)",
@@ -204,6 +205,7 @@ class Game(commands.Cog):
             category,
             nb_question,
             team=team,
+            event=event,
             flat=flat,
             keep=keep,
             debug=debug,

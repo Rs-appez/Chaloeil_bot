@@ -23,6 +23,7 @@ class Quizz:
         creator_id,
         category,
         nb_question=1,
+        event=False,
         team=False,
         flat=False,
         keep=False,
@@ -46,6 +47,7 @@ class Quizz:
         self.time_to_answer: int = time_to_answer
         self.flat: bool = flat
         self.keep: bool = keep
+        self.event: bool = event
         self.debug: bool = debug
         self.id_range = id_range
 
@@ -58,7 +60,10 @@ class Quizz:
     async def _get_question(self) -> Question | None:
         if self.questions is None or len(self.questions) == 0:
             self.questions = await Question.get_question(
-                self.nb_question, cat=self.category, id_range=self.id_range
+                self.nb_question,
+                cat=self.category,
+                id_range=self.id_range,
+                event=self.event,
             )
 
         return self.questions.pop(0) if self.questions else None

@@ -7,7 +7,7 @@ from models.games.teamMaker import TeamMaker
 
 class MakeTeamView(View):
     def __init__(self, game_controller, admin, nb_players_per_team) -> None:
-        super().__init__(timeout=None)
+        super().__init__(timeout=1200)
         self.__controller = game_controller
         self.__admin = admin
         self.__players = set()

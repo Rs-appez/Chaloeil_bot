@@ -18,7 +18,9 @@ from models.games.qotd import QuestionsOfTheDay
 from models.games.qotdscheduler import QOTDScheduler
 from models.games.question import Question
 from models.games.quizz import Quizz
+from models.games.teamMaker import TeamMaker
 from views.games.joinGameView import JoinGameView
+from views.games.makeTeam import MakeTeamView
 from views.games.statementView import StatementView
 
 
@@ -39,6 +41,7 @@ class Game(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.qotd_scheduler = QOTDScheduler(bot)
+        self.team_maker: TeamMaker = None
 
     @slash_command(default_member_permissions=0)
     async def reset_event_role(
@@ -330,6 +333,68 @@ class Game(commands.Cog):
             )
             if channel:
                 _ = await channel.delete()
+
+    @slash_command(
+        name="setup_team_maker",
+        description="Créer une équipe pour les jeux en équipe",
+        contexts=[InteractionContextType.guild],
+        default_member_permissions=0,
+    )
+    async def setup_team_maker(
+        self,
+        interaction: Interaction,
+        nb_players_per_team: int = SlashOption(
+            name="nombre_de_joueurs_par_équipe",
+            description="Nombre de joueurs par équipe",
+            required=True,
+        ),
+    ):
+        """Créer les équipes pour les jeux en équipe"""
+        if self.team_maker:
+            _ = await interaction.response.send_message(
+                "Les équipes ont déjà été setup", ephemeral=True
+            )
+            return
+        _ = await interaction.response.send_message(
+            view=MakeTeamView(self, interaction.user, nb_players_per_team)
+        )
+
+    @slash_command(
+        name="show_teams",
+        description="Afficher les équipes créées pour les jeux en équipe",
+        contexts=[InteractionContextType.guild],
+        default_member_permissions=0,
+    )
+    async def show_teams(self, interaction: Interaction):
+        if not self.team_maker:
+            _ = await interaction.response.send_message(
+                "Les équipes n'ont pas encore été setup", ephemeral=True
+            )
+            return
+
+        _ = await interaction.response.defer()
+        teams = self.team_maker.make_teams()
+        message = "Voici les équipes :\n"
+        for i, t in enumerate(teams):
+            message += (
+                f"**Equipe {i + 1}** : "
+                + ", ".join([m.member.mention for m in t])
+                + "\n"
+            )
+        await interaction.followup.send(message)
+
+    @slash_command(
+        name="reset_teams",
+        description="Reset les équipes créées pour les jeux en équipe",
+        contexts=[InteractionContextType.guild],
+        default_member_permissions=0,
+    )
+    async def reset_teams(self, interaction: Interaction):
+        """Reset les équipes créées pour les jeux en équipe"""
+        self.team_maker = None
+        _ = await interaction.response.send_message(
+            "Les équipes ont été réinitialisées.", ephemeral=True
+        )
 
     async def __create_game_channel(self, interaction: Interaction, name_channel):
         if not interaction.channel:

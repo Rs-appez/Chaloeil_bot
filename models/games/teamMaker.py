@@ -4,9 +4,9 @@ import math
 
 
 class TeamMaker:
-    def __init__(self, team_size, players: list[Player]) -> None:
+    def __init__(self, team_size, players: set[Player]) -> None:
         self.team_size = team_size
-        self.__players: list[Player] = players
+        self.__players: list[Player] = list(players)
         self.__teams: list[list[Player]] = []
         self.__old_teams: set[frozenset[Player]] = set()
         self.__max_teams = math.comb(len(players), team_size)

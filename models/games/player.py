@@ -69,3 +69,8 @@ class Team(Player):
 
     async def dm(self, msg, view=None):
         return
+
+    def __eq__(self, __o: object) -> bool:
+        if isinstance(__o, Team):
+            return self.name == __o.name
+        return False

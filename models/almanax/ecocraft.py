@@ -19,7 +19,9 @@ class EcoCraft:
 
     @staticmethod
     def get_all_dates() -> list[tuple[str, int, int]]:
-        res: httpx.Response = httpx.get(EcoCraft.api_url, headers=EcoCraft.headers)
+        res: httpx.Response = httpx.get(
+            EcoCraft.api_url, headers=EcoCraft.headers, timeout=30.0
+        )
         res_json = res.json()
         data = []
         data.extend(res_json.get("results", []))

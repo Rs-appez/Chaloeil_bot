@@ -29,7 +29,7 @@ class Raid(commands.Cog):
         self, interaction: Interaction[ChaloeilBot], raid_name: str = raid_choices
     ) -> None:
         """Affiche le sondage pour le raid."""
-        await interaction.response.defer()
+        await interaction.response.defer(ephemeral=True)
         poll = RaidInfo.get_raid_poll_payload(raid_name)
         await self.bot.http.request(
             Route(

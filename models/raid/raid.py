@@ -1,3 +1,6 @@
+from config import DEBUG
+
+
 class RaidInfo:
     questions = {
         "belladone": {
@@ -23,13 +26,15 @@ class RaidInfo:
     )
 
     @staticmethod
-    def get_raid_poll_payload(raid_id, emoji_final):
+    def get_raid_poll_payload(raid_id):
         answers = [{"poll_media": {"text": option}} for option in RaidInfo.options[0]]
         answers.append(
             {
                 "poll_media": {
                     "text": "Tout me va !",
-                    "emoji": {"name": emoji_final},
+                    "emoji": {"id": 1539397731095941241}
+                    if not DEBUG
+                    else {"name": "✅"},
                 }
             }
         )

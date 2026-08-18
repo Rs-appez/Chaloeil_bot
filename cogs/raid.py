@@ -26,9 +26,7 @@ class Raid(commands.Cog):
     ) -> None:
         """Affiche le sondage pour le raid."""
         await interaction.response.defer()
-        emoji = self.bot.ch_emojis.get("delire")
-        emoji_name = emoji.name if emoji else "✅"
-        poll = RaidInfo.get_raid_poll_payload(raid_name, emoji_name)
+        poll = RaidInfo.get_raid_poll_payload(raid_name)
         await self.bot.http.request(
             Route(
                 "POST",

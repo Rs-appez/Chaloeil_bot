@@ -20,7 +20,11 @@ class Raid(commands.Cog):
         },
     )
 
-    @slash_command(name="raid_poll", description="Affiche le sondage pour le raid")
+    @slash_command(
+        name="raid_poll",
+        description="Affiche le sondage pour le raid",
+        default_member_permissions=0,
+    )
     async def raid_poll(
         self, interaction: Interaction[ChaloeilBot], raid_name: str = raid_choices
     ) -> None:

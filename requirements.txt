@@ -14,7 +14,7 @@ h11==0.16.0
 httpcore==1.0.9
 httpx==0.28.1
 idna==3.20
-multidict==6.8.0
+multidict==6.9.1
 nextcord==3.2.0
 propcache==0.5.4
 python-decouple==3.8

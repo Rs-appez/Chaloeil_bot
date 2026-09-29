@@ -14,6 +14,8 @@ class RaidInfo:
     }
     options = (
         [
+            "Samedi 15 h",
+            "Samedi 16 h",
             "Samedi 17 h",
             "Samedi 18 h",
             "Samedi 20h30",

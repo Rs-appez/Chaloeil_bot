@@ -19,7 +19,6 @@ class RaidInfo:
             "Samedi 17 h",
             "Samedi 18 h",
             "Samedi 20h30",
-            "Samedi 21h30",
             "Dimanche 16h",
             "Dimanche 17h",
             "Dimanche 18h",

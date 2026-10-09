@@ -44,7 +44,7 @@ class RaidInfo:
             "poll": {
                 "question": {"text": RaidInfo.questions[raid_id]["question"]},
                 "answers": answers,
-                "duration": 24 * 3,
+                "duration": 24 * 2,
                 "allow_multiselect": True,
                 "layout_type": 1,
             },

@@ -1,13 +1,15 @@
+from typing import ClassVar
+
 from nextcord import SlashOption, slash_command
 from nextcord.ext import commands
 from nextcord.interactions import Interaction
 
-from models.almanax.ecocraft import EcoCraft
 from bot.chaloeilBot import ChaloeilBot
+from models.almanax.ecocraft import EcoCraft
 
 
 class Almanax(commands.Cog):
-    JOBS = {
+    JOBS: ClassVar = {
         "Eleveur": "Breeder",
         "Bûcheron": "Lumberjack",
         "Chasseur": "Hunter",

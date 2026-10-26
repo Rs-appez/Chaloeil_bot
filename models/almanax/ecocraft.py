@@ -1,5 +1,7 @@
-import config
 import httpx
+from httpx import Timeout
+
+import config
 
 
 class EcoCraft:
@@ -7,28 +9,33 @@ class EcoCraft:
 
     headers: dict[str, str] = {"Authorization": config.BACKEND_TOKEN}
 
+    timeout = Timeout(30.0, connect=10.0)
+
     def __init__(self, job: str):
         self.job = job
 
-    def get_date(self) -> tuple[int, int]:
-        res: httpx.Response = httpx.get(
-            self.api_url + "get_job/", params={"job": self.job}, headers=self.headers
-        )
-        data = res.json()
+    async def get_date(self) -> tuple[int, int]:
+        async with httpx.AsyncClient(
+            headers=self.headers, timeout=self.timeout
+        ) as client:
+            res = await client.get(self.api_url + "get_job/", params={"job": self.job})
+            res.raise_for_status()
+            data = res.json()
         return (data.get("day"), data.get("month"))
 
     @staticmethod
-    def get_all_dates() -> list[tuple[str, int, int]]:
-        res: httpx.Response = httpx.get(
-            EcoCraft.api_url, headers=EcoCraft.headers, timeout=30.0
-        )
-        res_json = res.json()
+    async def get_all_dates() -> list[tuple[str, int, int]]:
         data = []
-        data.extend(res_json.get("results", []))
-        while res_json.get("next", None):
-            res = httpx.get(res_json["next"], headers=EcoCraft.headers)
-            res_json = res.json()
-            data.extend(res_json.get("results", []))
+        async with httpx.AsyncClient(
+            headers=EcoCraft.headers, timeout=EcoCraft.timeout
+        ) as client:
+            url: str | None = EcoCraft.api_url
+            while url:
+                res = await client.get(url)
+                res.raise_for_status()
+                res_json = res.json()
+                data.extend(res_json.get("results", []))
+                url = res_json.get("next")
         return [
             (entry.get("bonus"), entry.get("day"), entry.get("month")) for entry in data
         ]
